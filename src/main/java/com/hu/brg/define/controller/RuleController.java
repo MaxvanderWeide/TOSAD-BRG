@@ -15,6 +15,7 @@ public class RuleController {
     private RuleDefinitionBuilder ruleDefinitionBuilder;
 
     public List<BusinessRuleType> getTypes() {
+<<<<<<< HEAD
         return Main.getRuleService().getTypes();
     }
 
