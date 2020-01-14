@@ -1,13 +1,8 @@
 package generate;
 
 public class RuleGenerator {
-    private BusinessRule businessRule;
     private String generatedCode;
     private String triggerName;
-
-    public RuleGenerator(BusinessRule businessRule) {
-        this.businessRule = businessRule;
-    }
 
     private void generateTriggerName() {
         System.out.println("TriggerName is being generated...");
