@@ -1,11 +1,11 @@
 package define.builder;
 
-import define.model.definition.Comparator;
-import define.model.definition.Operator;
-import define.model.definition.RuleDefinition;
-import define.model.physical.Attribute;
-import define.model.physical.Table;
-import define.model.rule.BusinessRuleType;
+import model.definition.Comparator;
+import model.definition.Operator;
+import model.definition.RuleDefinition;
+import model.physical.Attribute;
+import model.physical.Table;
+import model.rule.BusinessRuleType;
 
 import java.util.List;
 

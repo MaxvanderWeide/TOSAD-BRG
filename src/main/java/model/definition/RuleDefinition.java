@@ -1,8 +1,8 @@
-package define.model.definition;
+package model.definition;
 
-import define.model.physical.Attribute;
-import define.model.physical.Table;
-import define.model.rule.BusinessRuleType;
+import model.physical.Attribute;
+import model.physical.Table;
+import model.rule.BusinessRuleType;
 
 import java.util.List;
 

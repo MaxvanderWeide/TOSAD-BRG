@@ -1,4 +1,4 @@
-package define.model.rule;
+package model.rule;
 
 public class BusinessRuleType {
 }
