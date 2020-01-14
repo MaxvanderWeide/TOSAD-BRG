@@ -1,4 +1,4 @@
-package generate;
+package com.hu.brg.generate;
 
 public class BusinessRuleTrigger {
     private String triggerEvent;

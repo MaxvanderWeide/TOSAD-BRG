@@ -1,11 +1,11 @@
-package define.builder;
+package com.hu.brg.define.builder;
 
-import model.definition.Comparator;
-import model.definition.Operator;
-import model.definition.RuleDefinition;
-import model.physical.Attribute;
-import model.physical.Table;
-import model.rule.BusinessRuleType;
+import com.hu.brg.model.definition.Comparator;
+import com.hu.brg.model.definition.Operator;
+import com.hu.brg.model.definition.RuleDefinition;
+import com.hu.brg.model.physical.Attribute;
+import com.hu.brg.model.physical.Table;
+import com.hu.brg.model.rule.BusinessRuleType;
 
 import java.util.List;
 
