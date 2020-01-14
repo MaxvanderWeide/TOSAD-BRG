@@ -29,5 +29,8 @@ public class RuleDefinition {
         this.values = values;
     }
 
+    public String toString() {
+        return "" + type.toString();
+    }
 
 }

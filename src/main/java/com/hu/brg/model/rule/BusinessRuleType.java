@@ -10,5 +10,8 @@ public class BusinessRuleType {
         this.description = description;
     }
 
+    public String toString() {
+        return "" + name + " " + description;
+    }
 
 }

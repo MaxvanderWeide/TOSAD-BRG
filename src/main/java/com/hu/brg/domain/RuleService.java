@@ -25,6 +25,10 @@ public class RuleService {
         this.selectedTable = table;
     }
 
+    public List<RuleDefinition> getRuleDefinitions() {
+        return ruleDefinitions;
+    }
+
     public boolean addRuleDefinition(RuleDefinition ruleDefinition) {
         if (ruleDefinition != null) ruleDefinitions.add(ruleDefinition);
         return ruleDefinition != null;
