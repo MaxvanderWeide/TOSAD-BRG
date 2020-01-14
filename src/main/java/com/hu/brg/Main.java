@@ -18,6 +18,8 @@ public class Main {
     private static RuleGenerator ruleGenerator;
 
     public static void main(String[] args) {
+
+
         ruleService = new RuleService();
 
         ruleGenerator = new RuleGenerator();
