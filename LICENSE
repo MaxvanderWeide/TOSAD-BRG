@@ -132,7 +132,7 @@ implementation is available to the public in source code form.  A
 produce the work, or an object code interpreter used to run it.
 
   The "Corresponding Source" for a work in object code form means all
-the source code needed to generate, install, and (for an executable
+the source code needed to com.hu.brg.generate, install, and (for an executable
 work) run the object code and to modify the work, including scripts to
 control those activities.  However, it does not include the work's
 System Libraries, or general-purpose tools or generally available free
@@ -258,7 +258,7 @@ in one of these ways:
     (including a physical distribution medium), accompanied by a
     written offer, valid for at least three years and valid for as
     long as you offer spare parts or customer support for that product
-    model, to give anyone who possesses the object code either (1) a
+    com.hu.brg.model, to give anyone who possesses the object code either (1) a
     copy of the Corresponding Source for all the software in the
     product that is covered by this License, on a durable physical
     medium customarily used for software interchange, for a price no

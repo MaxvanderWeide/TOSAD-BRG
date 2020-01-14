@@ -1,4 +1,4 @@
-package generate;
+package com.hu.brg.generate;
 
 public class RuleGenerator {
     private String generatedCode;
