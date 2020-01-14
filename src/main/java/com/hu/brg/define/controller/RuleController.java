@@ -55,11 +55,7 @@ public class RuleController {
 
     public void setValues(Attribute attribute, List<String> values) {
         // TODO - Add FE interaction
-        if (attribute != null) {
-            ruleDefinitionBuilder.setValues(attribute, values);
-        } else {
-            ruleDefinitionBuilder.setValues(values);
-        }
+        ruleDefinitionBuilder.setValues(attribute, values);
     }
 
     public RuleDefinition createBusinessRule() {

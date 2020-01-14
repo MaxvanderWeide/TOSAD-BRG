@@ -45,12 +45,9 @@ public class RuleDefinitionBuilder {
     }
 
     public RuleDefinitionBuilder setValues(Attribute attribute, List<String> values) {
-        this.compareAttribute = attribute;
-        this.values = values;
-        return this;
-    }
-
-    public RuleDefinitionBuilder setValues(List<String> values) {
+        if (attribute != null) {
+            this.compareAttribute = attribute;
+        }
         this.values = values;
         return this;
     }
