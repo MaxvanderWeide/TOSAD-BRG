@@ -19,7 +19,7 @@ public class RuleGenerator {
     private String errorMessage = "Dit is fout";
 
     private List<String> triggerEvents = new ArrayList<>();
-    private String triggerCode = String.format("v_passed := %s.%s between 1 and 10", this.tableName, this.tableAttribute);
+    private String triggerCode = String.format("v_passed := :new.%s between 1 and 10", this.tableAttribute);
     private String triggerEvent = "";
 
 
@@ -46,7 +46,7 @@ public class RuleGenerator {
         this.generatedCode =
                 String.format("create or replace trigger %s\n" +
                 "    before %s\n" +
-                "    on %s.%s\n" +
+                "    on %s\n" +
                 "    for each row\n" +
                 "declare\n" +
                 "    v_passed boolean;\n" +
@@ -56,7 +56,7 @@ public class RuleGenerator {
                 "        then\n" +
                 "        DBMS_OUTPUT.PUT_LINE('%s');\n" +
                 "    end if;\n" +
-                "end;", this.triggerName, this.triggerEvent, this.tableName, this.tableAttribute, this.triggerCode, this.errorMessage);
+                "end;", this.triggerName, this.triggerEvent, this.tableName, this.triggerCode, this.errorMessage);
     }
 
     private void formatTriggerEvent() {
