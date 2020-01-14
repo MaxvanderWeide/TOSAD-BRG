@@ -1,5 +1,6 @@
 package com.hu.brg;
 
+import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.domain.RuleService;
 import com.hu.brg.generate.RuleGenerator;
 
@@ -17,4 +18,5 @@ public class Main {
     public static RuleService getRuleService() {
         return ruleService;
     }
+
 }

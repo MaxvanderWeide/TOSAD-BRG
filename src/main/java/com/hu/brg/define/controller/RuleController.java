@@ -3,6 +3,7 @@ package com.hu.brg.define.controller;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
+import com.hu.brg.model.definition.RuleDefinition;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRuleType;
@@ -15,7 +16,6 @@ public class RuleController {
     private RuleDefinitionBuilder ruleDefinitionBuilder;
 
     public List<BusinessRuleType> getTypes() {
-<<<<<<< HEAD
         return Main.getRuleService().getTypes();
     }
 
@@ -62,7 +62,10 @@ public class RuleController {
         }
     }
 
-    public void createBusinessRule() {
-        Main.getRuleService().addRuleDefinition(ruleDefinitionBuilder.build());
+    public RuleDefinition createBusinessRule() {
+        // TODO - Add FE interaction
+        RuleDefinition ruleDefinition = ruleDefinitionBuilder.build();
+        Main.getRuleService().addRuleDefinition(ruleDefinition);
+        return ruleDefinition;
     }
 }
