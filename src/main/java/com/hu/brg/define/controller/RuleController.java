@@ -6,6 +6,7 @@ import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.definition.RuleDefinition;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
+import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
 
@@ -59,9 +60,15 @@ public class RuleController {
     }
 
     public RuleDefinition createBusinessRule() {
-        // TODO - Add FE interaction
+        // TODO - Add FE interaction and remove return
         RuleDefinition ruleDefinition = ruleDefinitionBuilder.build();
         Main.getRuleService().addRuleDefinition(ruleDefinition);
         return ruleDefinition;
     }
+
+    public void selectFailureHandling() {
+        // TODO - Add FE data and selection
+        System.out.println(new BusinessRule("Name", "Description", "codeName", createBusinessRule()));
+    }
+
 }

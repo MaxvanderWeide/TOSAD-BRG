@@ -43,7 +43,7 @@ public class Main {
             add("C");
         }};
         rc.setValues(null, valueList);
-        rc.createBusinessRule();
+        rc.selectFailureHandling();
 
         for (RuleDefinition rd : ruleService.getRuleDefinitions()) {
             System.out.println(rd.toString());
