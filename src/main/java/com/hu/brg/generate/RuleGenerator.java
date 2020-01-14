@@ -13,6 +13,9 @@ public class RuleGenerator {
     private String tableName = "products";
     private String tableAttribute = "productCode";
 
+    private String triggerEvent = "insert, update";
+    private String triggerCode = String.format("v_passed := %s.%s between 1 and 10", this.tableName, this.tableAttribute);
+
 
     public RuleGenerator() {
         generateTriggerName();

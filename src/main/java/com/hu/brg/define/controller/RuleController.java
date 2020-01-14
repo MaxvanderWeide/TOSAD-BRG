@@ -8,6 +8,7 @@ import java.util.List;
 public class RuleController {
 
     public List<BusinessRuleType> getTypes() {
-        Main.getRuleService();
+//        Main.getRuleService();
+        return null;
     }
 }
