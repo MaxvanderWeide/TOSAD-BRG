@@ -2,9 +2,12 @@ package com.hu.brg.domain;
 
 import com.hu.brg.model.definition.RuleDefinition;
 import com.hu.brg.model.physical.Table;
+import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.persistence.tooldatabase.RulesDAO;
+import com.hu.brg.persistence.tooldatabase.RulesDAOImpl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ public class RuleService {
     private Table selectedTable;
     private List<BusinessRuleType> types = new ArrayList<>();
     private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseDAOImpl();
+    private RulesDAO rulesDAO = new RulesDAOImpl();
 
     public RuleService() {
     }
@@ -72,5 +76,15 @@ public class RuleService {
             }
         }
         return null;
+    }
+
+    public boolean saveRule(BusinessRule businessRule) {
+        try {
+            rulesDAO.saveRule(businessRule);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 }

@@ -26,8 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.javalin.apibuilder.ApiBuilder.get;
-import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
     private static RuleService ruleService;
@@ -65,6 +64,11 @@ public class Main {
                 });
             });
 
+            path("businessrule", () -> {
+                path("post", () -> {
+                    post(RuleController::saveBusinessRule);
+                });
+            });
 
 //            path("types", () -> {
 //                get(RuleController::getAllTypes);

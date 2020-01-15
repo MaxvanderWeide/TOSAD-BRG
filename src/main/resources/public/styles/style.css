@@ -1,6 +1,15 @@
+.container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
 .god-step {
     text-align: center;
 }
 .form-input {
     margin: 10px;
+}
+
+footer {
+    text-align: right;
 }

@@ -7,32 +7,37 @@
     <script src="scripts/form-controller.js"></script>
 </head>
 <body onload="fillSelection()">
-<div class="god-step">
-    <div class="top-step">
-        <h1>Business Rule Generator</h1>
-        <p>Open Source Business Rule Generator</p>
-    </div>
-    <div class="form-step-top">
-        <label for="tableSelection">Tables:</label>
-        <select id="tableSelection" class="form-input" onchange="fillTargetAttributes(this)">
-            <option disabled selected>Select a table</option>
-        </select>
-        <label for="typeSelection">Rule Type:</label>
-        <select id="typeSelection" class="form-input" onchange="fillOperators(this)">
-            <option disabled selected>Select a type</option>
-        </select>
-    </div>
-    <div class="form-step-middle attribute">
-        <label for="attributeSelection">Target Attribute:</label>
-        <select id="attributeSelection" class="form-input">
-            <option disabled selected>Select an attribute</option>
-        </select>
+<div class="container">
+    <div class="god-step">
+        <div class="top-step">
+            <h1>Business Rule Generator</h1>
+            <p>Open Source Business Rule Generator</p>
+        </div>
+        <div class="form-step-top">
+            <label for="tableSelection">Tables:</label>
+            <select id="tableSelection" class="form-input" onchange="fillTargetAttributes(this)">
+                <option disabled selected>Select a table</option>
+            </select>
+            <label for="typeSelection">Rule Type:</label>
+            <select id="typeSelection" class="form-input" onchange="fillOperators(this)">
+                <option disabled selected>Select a type</option>
+            </select>
+        </div>
+        <div class="form-step-middle attribute">
+            <label for="attributeSelection">Target Attribute:</label>
+            <select id="attributeSelection" class="form-input">
+                <option disabled selected>Select an attribute</option>
+            </select>
 
-        <label for="operatorSelection">Operator:</label>
-        <select id="operatorSelection" class="form-input">
-            <option disabled selected>Select an operator</option>
-        </select>
+            <label for="operatorSelection">Operator:</label>
+            <select id="operatorSelection" class="form-input">
+                <option disabled selected>Select an operator</option>
+            </select>
+        </div>
     </div>
+    <footer>
+        <button class="save-rule" onclick="saveRule()">OK</button>
+    </footer>
 </div>
 </body>
 </html>

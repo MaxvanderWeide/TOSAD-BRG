@@ -5,9 +5,11 @@ import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
+import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,6 +131,39 @@ public class RuleController {
         } catch (NullPointerException e) {
             System.out.println(e.fillInStackTrace());
             context.result("No Operators or Types Found");
+            context.status(400);
+        }
+    }
+
+    @OpenApi( // TODO - Add to openapi.json
+            summary = "Save the business rule",
+            operationId = "saveBusinessRule",
+            path = "/businessrule/post",
+            method = HttpMethod.POST,
+            tags = {"Rule"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void saveBusinessRule(io.javalin.http.Context context) {
+        try {
+            JSONObject jsonObject = new JSONObject(context.body());
+//            System.out.println(jsonObject);
+//            System.out.println(jsonObject.get("tableName"));
+//            System.out.println(jsonObject.get("typeName"));
+//            System.out.println(jsonObject.get("targetAttribute"));
+//            System.out.println(jsonObject.get("operatorName"));
+
+//            BusinessRule businessRule = new BusinessRule();
+//
+//            Main.getRuleService().saveRule(businessRule);
+            context.json("Business rule saved");
+            context.status(200);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("Business rule not saved");
             context.status(400);
         }
     }

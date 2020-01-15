@@ -64,5 +64,12 @@
             <artifactId>classgraph</artifactId> <!-- only required for annotated static handlers in Java -->
             <version>4.8.34</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20190722</version>
+        </dependency>
+
+
     </dependencies>
 </project>
