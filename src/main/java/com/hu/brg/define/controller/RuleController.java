@@ -4,6 +4,7 @@ import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.definition.RuleDefinition;
+import com.hu.brg.model.failurehandling.FailureHandling;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRule;
@@ -56,7 +57,7 @@ public class RuleController {
         ruleDefinitionBuilder.setTable(table);
     }
 
-    public void setValues(Attribute attribute, List<String> values) {
+    public void setValues(Attribute attribute, Map<String, String> values) {
         // TODO - Add FE interaction
         ruleDefinitionBuilder.setValues(attribute, values);
     }
@@ -70,7 +71,8 @@ public class RuleController {
 
     public void selectFailureHandling() {
         // TODO - Add FE data and selection
-        System.out.println(new BusinessRule("Name", "Description", "codeName", createBusinessRule()));
+        FailureHandling failureHandling = new FailureHandling("Error message", "Error token", "Error severity");
+        System.out.println(new BusinessRule("Name", "Description", "codeName", createBusinessRule(), failureHandling));
     }
 
     @OpenApi(

@@ -20,4 +20,8 @@ public class Table {
     public List<Attribute> getAttributes() {
         return attributes;
     }
+
+    public String getName() {
+        return name;
+    }
 }
