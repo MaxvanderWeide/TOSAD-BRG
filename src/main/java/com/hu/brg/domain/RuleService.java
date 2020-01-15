@@ -3,7 +3,7 @@ package com.hu.brg.domain;
 import com.hu.brg.model.definition.RuleDefinition;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRuleType;
-import com.hu.brg.persistence.targetdatabase.TargetDatabaseDao;
+import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseImpl;
 
 import java.sql.SQLException;
@@ -16,7 +16,7 @@ public class RuleService {
     private List<RuleDefinition> ruleDefinitions = new ArrayList<>();
     private Table selectedTable;
     private List<BusinessRuleType> types = new ArrayList<>();
-    private TargetDatabaseDao targetDatabaseDao = new TargetDatabaseImpl();
+    private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseImpl();
 
     public RuleService() {
     }
@@ -61,6 +61,15 @@ public class RuleService {
             return targetDatabaseDao.getTables("TOSAD_TARGET");
         } catch (SQLException e) {
             System.out.println(e.getStackTrace());
+        }
+        return null;
+    }
+
+    public Table getTableByName(String name) {
+        for (Table table : getAllTables()) {
+            if (table.getName().equals(name)) {
+                return table;
+            }
         }
         return null;
     }

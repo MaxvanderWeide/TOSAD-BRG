@@ -46,21 +46,39 @@ public class Main {
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {
-            path("tables", () -> get(RuleController::getAllTables));
-            path("types", () -> {
-                get(RuleController::getAllTypes);
-                path("operators", () -> {
-                    path(":typeName", () -> {
-                        get(RuleController::getOperatorsWithType);
-                        path("comparators", () -> {
-                            path(":operatorName", () -> {
-                                get(RuleController::GetComparatorsWithTypeAndOperator);
-                            });
-                        });
+            path("tables", () -> {
+                get(RuleController::getAllTables);
+                path(":tableName", () -> {
+                    path("attributes", () -> {
+                        get(RuleController::getAllAttributesByTable);
                     });
                 });
             });
-            path("attributes", () -> get(RuleController::getAllAttributes));
+
+            path("types", () -> {
+                get(RuleController::getAllTypes);
+                path(":typeName", () -> {
+                    path("operators", () -> {
+                        get(RuleController::getOperatorsWithType);
+                    });
+                });
+            });
+
+
+//            path("types", () -> {
+//                get(RuleController::getAllTypes);
+//                path("operators", () -> {
+//                    path(":typeName", () -> {
+//                        get(RuleController::getOperatorsWithType);
+//                        path("comparators", () -> {
+//                            path(":operatorName", () -> {
+//                                get(RuleController::GetComparatorsWithTypeAndOperator);
+//                            });
+//                        });
+//                    });
+//                });
+//            });
+//            path("attributes", () -> get(RuleController::getAllAttributes));
         }).start(7002);
 
         //TODO: remove test BusinessRule

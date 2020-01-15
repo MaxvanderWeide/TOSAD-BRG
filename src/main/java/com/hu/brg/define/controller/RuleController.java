@@ -74,6 +74,85 @@ public class RuleController {
     }
 
     @OpenApi( // TODO - Add to openapi.json
+            summary = "Get all attributes by table",
+            operationId = "getAllAttributesByTable",
+            path = "/tables/:tableName/attributes",
+            method = HttpMethod.GET,
+            pathParams = {@OpenApiParam(name = "tableName", type = String.class, description = "The table name")},
+            tags = {"Tables", "Attributes"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getAllAttributesByTable(io.javalin.http.Context context) {
+        Map<String, Map<String, String>> attributes = new HashMap<>();
+        Map<String, String> tempAttribute = new HashMap<>();
+        try {
+            for (Attribute attribute : Main.getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
+                tempAttribute.put(attribute.getName(),attribute.getType());
+            }
+            attributes.put("Attributes", tempAttribute);
+            context.json(attributes);
+            context.status(200);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("No Table Attributes Found");
+            context.status(400);
+        }
+    }
+
+    @OpenApi( // TODO - Add to openapi.json
+            summary = "get Operators by Type Name",
+            operationId = "getOperatorsWithType",
+            path = "/types/:typeName/operators",
+            method = HttpMethod.GET,
+            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name")},
+            tags = {"Types"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Operator[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getOperatorsWithType(io.javalin.http.Context context) {
+        Map<String, ArrayList<String>> operators = new HashMap<>();
+        ArrayList<String> operatorNameList = new ArrayList<>();
+        try {
+            for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
+                operatorNameList.add(operator.getName());
+            }
+            operators.put("Operators", operatorNameList);
+            context.json(operators);
+            context.status(200);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("No Operators or Types Found");
+            context.status(400);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @OpenApi( // TODO - Add to openapi.json
             summary = "Get all attributes",
             operationId = "getAllAttributes",
             path = "/attributes",
@@ -98,36 +177,6 @@ public class RuleController {
         } catch (NullPointerException e) {
             System.out.println(e.fillInStackTrace());
             context.result("No Attributes Found");
-            context.status(400);
-        }
-    }
-
-    @OpenApi( // TODO - Add to openapi.json
-            summary = "get Operators by Type Name",
-            operationId = "getOperatorsWithType",
-            path = "/types/operators/:typeName",
-            method = HttpMethod.GET,
-            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name")},
-            tags = {"Types"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void getOperatorsWithType(io.javalin.http.Context context) {
-        Map<String, ArrayList<String>> operators = new HashMap<>();
-        ArrayList<String> operatorNameList = new ArrayList<>();
-        try {
-            for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
-                operatorNameList.add(operator.getName());
-            }
-            operators.put("Operators", operatorNameList);
-            context.json(operators);
-            context.status(200);
-        } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
-            context.result("No Operators or Types Found");
             context.status(400);
         }
     }
