@@ -9,17 +9,17 @@ import java.sql.SQLException;
 public abstract class BaseDAO {
     private Connection connection;
 
-    protected Connection getConnection(String user, String password){
-        if (connection == null) {
-            try {
+    protected Connection getConnection(String user, String password) {
+        try {
+            if (connection == null || connection.isClosed()) {
                 OracleDataSource ods = new OracleDataSource();
                 ods.setURL("jdbc:oracle:thin:@//ondora04.hu.nl:8521/EDUC17"); // jdbc:oracle:thin@//[hostname]:[port]/[DB service name]
                 ods.setUser(user); // [username]
                 ods.setPassword(password); // [password]
                 connection = ods.getConnection();
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
         return connection;
