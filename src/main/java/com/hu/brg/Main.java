@@ -2,16 +2,9 @@ package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.domain.RuleService;
-import com.hu.brg.generate.RuleGenerator;
 import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.failurehandling.FailureHandling;
-import com.hu.brg.model.physical.Attribute;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
-import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -20,9 +13,7 @@ import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -30,16 +21,18 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Main {
     private static RuleService ruleService;
-    private static RuleGenerator ruleGenerator;
 
     public static void main(String[] args) {
         ruleService = new RuleService();
+
+        // TODO - Remove operators and comparators definition from Main and move them to DB
         List<Operator> operators = new ArrayList<>();
         List<Comparator> comparators = new ArrayList<>();
         comparators.add(new Comparator("Between"));
         operators.add(new Operator("Between", comparators));
         operators.add(new Operator("Not Between", comparators));
         ruleService.addType(new BusinessRuleType("Range", "Range between values", operators));
+
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
@@ -72,29 +65,6 @@ public class Main {
                 post(RuleController::saveBusinessRule);
             });
         }).start(7002);
-
-        //TODO: remove test BusinessRule
-        Map<String, String> values = new HashMap<>();
-        values.put("minValue", "1");
-        values.put("maxValue", "1000");
-        RuleDefinition newRuleDefinition = new RuleDefinition(
-                new BusinessRuleType("range", "Description", operators),
-                new Attribute("PRIJS", "Type"),
-                new Operator("operatorName", comparators),
-                new Comparator("comparatorName"),
-                new Table("PRODUCTEN"),
-                new Attribute("compareAttribute", "compareType"),
-                values
-        );
-        FailureHandling newFailureHandling = new FailureHandling("failMessage");
-        BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", newRuleDefinition, newFailureHandling);
-        ruleGenerator = new RuleGenerator(newBusinessRule);
-
-        String generated = ruleGenerator.generateCode();
-        System.out.println(generated);
-
-        new TargetDatabaseDAOImpl().getTables("TOSAD_TARGET");
-//        new RulesDAOImpl().saveRule(newBusinessRule);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {
