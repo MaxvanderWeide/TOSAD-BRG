@@ -1,21 +1,16 @@
 package com.hu.brg.define.controller;
 
 import com.hu.brg.ErrorResponse;
-import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.failurehandling.FailureHandling;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RuleController {
@@ -45,6 +40,35 @@ public class RuleController {
         } catch (NullPointerException e) {
             System.out.println(e.fillInStackTrace());
             context.result("No Types Found");
+            context.status(400);
+        }
+    }
+
+    @OpenApi( // TODO - Add to openapi.json
+            summary = "Get all tables",
+            operationId = "getAllTables",
+            path = "/tables",
+            method = HttpMethod.GET,
+            tags = {"Tables"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Table[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getAllTables(io.javalin.http.Context context) {
+        Map<String, ArrayList<String>> tables = new HashMap<>();
+        ArrayList<String> tableList = new ArrayList<>();
+        try {
+            for (Table table : Main.getRuleService().getAllTables()) {
+                tableList.add(table.getName());
+            }
+            tables.put("Tables", tableList);
+            context.json(tables);
+            context.status(200);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("No Tables Found");
             context.status(400);
         }
     }

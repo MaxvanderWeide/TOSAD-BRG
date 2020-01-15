@@ -13,16 +13,14 @@
         <p>Open Source Business Rule Generator</p>
     </div>
     <div class="form-step">
+        <label for="tableSelection">Tables:</label>
+        <select id="tableSelection" class="form-input">
+            <option disabled selected>Select a table</option>
+        </select>
         <label for="typeSelection">Rule Type:</label>
-        <select id="typeSelection" onchange="getOperatorsWithType()">
+        <select id="typeSelection" class="form-input">
             <option disabled selected>Select a type</option>
         </select>
-        <div class="form-step-operator">
-
-        </div>
-        <div class="form-step-comparator">
-
-        </div>
     </div>
 </div>
 </body>

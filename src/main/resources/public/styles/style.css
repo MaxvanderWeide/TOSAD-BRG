@@ -1,12 +1,6 @@
 .god-step {
     text-align: center;
 }
-.form-step {
-    margin-top: 5vw;
-}
 .form-input {
-    margin-top: 2vw;
-}
-.hidden {
-    display: none;
+    margin: 10px;
 }

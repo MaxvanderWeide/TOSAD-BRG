@@ -46,6 +46,7 @@ public class Main {
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {
+            path("tables", () -> get(RuleController::getAllTables));
             path("types", () -> {
                 get(RuleController::getAllTypes);
                 path("operators", () -> {
