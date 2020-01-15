@@ -152,63 +152,63 @@ public class RuleController {
 
 
 
-    @OpenApi( // TODO - Add to openapi.json
-            summary = "Get all attributes",
-            operationId = "getAllAttributes",
-            path = "/attributes",
-            method = HttpMethod.GET,
-            tags = {"Attributes"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void getAllAttributes(io.javalin.http.Context context) {
-        Map<String, Map<String, String>> attributes = new HashMap<>();
-        Map<String, String> tempAttributes = new HashMap<>();
-        try {
-            for (Attribute attribute : Main.getRuleService().getTable().getAttributes()) {
-                tempAttributes.put(attribute.getName(), attribute.getType());
-            }
-            attributes.put("Attributes", tempAttributes);
-            context.json(attributes);
-            context.status(200);
-        } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
-            context.result("No Attributes Found");
-            context.status(400);
-        }
-    }
-
-    @OpenApi( // TODO - Add to openapi.json
-            summary = "get Comparators by Type Name and Operator Name",
-            operationId = "GetComparatorsWithTypeAndOperator",
-            path = "/types/operators/:typeName/comparators/:operatorName",
-            method = HttpMethod.GET,
-            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name"),
-                          @OpenApiParam(name = "operatorName", type = String.class, description = "The operator name")},
-            tags = {"Types"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void GetComparatorsWithTypeAndOperator(io.javalin.http.Context context) {
-        Map<String, ArrayList<String>> comparators = new HashMap<>();
-        ArrayList<String> comparatorList = new ArrayList<>();
-        try {
-            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
-                comparatorList.add(comparator.getComparator());
-            }
-            comparators.put("Comparators", comparatorList);
-            context.json(comparators);
-            context.status(200);
-        } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
-            context.result("No Operators or Types or Comparators Found");
-            context.status(400);
-        }
-    }
+//    @OpenApi( // TODO - Add to openapi.json
+//            summary = "Get all attributes",
+//            operationId = "getAllAttributes",
+//            path = "/attributes",
+//            method = HttpMethod.GET,
+//            tags = {"Attributes"},
+//            responses = {
+//                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
+//                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+//                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+//            }
+//    )
+//    public static void getAllAttributes(io.javalin.http.Context context) {
+//        Map<String, Map<String, String>> attributes = new HashMap<>();
+//        Map<String, String> tempAttributes = new HashMap<>();
+//        try {
+//            for (Attribute attribute : Main.getRuleService().getTable().getAttributes()) {
+//                tempAttributes.put(attribute.getName(), attribute.getType());
+//            }
+//            attributes.put("Attributes", tempAttributes);
+//            context.json(attributes);
+//            context.status(200);
+//        } catch (NullPointerException e) {
+//            System.out.println(e.fillInStackTrace());
+//            context.result("No Attributes Found");
+//            context.status(400);
+//        }
+//    }
+//
+//    @OpenApi( // TODO - Add to openapi.json
+//            summary = "get Comparators by Type Name and Operator Name",
+//            operationId = "GetComparatorsWithTypeAndOperator",
+//            path = "/types/operators/:typeName/comparators/:operatorName",
+//            method = HttpMethod.GET,
+//            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name"),
+//                          @OpenApiParam(name = "operatorName", type = String.class, description = "The operator name")},
+//            tags = {"Types"},
+//            responses = {
+//                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
+//                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+//                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+//            }
+//    )
+//    public static void GetComparatorsWithTypeAndOperator(io.javalin.http.Context context) {
+//        Map<String, ArrayList<String>> comparators = new HashMap<>();
+//        ArrayList<String> comparatorList = new ArrayList<>();
+//        try {
+//            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
+//                comparatorList.add(comparator.getComparator());
+//            }
+//            comparators.put("Comparators", comparatorList);
+//            context.json(comparators);
+//            context.status(200);
+//        } catch (NullPointerException e) {
+//            System.out.println(e.fillInStackTrace());
+//            context.result("No Operators or Types or Comparators Found");
+//            context.status(400);
+//        }
+//    }
 }
