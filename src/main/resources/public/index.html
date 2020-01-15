@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BRG</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/form-controller.js"></script>
+</head>
+<body onload="fillSelection()">
+<div class="container">
+    <div class="god-step">
+        <div class="top-step">
+            <h1>Business Rule Generator</h1>
+            <p>Open Source Business Rule Generator</p>
+        </div>
+        <div class="form-step-top">
+            <label for="tableSelection">Tables:</label>
+            <select id="tableSelection" class="form-input" onchange="fillTargetAttributes(this)">
+                <option disabled selected>Select a table</option>
+            </select>
+            <label for="typeSelection">Rule Type:</label>
+            <select id="typeSelection" class="form-input" onchange="fillOperators(this)">
+                <option disabled selected>Select a type</option>
+            </select>
+        </div>
+        <div class="form-step-middle">
+            <label for="attributeSelection">Target Attribute:</label>
+            <select id="attributeSelection" class="form-input">
+                <option disabled selected>Select an attribute</option>
+            </select>
+
+            <label for="operatorSelection">Operator:</label>
+            <select id="operatorSelection" class="form-input"
+                    onchange="fillComparators(this, document.getElementById('typeSelection'))">
+                <option disabled selected>Select an operator</option>
+            </select>
+        </div>
+        <div class="form-step-bottom">
+            <label for="comparatorSelection">Comparator:</label>
+            <select id="comparatorSelection" class="form-input"
+                    onchange="evalCodeBlock(this)">
+                <option disabled selected>Select a comparator</option>
+            </select>
+        </div>
+        <div id="comparatorStep" class="form-step-comparator"></div>
+    </div>
+    <footer>
+        <button class="save-rule" onclick="saveRule()">OK</button>
+    </footer>
+</div>
+</body>
+</html>
