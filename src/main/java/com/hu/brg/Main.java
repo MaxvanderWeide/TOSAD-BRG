@@ -65,7 +65,7 @@ public class Main {
         FailureHandling newFailureHandling = new FailureHandling("failMessage", "failToken", "failSeverity");
         BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", newRuleDefinition, newFailureHandling);
         ruleGenerator = new RuleGenerator(newBusinessRule);
-        
+
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {

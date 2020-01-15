@@ -26,7 +26,6 @@ public class RuleGenerator {
         generateCode();
     }
 
-
     private void generateTriggerName() {
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
                 this.applicationName,
@@ -74,9 +73,8 @@ public class RuleGenerator {
                         this.businessRule.getBusinessRuleTrigger().getTriggerCode(),
                         failureHandling.getMessage());
 
-        System.out.println(this.generatedCode);
+        System.out.println(getGeneratedCode());
     }
-
 
     public String getGeneratedCode() {
         return this.generatedCode;
