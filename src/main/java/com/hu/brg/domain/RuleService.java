@@ -42,4 +42,13 @@ public class RuleService {
     public List<BusinessRuleType> getTypes() {
         return Collections.unmodifiableList(types);
     }
+
+    public BusinessRuleType getTypeByName(String name) {
+        for (BusinessRuleType brt : types) {
+            if (brt.getName().equals(name)) {
+                return brt;
+            }
+        }
+        return null;
+    }
 }

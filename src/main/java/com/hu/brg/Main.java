@@ -36,16 +36,21 @@ public class Main {
         List<Operator> operators = new ArrayList<>();
         operators.add(new Operator("OperatorName"));
         ruleService.addType(new BusinessRuleType("Name", "Description", operators));
-        operators.add(new Operator("OperatorName2"));
         ruleService.addType(new BusinessRuleType("Name2", "Description2", operators));
-        operators.add(new Operator("OperatorName3"));
         ruleService.addType(new BusinessRuleType("Name3", "Description3", operators));
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {
-            path("types", () -> get(RuleController::getAllTypes));
+            path("types", () -> {
+                get(RuleController::getAllTypes);
+                path("operators", () -> {
+                    path(":typeName", () -> {
+                        get(RuleController::getOperatorsWithType);
+                    });
+                });
+            });
             path("attributes", () -> get(RuleController::getAllAttributes));
         }).start(7002);
 
