@@ -11,7 +11,7 @@ import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
-import com.hu.brg.persistence.targetdatabase.TargetDatabaseImpl;
+import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -102,7 +102,7 @@ public class Main {
         System.out.println(generated);
 
         try {
-            new TargetDatabaseImpl().getTables("TOSAD_TARGET");
+            new TargetDatabaseDAOImpl().getTables("TOSAD_TARGET");
         } catch (SQLException e) {
             e.printStackTrace();
         }
