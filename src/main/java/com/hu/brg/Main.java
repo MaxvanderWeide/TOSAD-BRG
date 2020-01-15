@@ -64,14 +64,14 @@ public class Main {
 
         //TODO: remove test BusinessRule
         Map<String, String> values = new HashMap<>();
-        values.put("minValue", "100");
-        values.put("maxValue", "300");
+        values.put("minValue", "1");
+        values.put("maxValue", "1000");
         RuleDefinition newRuleDefinition = new RuleDefinition(
                 new BusinessRuleType("range", "Description", operators),
-                new Attribute("attributeName", "Type"),
+                new Attribute("PRIJS", "Type"),
                 new Operator("operatorName", comparators),
                 new Comparator("comparatorName"),
-                new Table("tableName"),
+                new Table("PRODUCTEN"),
                 new Attribute("compareAttribute", "compareType"),
                 values
         );
