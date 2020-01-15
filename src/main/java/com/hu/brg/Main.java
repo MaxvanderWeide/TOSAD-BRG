@@ -36,11 +36,10 @@ public class Main {
         ruleService = new RuleService();
         List<Operator> operators = new ArrayList<>();
         List<Comparator> comparators = new ArrayList<>();
-        comparators.add(new Comparator("ComparatorName"));
-        operators.add(new Operator("OperatorName", comparators));
-        ruleService.addType(new BusinessRuleType("Name", "Description", operators));
-        ruleService.addType(new BusinessRuleType("Name2", "Description2", operators));
-        ruleService.addType(new BusinessRuleType("Name3", "Description3", operators));
+        comparators.add(new Comparator("Between"));
+        operators.add(new Operator("Between", comparators));
+        operators.add(new Operator("Not Between", comparators));
+        ruleService.addType(new BusinessRuleType("Range", "Range between values", operators));
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
