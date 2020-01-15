@@ -79,9 +79,10 @@ function fillComparators(operator, type) {
             var responseJSON = JSON.parse(this.responseText);
             var selection = document.getElementById("comparatorSelection");
             selection.options.length = 1;
-            for (var k in responseJSON.Comparators) {
+            for (var k in responseJSON) {
                 var option = document.createElement("option");
-                option.value = responseJSON.Comparators[k];
+                option.setAttribute("eval", responseJSON[k].CodeReval);
+                option.setAttribute("block", responseJSON[k].CodeBlock);
                 option.text = k;
                 selection.add(option)
             }
@@ -93,7 +94,8 @@ function fillComparators(operator, type) {
 }
 
 function evalCodeBlock(comparator) {
-    eval(comparator.options[comparator.selectedIndex].value)
+    console.log(comparator);
+    eval(comparator.options[comparator.selectedIndex].getAttribute("block"))
 }
 
 

@@ -153,14 +153,16 @@ public class RuleController {
             }
     )
     public static void getComparatorWithOperatorAndType(io.javalin.http.Context context) {
+        // TODO - Better Map structure
         Map<String, Map<String, String>> comparators = new HashMap<>();
-        Map<String, String> tempComparators = new HashMap<>();
+        Map<String, String> tempFeCodeBlock = new HashMap<>();
         try {
             for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
                     .getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
-                tempComparators.put(comparator.getComparator(), comparator.getFeCodeBlock());
+                tempFeCodeBlock.put("CodeBlock", comparator.getFeCodeBlock());
+                tempFeCodeBlock.put("CodeReval", comparator.getFeCodeReval());
+                comparators.put(comparator.getComparator(), tempFeCodeBlock);
             }
-            comparators.put("Comparators", tempComparators);
             context.json(comparators);
             context.status(200);
         } catch (NullPointerException e) {

@@ -1,6 +1,5 @@
 package com.hu.brg.model.definition;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Operator {
