@@ -1,5 +1,6 @@
 package com.hu.brg.define.controller;
 
+import com.hu.brg.ErrorResponse;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
@@ -80,16 +81,52 @@ public class RuleController {
             operationId = "getAllTypes",
             path = "/types",
             method = HttpMethod.GET,
-            tags = {"User"},
+            tags = {"Types"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = BusinessRuleType[].class)})
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = BusinessRuleType[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
     public static void getAllTypes(io.javalin.http.Context context) {
-        Map<String, String> types = new HashMap<>();
-        for (BusinessRuleType type : Main.getRuleService().getTypes()) {
-            types.put(type.getName(), type.getDescription());
+        Map<String, Map<String, String>> types = new HashMap<>();
+        Map<String, String> tempTypes = new HashMap<>();
+        try {
+            for (BusinessRuleType type : Main.getRuleService().getTypes()) {
+                tempTypes.put(type.getName(), type.getDescription());
+            }
+            types.put("Types", tempTypes);
+            context.json(types);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("No Types Found");
         }
-        context.json(types);
+    }
+
+    @OpenApi(
+            summary = "Get all attributes",
+            operationId = "getAllAttributes",
+            path = "/attributes",
+            method = HttpMethod.GET,
+            tags = {"Attributes"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getAllAttributes(io.javalin.http.Context context) {
+        Map<String, Map<String, String>> attributes = new HashMap<>();
+        Map<String, String> tempAttributes = new HashMap<>();
+        try {
+            for (Attribute attribute : Main.getRuleService().getTable().getAttributes()) {
+                tempAttributes.put(attribute.getName(), attribute.getType());
+            }
+            attributes.put("Attributes", tempAttributes);
+            context.json(attributes);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("No Attributes Found");
+        }
     }
 }
