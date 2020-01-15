@@ -84,7 +84,7 @@ public class Main {
         System.out.println(generated);
 
         try {
-            new TargetDatabaseImpl().insertRule(generated);
+            new TargetDatabaseImpl().getTables("TOSAD_TARGET");
         } catch (SQLException e) {
             e.printStackTrace();
         }
