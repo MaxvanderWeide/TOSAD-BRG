@@ -28,9 +28,10 @@ public class TargetDatabaseImpl extends BaseDAO implements TargetDatabaseDAO {
         ResultSet result = tableSt.executeQuery();
 
         while (result.next()) {
-            Table table = new Table(result.getString("TABLE_NAME"));
+            String tableName = result.getString("TABLE_NAME");
+            Table table = new Table(tableName);
 
-            PreparedStatement attributeSt = conn.prepareStatement("select column_name, data_type from USER_TAB_COLUMNS where TABLE_NAME = 'RULES'");
+            PreparedStatement attributeSt = conn.prepareStatement("select column_name, data_type from USER_TAB_COLUMNS where TABLE_NAME = "+tableName);
             ResultSet tableAttributes = attributeSt.executeQuery();
 
             while (tableAttributes.next()) {
