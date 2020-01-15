@@ -18,8 +18,9 @@ public class BusinessRuleTrigger {
 
     private void generateTriggerCode() {
         if (this.businessRule.getRuleDefinition().getType().getName().equalsIgnoreCase("range")) {
-            triggerCode = String.format("v_passed := :new.%s between %s and %s",
+            triggerCode = String.format("v_passed := :new.%s %s %s and %s",
                     this.businessRule.getRuleDefinition().getTargetAttribute().getName(),
+                    this.businessRule.getRuleDefinition().getOperator().getName(),
                     this.businessRule.getRuleDefinition().getValues().get("minValue"),
                     this.businessRule.getRuleDefinition().getValues().get("maxValue"));
         }
