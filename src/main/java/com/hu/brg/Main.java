@@ -12,7 +12,6 @@ import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
-import com.hu.brg.persistence.tooldatabase.RulesDAOImpl;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -25,7 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
+import static io.javalin.apibuilder.ApiBuilder.get;
+import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Main {
     private static RuleService ruleService;
@@ -106,7 +107,7 @@ public class Main {
         System.out.println(generated);
 
         new TargetDatabaseDAOImpl().getTables("TOSAD_TARGET");
-        new RulesDAOImpl().saveRule(newBusinessRule);
+//        new RulesDAOImpl().saveRule(newBusinessRule);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {
