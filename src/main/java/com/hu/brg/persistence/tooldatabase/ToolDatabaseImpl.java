@@ -15,7 +15,7 @@ public class ToolDatabaseImpl extends BaseDAO implements ToolDatabaseDAO {
     }
 
     @Override
-    public void saveRules() {
+    public void saveRules(List<BusinessRule> businessRules, Table table) {
 
     }
 

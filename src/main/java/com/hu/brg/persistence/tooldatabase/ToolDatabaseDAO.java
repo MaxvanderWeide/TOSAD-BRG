@@ -6,7 +6,7 @@ import com.hu.brg.model.rule.BusinessRule;
 import java.util.List;
 
 public interface ToolDatabaseDAO {
-    void saveRules();
+    void saveRules(List<BusinessRule> businessRules, Table table);
 
     List<BusinessRule> loadRules(Table table);
 }
