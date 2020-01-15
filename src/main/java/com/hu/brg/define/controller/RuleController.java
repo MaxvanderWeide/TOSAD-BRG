@@ -1,17 +1,23 @@
 package com.hu.brg.define.controller;
 
 import com.hu.brg.ErrorResponse;
+import com.hu.brg.define.builder.RuleDefinitionBuilder;
+import com.hu.brg.generate.RuleGenerator;
 import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
+import com.hu.brg.model.failurehandling.FailureHandling;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
+import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RuleController {
@@ -189,13 +195,39 @@ public class RuleController {
         try {
             JSONObject jsonObject = new JSONObject(context.body());
             // TODO - Create Business Rule using builder
-//            System.out.println(jsonObject);
-//            System.out.println(jsonObject.get("tableName"));
-//            System.out.println(jsonObject.get("typeName"));
-//            System.out.println(jsonObject.get("targetAttribute"));
-//            System.out.println(jsonObject.get("operatorName"));
-//
-//            Main.getRuleService().saveRule(businessRule);
+            System.out.println(jsonObject.get("comparatorValues"));
+
+            RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
+
+            Table table = Main.getRuleService().getTableByName(jsonObject.get("tableName").toString());
+            BusinessRuleType type = Main.getRuleService().getTypeByName(jsonObject.get("typeName").toString());
+            Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
+            Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
+            Comparator comparator = operator.getComparatorByName(jsonObject.get("selectedComparatorName").toString());
+            FailureHandling newFailureHandling = new FailureHandling("failMessage");
+            Map<String, String> values = new HashMap<>();
+            JSONArray jsonArray = (JSONArray)jsonObject.get("comparatorValues");
+            if (jsonArray != null) {
+                boolean firstSkip = true;
+                int len = jsonArray.length();
+                for (int i=0;i<len;i++){
+                    values.put(firstSkip ? "minValue" : "maxValue", jsonArray.get(i).toString());
+                    firstSkip = false;
+                }
+            }
+
+            builder.setTable(table);
+            builder.setType(type);
+            builder.setAttribute(attribute);
+            builder.setOperator(operator);
+            builder.setComparator(comparator);
+            builder.setValues(null, values);
+
+            BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", builder.build(), newFailureHandling);
+            Main.getRuleService().saveRule(newBusinessRule);
+            RuleGenerator ruleGenerator = new RuleGenerator(newBusinessRule);
+            String generated = ruleGenerator.generateCode();
+            System.out.println(generated); // TODO - Remove testing
             context.result("Rule Saved");
             context.status(200);
         } catch (NullPointerException e) {

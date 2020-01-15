@@ -19,4 +19,13 @@ public class Operator {
     public List<Comparator> getComparators() {
         return comparators;
     }
+
+    public Comparator getComparatorByName(String name) {
+        for (Comparator comparator : comparators) {
+            if (comparator.getComparator().equals(name)) {
+                return comparator;
+            }
+        }
+        return null;
+    }
 }

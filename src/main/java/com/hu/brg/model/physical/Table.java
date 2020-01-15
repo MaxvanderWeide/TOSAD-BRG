@@ -21,6 +21,15 @@ public class Table {
         return attributes;
     }
 
+    public Attribute getAttributeByName(String name) {
+        for (Attribute attribute : attributes) {
+            if (attribute.getName().equals(name)) {
+                return attribute;
+            }
+        }
+        return null;
+    }
+
     public String getName() {
         return name;
     }

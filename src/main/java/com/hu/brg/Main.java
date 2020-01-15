@@ -86,7 +86,7 @@ public class Main {
                 new Attribute("compareAttribute", "compareType"),
                 values
         );
-        FailureHandling newFailureHandling = new FailureHandling("failMessage", "failToken", "failSeverity");
+        FailureHandling newFailureHandling = new FailureHandling("failMessage");
         BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", newRuleDefinition, newFailureHandling);
         ruleGenerator = new RuleGenerator(newBusinessRule);
 

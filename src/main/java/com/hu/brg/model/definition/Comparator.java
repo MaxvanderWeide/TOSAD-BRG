@@ -18,8 +18,9 @@ public class Comparator {
                         "custInput2.setAttribute(\"id\", \"custInput2\");" +
                         "document.getElementById(\"comparatorStep\").appendChild(custInput2);";
         this.feCodeReval =
-                "document.getElementById(\"custInput1\").value + \" \" + " +
-                        "document.getElementById(\"custInput2\").value;";
+                "new Array(" +
+                        "document.getElementById(\"custInput1\").value" + "," +
+                        "document.getElementById(\"custInput2\").value)";
 
     }
 
