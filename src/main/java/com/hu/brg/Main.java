@@ -20,7 +20,6 @@ import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,13 +105,8 @@ public class Main {
         String generated = ruleGenerator.generateCode();
         System.out.println(generated);
 
-        try {
-            new TargetDatabaseDAOImpl().getTables("TOSAD_TARGET");
-
-            new RulesDAOImpl().saveRule(newBusinessRule);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        new TargetDatabaseDAOImpl().getTables("TOSAD_TARGET");
+        new RulesDAOImpl().saveRule(newBusinessRule);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {

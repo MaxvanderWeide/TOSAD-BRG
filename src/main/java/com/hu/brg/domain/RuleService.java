@@ -9,7 +9,6 @@ import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.persistence.tooldatabase.RulesDAO;
 import com.hu.brg.persistence.tooldatabase.RulesDAOImpl;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -61,12 +60,7 @@ public class RuleService {
     }
 
     public List<Table> getAllTables() {
-        try {
-            return targetDatabaseDao.getTables("TOSAD_TARGET");
-        } catch (SQLException e) {
-            System.out.println(e.getStackTrace());
-        }
-        return null;
+        return targetDatabaseDao.getTables("TOSAD_TARGET");
     }
 
     public Table getTableByName(String name) {
