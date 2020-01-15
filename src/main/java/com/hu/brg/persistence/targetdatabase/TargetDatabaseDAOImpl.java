@@ -22,7 +22,7 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
     @Override
     public List<Table> getTables(String targetDatabase) {
         try (Connection conn = getConnection()) {
-            List<Table> tables = new ArrayList<Table>();
+            List<Table> tables = new ArrayList<>();
 
             PreparedStatement tableSt = conn.prepareStatement("select TABLE_NAME from ALL_TABLES where owner = ?");
             tableSt.setString(1, targetDatabase);
@@ -43,7 +43,12 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                 }
 
                 tables.add(table);
+
+                attributeSt.close();
             }
+
+            result.close();
+            tableSt.close();
 
             return tables;
         } catch (SQLException e) {
@@ -58,6 +63,7 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
         try (Connection conn = getConnection()) {
             Statement statement = conn.createStatement();
             statement.execute(sql);
+            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -26,6 +26,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
             cs.executeUpdate();
 
             int ruleId = cs.getInt(9);
+            cs.close();
 
             System.out.println(ruleId);
         } catch (SQLException e) {
@@ -44,6 +45,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
             preparedStatement.setInt(9, id);
 
             preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
