@@ -4,7 +4,6 @@ import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRuleType;
 
-import java.util.List;
 import java.util.Map;
 
 public class RuleDefinition {
@@ -50,4 +49,7 @@ public class RuleDefinition {
         return "" + type.toString();
     }
 
+    public Operator getOperator() {
+        return operator;
+    }
 }
