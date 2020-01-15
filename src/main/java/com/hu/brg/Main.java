@@ -4,6 +4,12 @@ import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.domain.RuleService;
 import com.hu.brg.generate.RuleGenerator;
 import com.hu.brg.model.definition.Operator;
+import com.hu.brg.model.definition.Comparator;
+import com.hu.brg.model.definition.RuleDefinition;
+import com.hu.brg.model.failurehandling.FailureHandling;
+import com.hu.brg.model.physical.Attribute;
+import com.hu.brg.model.physical.Table;
+import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
@@ -14,6 +20,8 @@ import io.swagger.v3.oas.models.info.Info;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -41,8 +49,23 @@ public class Main {
             path("attributes", () -> get(RuleController::getAllAttributes));
         }).start(7002);
 
-        ruleGenerator = new RuleGenerator();
-
+        //TODO: remove test BusinessRule
+        Map<String, String> values = new HashMap<>();
+        values.put("minValue", "100");
+        values.put("maxValue", "300");
+        RuleDefinition newRuleDefinition = new RuleDefinition(
+                new BusinessRuleType("range", "Description", operators),
+                new Attribute("attributeName", "Type"),
+                new Operator("operatorName"),
+                new Comparator("comparatorName"),
+                new Table("tableName"),
+                new Attribute("compareAttribute", "compareType"),
+                values
+        );
+        FailureHandling newFailureHandling = new FailureHandling("failMessage", "failToken", "failSeverity");
+        BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", newRuleDefinition, newFailureHandling);
+        ruleGenerator = new RuleGenerator(newBusinessRule);
+        
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {

@@ -8,6 +8,7 @@ import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRuleType;
 
 import java.util.List;
+import java.util.Map;
 
 public class RuleDefinitionBuilder {
 
@@ -17,7 +18,7 @@ public class RuleDefinitionBuilder {
     private Comparator comparator;
     private Table table;
     private Attribute compareAttribute;
-    private List<String> values;
+    private Map<String, String> values;
 
     public RuleDefinitionBuilder setType(BusinessRuleType type) {
         this.type = type;
@@ -44,7 +45,7 @@ public class RuleDefinitionBuilder {
         return this;
     }
 
-    public RuleDefinitionBuilder setValues(Attribute attribute, List<String> values) {
+    public RuleDefinitionBuilder setValues(Attribute attribute, Map<String, String> values) {
         if (attribute != null) {
             this.compareAttribute = attribute;
         }
