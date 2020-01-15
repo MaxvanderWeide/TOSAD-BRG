@@ -7,4 +7,8 @@ public class Comparator {
     public Comparator(String comparator) {
         this.comparator = comparator;
     }
+
+    public String getComparator() {
+        return comparator;
+    }
 }

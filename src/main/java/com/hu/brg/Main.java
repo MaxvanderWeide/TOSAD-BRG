@@ -35,7 +35,9 @@ public class Main {
     public static void main(String[] args) {
         ruleService = new RuleService();
         List<Operator> operators = new ArrayList<>();
-        operators.add(new Operator("OperatorName"));
+        List<Comparator> comparators = new ArrayList<>();
+        comparators.add(new Comparator("ComparatorName"));
+        operators.add(new Operator("OperatorName", comparators));
         ruleService.addType(new BusinessRuleType("Name", "Description", operators));
         ruleService.addType(new BusinessRuleType("Name2", "Description2", operators));
         ruleService.addType(new BusinessRuleType("Name3", "Description3", operators));
@@ -49,6 +51,11 @@ public class Main {
                 path("operators", () -> {
                     path(":typeName", () -> {
                         get(RuleController::getOperatorsWithType);
+                        path("comparators", () -> {
+                            path(":operatorName", () -> {
+                                get(RuleController::GetComparatorsWithTypeAndOperator);
+                            });
+                        });
                     });
                 });
             });
@@ -62,7 +69,7 @@ public class Main {
         RuleDefinition newRuleDefinition = new RuleDefinition(
                 new BusinessRuleType("range", "Description", operators),
                 new Attribute("attributeName", "Type"),
-                new Operator("operatorName"),
+                new Operator("operatorName", comparators),
                 new Comparator("comparatorName"),
                 new Table("tableName"),
                 new Attribute("compareAttribute", "compareType"),

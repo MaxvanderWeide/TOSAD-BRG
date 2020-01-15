@@ -34,4 +34,13 @@ public class BusinessRuleType {
         return operators;
     }
 
+    public Operator getOperatorByName(String name) {
+        for (Operator operator : operators) {
+            if (operator.getName().equals(name)) {
+                return operator;
+            }
+        }
+        return null;
+    }
+
 }

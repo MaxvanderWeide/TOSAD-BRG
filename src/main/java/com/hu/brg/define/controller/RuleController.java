@@ -20,47 +20,6 @@ import java.util.Map;
 
 public class RuleController {
 
-    private RuleDefinitionBuilder ruleDefinitionBuilder;
-
-    public void startRuleDefinition() {
-        ruleDefinitionBuilder = new RuleDefinitionBuilder();
-    }
-
-    public void setType(BusinessRuleType type) {
-        ruleDefinitionBuilder.setType(type);
-    }
-
-    public void setAttribute(Attribute attribute) {
-        ruleDefinitionBuilder.setAttribute(attribute);
-    }
-
-    public void setOperator(Operator operator) {
-        ruleDefinitionBuilder.setOperator(operator);
-    }
-
-    public void setComparator(Comparator comparator) {
-        ruleDefinitionBuilder.setComparator(comparator);
-    }
-
-    public void setTable(Table table) {
-        ruleDefinitionBuilder.setTable(table);
-    }
-
-    public void setValues(Attribute attribute, Map<String, String> values) {
-        ruleDefinitionBuilder.setValues(attribute, values);
-    }
-
-    public RuleDefinition createBusinessRule() {
-        RuleDefinition ruleDefinition = ruleDefinitionBuilder.build();
-        Main.getRuleService().addRuleDefinition(ruleDefinition);
-        return ruleDefinition;
-    }
-
-    public void selectFailureHandling() {
-        FailureHandling failureHandling = new FailureHandling("Error message", "Error token", "Error severity");
-        System.out.println(new BusinessRule("Name", "Description", "codeName", createBusinessRule(), failureHandling));
-    }
-
     @OpenApi( // TODO - Add to openapi.json
             summary = "Get all types",
             operationId = "getAllTypes",
@@ -137,7 +96,6 @@ public class RuleController {
         ArrayList<String> operatorNameList = new ArrayList<>();
         try {
             for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
-                System.out.println(operator.getName());
                 operatorNameList.add(operator.getName());
             }
             operators.put("Operators", operatorNameList);
@@ -146,6 +104,37 @@ public class RuleController {
         } catch (NullPointerException e) {
             System.out.println(e.fillInStackTrace());
             context.result("No Operators or Types Found");
+            context.status(400);
+        }
+    }
+
+    @OpenApi( // TODO - Add to openapi.json
+            summary = "get Comparators by Type Name and Operator Name",
+            operationId = "GetComparatorsWithTypeAndOperator",
+            path = "/types/operators/:typeName/comparators/:operatorName",
+            method = HttpMethod.GET,
+            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name"),
+                          @OpenApiParam(name = "operatorName", type = String.class, description = "The operator name")},
+            tags = {"Types"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void GetComparatorsWithTypeAndOperator(io.javalin.http.Context context) {
+        Map<String, ArrayList<String>> comparators = new HashMap<>();
+        ArrayList<String> comparatorList = new ArrayList<>();
+        try {
+            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
+                comparatorList.add(comparator.getComparator());
+            }
+            comparators.put("Comparators", comparatorList);
+            context.json(comparators);
+            context.status(200);
+        } catch (NullPointerException e) {
+            System.out.println(e.fillInStackTrace());
+            context.result("No Operators or Types or Comparators Found");
             context.status(400);
         }
     }
