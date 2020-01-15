@@ -60,30 +60,18 @@ public class Main {
                 path(":typeName", () -> {
                     path("operators", () -> {
                         get(RuleController::getOperatorsWithType);
+                        path(":operatorName", () -> {
+                            path("comparators", () -> {
+                                get(RuleController::getComparatorWithOperatorAndType);
+                            });
+                        });
                     });
                 });
             });
 
-            path("businessrule", () -> {
-                path("post", () -> {
-                    post(RuleController::saveBusinessRule);
-                });
+            path("rules", () -> {
+                post(RuleController::saveBusinessRule);
             });
-
-//            path("types", () -> {
-//                get(RuleController::getAllTypes);
-//                path("operators", () -> {
-//                    path(":typeName", () -> {
-//                        get(RuleController::getOperatorsWithType);
-//                        path("comparators", () -> {
-//                            path(":operatorName", () -> {
-//                                get(RuleController::GetComparatorsWithTypeAndOperator);
-//                            });
-//                        });
-//                    });
-//                });
-//            });
-//            path("attributes", () -> get(RuleController::getAllAttributes));
         }).start(7002);
 
         //TODO: remove test BusinessRule

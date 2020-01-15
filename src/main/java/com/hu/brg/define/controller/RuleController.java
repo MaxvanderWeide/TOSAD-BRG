@@ -5,7 +5,6 @@ import com.hu.brg.model.definition.Comparator;
 import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
@@ -40,7 +39,8 @@ public class RuleController {
             context.json(types);
             context.status(200);
         } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
+            // TODO - Add proper error response
+            e.printStackTrace();
             context.result("No Types Found");
             context.status(400);
         }
@@ -69,7 +69,8 @@ public class RuleController {
             context.json(tables);
             context.status(200);
         } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
+            // TODO - Add proper error response
+            e.printStackTrace();
             context.result("No Tables Found");
             context.status(400);
         }
@@ -93,13 +94,14 @@ public class RuleController {
         Map<String, String> tempAttribute = new HashMap<>();
         try {
             for (Attribute attribute : Main.getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
-                tempAttribute.put(attribute.getName(),attribute.getType());
+                tempAttribute.put(attribute.getName(), attribute.getType());
             }
             attributes.put("Attributes", tempAttribute);
             context.json(attributes);
             context.status(200);
         } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
+            // TODO - Add proper error response
+            e.printStackTrace();
             context.result("No Table Attributes Found");
             context.status(400);
         }
@@ -129,8 +131,42 @@ public class RuleController {
             context.json(operators);
             context.status(200);
         } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
+            // TODO - Add proper error response
+            e.printStackTrace();
             context.result("No Operators or Types Found");
+            context.status(400);
+        }
+    }
+
+    @OpenApi( // TODO - Add to openapi.json
+            summary = "get Comparator with Operator and Table",
+            operationId = "getOperatorsWithType",
+            path = "/types/:typeName/operators/:operatorName/comparators",
+            method = HttpMethod.GET,
+            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name"),
+                          @OpenApiParam(name = "operatorName", type = String.class, description = "The operator name")},
+            tags = {"Types"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Comparator[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getComparatorWithOperatorAndType(io.javalin.http.Context context) {
+        Map<String, Map<String, String>> comparators = new HashMap<>();
+        Map<String, String> tempComparators = new HashMap<>();
+        try {
+            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
+                    .getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
+                tempComparators.put(comparator.getComparator(), comparator.getFeCodeBlock());
+            }
+            comparators.put("Comparators", tempComparators);
+            context.json(comparators);
+            context.status(200);
+        } catch (NullPointerException e) {
+            // TODO - Add proper error response
+            e.printStackTrace();
+            context.result("No Operators, Types or Comparators Found");
             context.status(400);
         }
     }
@@ -138,7 +174,7 @@ public class RuleController {
     @OpenApi( // TODO - Add to openapi.json
             summary = "Save the business rule",
             operationId = "saveBusinessRule",
-            path = "/businessrule/post",
+            path = "/rules",
             method = HttpMethod.POST,
             tags = {"Rule"},
             responses = {
@@ -150,100 +186,21 @@ public class RuleController {
     public static void saveBusinessRule(io.javalin.http.Context context) {
         try {
             JSONObject jsonObject = new JSONObject(context.body());
+            // TODO - Create Business Rule using builder
 //            System.out.println(jsonObject);
 //            System.out.println(jsonObject.get("tableName"));
 //            System.out.println(jsonObject.get("typeName"));
 //            System.out.println(jsonObject.get("targetAttribute"));
 //            System.out.println(jsonObject.get("operatorName"));
-
-//            BusinessRule businessRule = new BusinessRule();
 //
 //            Main.getRuleService().saveRule(businessRule);
-            context.json("Business rule saved");
+            context.result("Rule Saved");
             context.status(200);
         } catch (NullPointerException e) {
-            System.out.println(e.fillInStackTrace());
+            // TODO - Add proper error response
+            e.printStackTrace();
             context.result("Business rule not saved");
             context.status(400);
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    @OpenApi( // TODO - Add to openapi.json
-//            summary = "Get all attributes",
-//            operationId = "getAllAttributes",
-//            path = "/attributes",
-//            method = HttpMethod.GET,
-//            tags = {"Attributes"},
-//            responses = {
-//                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
-//                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-//                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-//            }
-//    )
-//    public static void getAllAttributes(io.javalin.http.Context context) {
-//        Map<String, Map<String, String>> attributes = new HashMap<>();
-//        Map<String, String> tempAttributes = new HashMap<>();
-//        try {
-//            for (Attribute attribute : Main.getRuleService().getTable().getAttributes()) {
-//                tempAttributes.put(attribute.getName(), attribute.getType());
-//            }
-//            attributes.put("Attributes", tempAttributes);
-//            context.json(attributes);
-//            context.status(200);
-//        } catch (NullPointerException e) {
-//            System.out.println(e.fillInStackTrace());
-//            context.result("No Attributes Found");
-//            context.status(400);
-//        }
-//    }
-//
-//    @OpenApi( // TODO - Add to openapi.json
-//            summary = "get Comparators by Type Name and Operator Name",
-//            operationId = "GetComparatorsWithTypeAndOperator",
-//            path = "/types/operators/:typeName/comparators/:operatorName",
-//            method = HttpMethod.GET,
-//            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name"),
-//                          @OpenApiParam(name = "operatorName", type = String.class, description = "The operator name")},
-//            tags = {"Types"},
-//            responses = {
-//                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
-//                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-//                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-//            }
-//    )
-//    public static void GetComparatorsWithTypeAndOperator(io.javalin.http.Context context) {
-//        Map<String, ArrayList<String>> comparators = new HashMap<>();
-//        ArrayList<String> comparatorList = new ArrayList<>();
-//        try {
-//            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
-//                comparatorList.add(comparator.getComparator());
-//            }
-//            comparators.put("Comparators", comparatorList);
-//            context.json(comparators);
-//            context.status(200);
-//        } catch (NullPointerException e) {
-//            System.out.println(e.fillInStackTrace());
-//            context.result("No Operators or Types or Comparators Found");
-//            context.status(400);
-//        }
-//    }
 }

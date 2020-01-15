@@ -36,7 +36,7 @@ public class BusinessRuleType {
 
     public Operator getOperatorByName(String name) {
         for (Operator operator : operators) {
-            if (operator.getName().equals(name)) {
+            if (operator.getName().equalsIgnoreCase(name)) {
                 return operator;
             }
         }

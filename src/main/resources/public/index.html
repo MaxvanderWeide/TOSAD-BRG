@@ -23,17 +23,26 @@
                 <option disabled selected>Select a type</option>
             </select>
         </div>
-        <div class="form-step-middle attribute">
+        <div class="form-step-middle">
             <label for="attributeSelection">Target Attribute:</label>
             <select id="attributeSelection" class="form-input">
                 <option disabled selected>Select an attribute</option>
             </select>
 
             <label for="operatorSelection">Operator:</label>
-            <select id="operatorSelection" class="form-input">
+            <select id="operatorSelection" class="form-input"
+                    onchange="fillComparators(this, document.getElementById('typeSelection'))">
                 <option disabled selected>Select an operator</option>
             </select>
         </div>
+        <div class="form-step-bottom">
+            <label for="comparatorSelection">Comparator:</label>
+            <select id="comparatorSelection" class="form-input"
+                    onchange="evalCodeBlock(this)">
+                <option disabled selected>Select a comparator</option>
+            </select>
+        </div>
+        <div id="comparatorStep" class="form-step-comparator"></div>
     </div>
     <footer>
         <button class="save-rule" onclick="saveRule()">OK</button>

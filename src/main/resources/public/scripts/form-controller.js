@@ -39,7 +39,7 @@ function fillTargetAttributes(tableSelection) {
             console.log('GET SUCCESS: ' + this.responseText);
             var responseJSON = JSON.parse(this.responseText);
             var selection = document.getElementById("attributeSelection");
-            selection.options.length = 0;
+            selection.options.length = 1;
             for (var k in responseJSON.Attributes) {
                 var option = document.createElement("option");
                 option.text = k + ' - ' + responseJSON.Attributes[k];
@@ -58,7 +58,7 @@ function fillOperators(type) {
             console.log('GET SUCCESS: ' + this.responseText);
             var responseJSON = JSON.parse(this.responseText);
             var selection = document.getElementById("operatorSelection");
-            selection.options.length = 0;
+            selection.options.length = 1;
             for (var k in responseJSON.Operators) {
                 var option = document.createElement("option");
                 option.text = responseJSON.Operators[k];
@@ -70,20 +70,47 @@ function fillOperators(type) {
     xhttp.send();
 }
 
+function fillComparators(operator, type) {
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log('GET SUCCESS: ' + this.responseText);
+            var responseJSON = JSON.parse(this.responseText);
+            var selection = document.getElementById("comparatorSelection");
+            selection.options.length = 1;
+            for (var k in responseJSON.Comparators) {
+                var option = document.createElement("option");
+                option.value = responseJSON.Comparators[k];
+                option.text = k;
+                selection.add(option)
+            }
+        }
+    };
+    xhttp.open("GET", 'types/' + type.options[type.selectedIndex].text + '/operators/'
+        + operator.options[operator.selectedIndex].text + '/comparators', true);
+    xhttp.send();
+}
+
+function evalCodeBlock(comparator) {
+    eval(comparator.options[comparator.selectedIndex].value)
+}
+
+
 function saveRule() {
-    const selectedTable = document.getElementById("tableSelection");
-    const selectedTableName = selectedTable.options[selectedTable.selectedIndex].value;
+    var selectedTable = document.getElementById("tableSelection");
+    var selectedTableName = selectedTable.options[selectedTable.selectedIndex].value;
 
-    const selectedType = document.getElementById("typeSelection");
-    const selectedTypeName = selectedType.options[selectedType.selectedIndex].value;
+    var selectedType = document.getElementById("typeSelection");
+    var selectedTypeName = selectedType.options[selectedType.selectedIndex].value;
 
-    const selectedTargetAttribute = document.getElementById("attributeSelection");
-    const selectedTargetAttributeName = selectedTargetAttribute.options[selectedTargetAttribute.selectedIndex].value;
+    var selectedTargetAttribute = document.getElementById("attributeSelection");
+    var selectedTargetAttributeName = selectedTargetAttribute.options[selectedTargetAttribute.selectedIndex].value;
 
-    const selectedOperator = document.getElementById("operatorSelection");
-    const selectedOperatorName = selectedOperator.options[selectedOperator.selectedIndex].value;
+    var selectedOperator = document.getElementById("operatorSelection");
+    var selectedOperatorName = selectedOperator.options[selectedOperator.selectedIndex].value;
 
-    let values = {};
+    var values = {};
     values["tableName"] = selectedTableName;
     values["typeName"] = selectedTypeName;
     values["targetAttribute"] = selectedTargetAttributeName;
@@ -96,6 +123,6 @@ function saveRule() {
             console.log('POST SUCCESS: ' + this.responseText);
         }
     };
-    xhttp.open("POST", 'businessrule/post', true);
+    xhttp.open("POST", 'rules', true);
     xhttp.send(values);
 }
