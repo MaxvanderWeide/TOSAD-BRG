@@ -3,14 +3,15 @@ package com.hu.brg;
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.domain.RuleService;
 import com.hu.brg.generate.RuleGenerator;
-import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.definition.Comparator;
+import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.definition.RuleDefinition;
 import com.hu.brg.model.failurehandling.FailureHandling;
 import com.hu.brg.model.physical.Attribute;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
+import com.hu.brg.persistence.targetdatabase.TargetDatabaseImpl;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -18,13 +19,13 @@ import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static io.javalin.apibuilder.ApiBuilder.*;
-
+import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class Main {
@@ -70,7 +71,15 @@ public class Main {
         FailureHandling newFailureHandling = new FailureHandling("failMessage", "failToken", "failSeverity");
         BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", newRuleDefinition, newFailureHandling);
         ruleGenerator = new RuleGenerator(newBusinessRule);
-        
+
+        String generated = ruleGenerator.generateCode();
+        System.out.println(generated);
+
+        try {
+            new TargetDatabaseImpl().insertRule(generated);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {

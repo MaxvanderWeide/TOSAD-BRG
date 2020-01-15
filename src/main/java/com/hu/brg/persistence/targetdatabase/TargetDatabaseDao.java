@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface TargetDatabaseDao {
     List<Table> getTables(String targetDatabase) throws SQLException;
+
+    void insertRule(String sql) throws SQLException;
 }

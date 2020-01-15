@@ -42,6 +42,10 @@ public class RuleDefinition {
         return targetAttribute;
     }
 
+    public Map<String, String> getValues() {
+        return values;
+    }
+
     public String toString() {
         return "" + type.toString();
     }

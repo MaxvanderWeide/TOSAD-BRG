@@ -23,9 +23,7 @@ public class RuleGenerator {
     public RuleGenerator(BusinessRule businessRule) {
         this.businessRule = businessRule;
         this.ruleDefinition = this.businessRule.getRuleDefinition();
-        generateCode();
     }
-
 
     private void generateTriggerName() {
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
@@ -47,8 +45,7 @@ public class RuleGenerator {
         }
     }
 
-    private void generateCode() {
-        System.out.println("Code is being generated...");
+    public String generateCode() {
         generateTriggerName();
         formatTriggerEvent();
         FailureHandling failureHandling = this.businessRule.getFailureHandling();
@@ -74,11 +71,6 @@ public class RuleGenerator {
                         this.businessRule.getBusinessRuleTrigger().getTriggerCode(),
                         failureHandling.getMessage());
 
-        System.out.println(this.generatedCode);
-    }
-
-
-    public String getGeneratedCode() {
         return this.generatedCode;
     }
 }
