@@ -4,11 +4,20 @@
     <meta charset="UTF-8">
     <title>BRG</title>
     <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/form-controller.js"></script>
 </head>
-<body>
-<div class="top-step">
-    <h1>Business Rule Generator</h1>
-    <p>Open Source Business Rule Generator</p>
+<body onload="fillSelection()">
+<div class="god-step">
+    <div class="top-step">
+        <h1>Business Rule Generator</h1>
+        <p>Open Source Business Rule Generator</p>
+    </div>
+    <div class="form-step">
+        <label for="typeSelection">Rule Type:</label>
+        <select id="typeSelection">
+            <option disabled>Select a type</option>
+        </select>
+    </div>
 </div>
 </body>
 </html>
