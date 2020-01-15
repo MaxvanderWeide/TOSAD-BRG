@@ -9,16 +9,18 @@ import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRule;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
+import io.javalin.plugin.openapi.annotations.HttpMethod;
+import io.javalin.plugin.openapi.annotations.OpenApi;
+import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RuleController {
 
     private RuleDefinitionBuilder ruleDefinitionBuilder;
-
-    public List<BusinessRuleType> getTypes() {
-        return Main.getRuleService().getTypes();
-    }
 
     public List<Attribute> getAttributes() {
         return Main.getRuleService().getTable().getAttributes();
@@ -71,4 +73,21 @@ public class RuleController {
         System.out.println(new BusinessRule("Name", "Description", "codeName", createBusinessRule()));
     }
 
+    @OpenApi(
+            summary = "Get all types",
+            operationId = "getAllTypes",
+            path = "/types",
+            method = HttpMethod.GET,
+            tags = {"User"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = BusinessRuleType[].class)})
+            }
+    )
+    public static void getAllTypes(io.javalin.http.Context context) {
+        Map<String, String> types = new HashMap<>();
+        for (BusinessRuleType type : Main.getRuleService().getTypes()) {
+            types.put(type.getName(), type.getDescription());
+        }
+        context.json(types);
+    }
 }
