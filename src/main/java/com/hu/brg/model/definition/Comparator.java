@@ -15,11 +15,11 @@ public class Comparator {
                         "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
                         "var custInput2 = document.createElement(\"INPUT\");" +
                         "custInput2.setAttribute(\"type\", \"text\");" +
-                        "custInput1.setAttribute(\"id\", \"custInput12\");" +
+                        "custInput2.setAttribute(\"id\", \"custInput2\");" +
                         "document.getElementById(\"comparatorStep\").appendChild(custInput2);";
         this.feCodeReval =
-                "document.getElementById(\"custInput1\").text;" +
-                        "document.getElementById(\"custInput1\").text;";
+                "document.getElementById(\"custInput1\").value + \" \" + " +
+                        "document.getElementById(\"custInput2\").value;";
 
     }
 

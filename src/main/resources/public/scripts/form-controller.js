@@ -81,7 +81,7 @@ function fillComparators(operator, type) {
             selection.options.length = 1;
             for (var k in responseJSON) {
                 var option = document.createElement("option");
-                option.setAttribute("eval", responseJSON[k].CodeReval);
+                option.setAttribute("reval", responseJSON[k].CodeReval);
                 option.setAttribute("block", responseJSON[k].CodeBlock);
                 option.text = k;
                 selection.add(option)
@@ -94,7 +94,6 @@ function fillComparators(operator, type) {
 }
 
 function evalCodeBlock(comparator) {
-    console.log(comparator);
     eval(comparator.options[comparator.selectedIndex].getAttribute("block"))
 }
 
@@ -112,11 +111,18 @@ function saveRule() {
     var selectedOperator = document.getElementById("operatorSelection");
     var selectedOperatorName = selectedOperator.options[selectedOperator.selectedIndex].value;
 
+    var selectedComparator = document.getElementById("comparatorSelection");
+    var selectedComparatorName = selectedComparator.options[selectedComparator.selectedIndex].value;
+
+    var comparator = document.getElementById("comparatorSelection");
+
     var values = {};
     values["tableName"] = selectedTableName;
     values["typeName"] = selectedTypeName;
     values["targetAttribute"] = selectedTargetAttributeName;
     values["operatorName"] = selectedOperatorName;
+    values["selectedComparatorName"] = selectedComparatorName;
+    values["comparatorValues"] = eval(comparator.options[comparator.selectedIndex].getAttribute('reval'));
     values = JSON.stringify(values);
 
     var xhttp = new XMLHttpRequest();
