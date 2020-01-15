@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TargetDatabaseImpl extends BaseDAO implements TargetDatabaseDao {
+public class TargetDatabaseImpl extends BaseDAO implements TargetDatabaseDAO {
     private Connection conn = this.getConnection();
 
     private Connection getConnection() {
