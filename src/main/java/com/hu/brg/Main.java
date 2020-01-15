@@ -1,5 +1,6 @@
 package com.hu.brg;
 
+import com.hu.brg.define.controller.MainController;
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.domain.RuleService;
 import com.hu.brg.generate.RuleGenerator;
@@ -31,10 +32,12 @@ public class Main {
         ruleService = new RuleService();
         ruleService.addType(new BusinessRuleType("Name", "Description"));
         Javalin.create(config -> {
+            config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {
             path("types", () -> get(RuleController::getAllTypes));
+            path("attributes", () -> get(RuleController::getAllAttributes));
         }).start(7002);
 
         System.out.println("Check out ReDoc docs at http://localhost:7002/redoc");
