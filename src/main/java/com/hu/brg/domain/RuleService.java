@@ -6,7 +6,6 @@ import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -57,12 +56,7 @@ public class RuleService {
     }
 
     public List<Table> getAllTables() {
-        try {
-            return targetDatabaseDao.getTables("TOSAD_TARGET");
-        } catch (SQLException e) {
-            System.out.println(e.getStackTrace());
-        }
-        return null;
+        return targetDatabaseDao.getTables("TOSAD_TARGET");
     }
 
     public Table getTableByName(String name) {
