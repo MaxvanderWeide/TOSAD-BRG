@@ -3,6 +3,7 @@ package com.hu.brg;
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.domain.RuleService;
 import com.hu.brg.generate.RuleGenerator;
+import com.hu.brg.model.definition.Operator;
 import com.hu.brg.model.rule.BusinessRuleType;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
@@ -10,6 +11,9 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
@@ -21,9 +25,13 @@ public class Main {
 
     public static void main(String[] args) {
         ruleService = new RuleService();
-        ruleService.addType(new BusinessRuleType("Name", "Description"));
-        ruleService.addType(new BusinessRuleType("Name2", "Description2"));
-        ruleService.addType(new BusinessRuleType("Name3", "Description3"));
+        List<Operator> operators = new ArrayList<>();
+        operators.add(new Operator("OperatorName"));
+        ruleService.addType(new BusinessRuleType("Name", "Description", operators));
+        operators.add(new Operator("OperatorName2"));
+        ruleService.addType(new BusinessRuleType("Name2", "Description2", operators));
+        operators.add(new Operator("OperatorName3"));
+        ruleService.addType(new BusinessRuleType("Name3", "Description3", operators));
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());

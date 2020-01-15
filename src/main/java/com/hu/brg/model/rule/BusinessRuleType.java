@@ -1,13 +1,21 @@
 package com.hu.brg.model.rule;
 
+import com.hu.brg.model.definition.Operator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class BusinessRuleType {
 
     private String name;
     private String description;
+    private List<Operator> operators;
 
-    public BusinessRuleType(String name, String description) {
+    public BusinessRuleType(String name, String description, List<Operator> operators) {
+        this.operators = new ArrayList<>();
         this.name = name;
         this.description = description;
+        this.operators = operators;
     }
 
     public String getName() {
@@ -20,6 +28,10 @@ public class BusinessRuleType {
 
     public String toString() {
         return "" + name + " " + description;
+    }
+
+    public List<Operator> getOperators() {
+        return operators;
     }
 
 }

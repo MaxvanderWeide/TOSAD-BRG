@@ -7,4 +7,8 @@ public class Operator {
     public Operator(String name) {
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
 }

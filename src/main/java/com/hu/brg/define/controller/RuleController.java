@@ -23,10 +23,6 @@ public class RuleController {
 
     private RuleDefinitionBuilder ruleDefinitionBuilder;
 
-    public List<Attribute> getAttributes() {
-        return Main.getRuleService().getTable().getAttributes();
-    }
-
     public void startRuleDefinition() {
         // TODO - Add FE interaction
         ruleDefinitionBuilder = new RuleDefinitionBuilder();
@@ -95,9 +91,11 @@ public class RuleController {
             }
             types.put("Types", tempTypes);
             context.json(types);
+            context.status(200);
         } catch (NullPointerException e) {
             System.out.println(e.fillInStackTrace());
             context.result("No Types Found");
+            context.status(400);
         }
     }
 
@@ -122,9 +120,11 @@ public class RuleController {
             }
             attributes.put("Attributes", tempAttributes);
             context.json(attributes);
+            context.status(200);
         } catch (NullPointerException e) {
             System.out.println(e.fillInStackTrace());
             context.result("No Attributes Found");
+            context.status(400);
         }
     }
 }
