@@ -4,7 +4,7 @@ import com.hu.brg.model.definition.RuleDefinition;
 import com.hu.brg.model.physical.Table;
 import com.hu.brg.model.rule.BusinessRuleType;
 import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAO;
-import com.hu.brg.persistence.targetdatabase.TargetDatabaseImpl;
+import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class RuleService {
     private List<RuleDefinition> ruleDefinitions = new ArrayList<>();
     private Table selectedTable;
     private List<BusinessRuleType> types = new ArrayList<>();
-    private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseImpl();
+    private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseDAOImpl();
 
     public RuleService() {
     }
