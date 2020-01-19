@@ -7,29 +7,29 @@ import java.util.List;
 
 public class RuleType {
 
-    private String name;
-    private String description;
+    private String type;
+    private String code;
     private List<Operator> operators;
     private List<Comparator> comparators;
 
-    public RuleType(String name, String description, List<Operator> operators, List<Comparator> comparators) {
+    public RuleType(String type, String code, List<Operator> operators, List<Comparator> comparators) {
         this.operators = new ArrayList<>();
-        this.name = name;
-        this.description = description;
+        this.type = type;
+        this.code = code;
         this.operators = operators;
         this.comparators = comparators;
     }
 
     public String getName() {
-        return name;
+        return type;
     }
 
     public String getDescription() {
-        return description;
+        return code;
     }
 
     public String toString() {
-        return "" + name + " " + description;
+        return "" + type + " " + code;
     }
 
     public List<Operator> getOperators() {

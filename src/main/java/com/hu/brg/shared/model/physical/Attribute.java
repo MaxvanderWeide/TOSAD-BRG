@@ -3,18 +3,12 @@ package com.hu.brg.shared.model.physical;
 public class Attribute {
 
     private String name;
-    private String type;
 
-    public Attribute(String name, String type) {
+    public Attribute(String name) {
         this.name = name;
-        this.type = type;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getType() {
-        return type;
     }
 }
