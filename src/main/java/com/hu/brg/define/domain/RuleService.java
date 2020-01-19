@@ -3,7 +3,7 @@ package com.hu.brg.define.domain;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.rule.BusinessRule;
-import com.hu.brg.shared.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
@@ -17,7 +17,7 @@ public class RuleService {
 
     private List<RuleDefinition> ruleDefinitions = new ArrayList<>();
     private Table selectedTable;
-    private List<BusinessRuleType> types = new ArrayList<>();
+    private List<RuleType> types = new ArrayList<>();
     private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseDAOImpl();
     private RulesDAO rulesDAO = new RulesDAOImpl();
 
@@ -41,17 +41,17 @@ public class RuleService {
         return ruleDefinition != null;
     }
 
-    public boolean addType(BusinessRuleType type) {
+    public boolean addType(RuleType type) {
         if (type != null) types.add(type);
         return type != null;
     }
 
-    public List<BusinessRuleType> getTypes() {
+    public List<RuleType> getTypes() {
         return Collections.unmodifiableList(types);
     }
 
-    public BusinessRuleType getTypeByName(String name) {
-        for (BusinessRuleType brt : types) {
+    public RuleType getTypeByName(String name) {
+        for (RuleType brt : types) {
             if (brt.getName().equals(name)) {
                 return brt;
             }

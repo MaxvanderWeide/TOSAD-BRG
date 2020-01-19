@@ -1,17 +1,17 @@
-package com.hu.brg.shared.model.rule;
+package com.hu.brg.shared.model.definition;
 
 import com.hu.brg.shared.model.definition.Operator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessRuleType {
+public class RuleType {
 
     private String name;
     private String description;
     private List<Operator> operators;
 
-    public BusinessRuleType(String name, String description, List<Operator> operators) {
+    public RuleType(String name, String description, List<Operator> operators) {
         this.operators = new ArrayList<>();
         this.name = name;
         this.description = description;

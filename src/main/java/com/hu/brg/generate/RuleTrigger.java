@@ -5,12 +5,12 @@ import com.hu.brg.shared.model.rule.BusinessRule;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessRuleTrigger {
+public class RuleTrigger {
     private List<String> triggerEvents = new ArrayList<>();
     private String triggerCode;
     private BusinessRule businessRule;
 
-    public BusinessRuleTrigger(BusinessRule businessRule) {
+    public RuleTrigger(BusinessRule businessRule) {
         this.businessRule = businessRule;
         generateTriggerEvents();
         generateTriggerCode();

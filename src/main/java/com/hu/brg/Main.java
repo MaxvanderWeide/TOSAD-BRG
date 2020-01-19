@@ -4,7 +4,7 @@ import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.model.definition.Comparator;
 import com.hu.brg.shared.model.definition.Operator;
-import com.hu.brg.shared.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.definition.RuleType;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -31,7 +31,7 @@ public class Main {
         comparators.add(new Comparator("Between"));
         operators.add(new Operator("Between", comparators));
         operators.add(new Operator("Not Between", comparators));
-        ruleService.addType(new BusinessRuleType("Range", "Range between values", operators));
+        ruleService.addType(new RuleType("Range", "Range between values", operators));
 
         Javalin.create(config -> {
             config.addStaticFiles("/public");

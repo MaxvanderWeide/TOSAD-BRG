@@ -9,7 +9,7 @@ import com.hu.brg.shared.model.failurehandling.FailureHandling;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.rule.BusinessRule;
-import com.hu.brg.shared.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
 import org.json.JSONArray;
@@ -28,7 +28,7 @@ public class RuleController {
             method = HttpMethod.GET,
             tags = {"Types"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = BusinessRuleType[].class)}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = RuleType[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
@@ -37,7 +37,7 @@ public class RuleController {
         Map<String, Map<String, String>> types = new HashMap<>();
         Map<String, String> tempTypes = new HashMap<>();
         try {
-            for (BusinessRuleType type : Main.getRuleService().getTypes()) {
+            for (RuleType type : Main.getRuleService().getTypes()) {
                 tempTypes.put(type.getName(), type.getDescription());
             }
             types.put("Types", tempTypes);
@@ -199,7 +199,7 @@ public class RuleController {
             RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
 
             Table table = Main.getRuleService().getTableByName(jsonObject.get("tableName").toString());
-            BusinessRuleType type = Main.getRuleService().getTypeByName(jsonObject.get("typeName").toString());
+            RuleType type = Main.getRuleService().getTypeByName(jsonObject.get("typeName").toString());
             Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
             Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
             Comparator comparator = operator.getComparatorByName(jsonObject.get("selectedComparatorName").toString());

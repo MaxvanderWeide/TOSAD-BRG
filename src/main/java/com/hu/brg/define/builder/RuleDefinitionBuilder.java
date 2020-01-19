@@ -5,13 +5,13 @@ import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
-import com.hu.brg.shared.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.definition.RuleType;
 
 import java.util.Map;
 
 public class RuleDefinitionBuilder {
 
-    private BusinessRuleType type;
+    private RuleType type;
     private Attribute targetAttribute;
     private Operator operator;
     private Comparator comparator;
@@ -19,7 +19,7 @@ public class RuleDefinitionBuilder {
     private Attribute compareAttribute;
     private Map<String, String> values;
 
-    public RuleDefinitionBuilder setType(BusinessRuleType type) {
+    public RuleDefinitionBuilder setType(RuleType type) {
         this.type = type;
         return this;
     }
