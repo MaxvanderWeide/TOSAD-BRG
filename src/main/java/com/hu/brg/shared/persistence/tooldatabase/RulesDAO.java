@@ -1,9 +1,10 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.shared.model.rule.BusinessRule;
+
+import com.hu.brg.shared.model.definition.RuleDefinition;
 
 public interface RulesDAO {
-    void saveRule(BusinessRule businessRule);
+    void saveRule(RuleDefinition ruleDefinition);
 
-    void updateRule(int id, BusinessRule businessRule);
+    void updateRule(int id, RuleDefinition ruleDefinition);
 }

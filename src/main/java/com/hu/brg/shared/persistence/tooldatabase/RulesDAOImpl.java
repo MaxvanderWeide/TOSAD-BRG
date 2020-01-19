@@ -1,6 +1,6 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.shared.model.rule.BusinessRule;
+import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.persistence.BaseDAO;
 import oracle.jdbc.OracleTypes;
 
@@ -15,13 +15,13 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     }
 
     @Override
-    public void saveRule(BusinessRule businessRule) {
+    public void saveRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
             String query = "{call INSERT INTO RULES (\"tableName\", \"attribute\", \"ruletypeId\", \"name\", " +
                     "\"description\", \"operator\", \"errorCode\", \"errorMessage\") VALUES (?, ?, ?, ?, ? , ?, ?, ?)" +
                     "RETURNING \"id\" INTO ? }";
             CallableStatement cs = conn.prepareCall(query);
-            setPreparedStatement(cs, businessRule);
+            setPreparedStatement(cs, ruleDefinition);
             cs.registerOutParameter(9, OracleTypes.NUMBER);
             cs.executeUpdate();
 
@@ -35,13 +35,13 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     }
 
     @Override
-    public void updateRule(int id, BusinessRule businessRule) {
+    public void updateRule(int id, RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
 
             String query = "UPDATE RULES SET \"tableName\" = ?, \"attribute\" = ?, \"ruletypeId\" = ?, \"name\" = ?, " +
                     "\"description\" = ?, \"operator\" = ?, \"errorCode\" = ?, \"errorMessage\" = ? WHERE \"id\" = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            setPreparedStatement(preparedStatement, businessRule);
+            setPreparedStatement(preparedStatement, ruleDefinition);
             preparedStatement.setInt(9, id);
 
             preparedStatement.executeUpdate();
@@ -51,14 +51,14 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         }
     }
 
-    private void setPreparedStatement(PreparedStatement preparedStatement, BusinessRule businessRule) throws SQLException {
-        preparedStatement.setString(1, businessRule.getRuleDefinition().getTable().getName());
-        preparedStatement.setString(2, businessRule.getRuleDefinition().getTargetAttribute().getName());
+    private void setPreparedStatement(PreparedStatement preparedStatement, RuleDefinition ruleDefinition) throws SQLException {
+        preparedStatement.setString(1, ruleDefinition.getTable().getName());
+        preparedStatement.setString(2, ruleDefinition.getTargetAttribute().getName());
         preparedStatement.setInt(3, 1);
         preparedStatement.setString(4, "Test");
         preparedStatement.setString(5, "Description");
-        preparedStatement.setString(6, businessRule.getRuleDefinition().getOperator().getName());
+        preparedStatement.setString(6, ruleDefinition.getOperator().getName());
         preparedStatement.setInt(7, 20000);
-        preparedStatement.setString(8, businessRule.getFailureHandling().getMessage());
+        preparedStatement.setString(8, "Message");
     }
 }
