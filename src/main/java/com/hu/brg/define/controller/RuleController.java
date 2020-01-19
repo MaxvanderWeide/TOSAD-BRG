@@ -63,8 +63,11 @@ public class RuleController {
             for (RuleType type : Main.getRuleService().getTypes()) {
                 tempTypes.put(type.getName(), type.getDescription());
             }
-            types.put("Types", tempTypes);
-            context.json(types).status(200);
+            if (tempTypes != null) {
+                types.put("Types", tempTypes);
+                context.json(types).status(200);
+            }
+            throw new NotFoundResponse("No Types Found");
         } catch (NullPointerException e) {
             e.printStackTrace();
             throw new NotFoundResponse("No Types Found");

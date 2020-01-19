@@ -1,4 +1,4 @@
-function fillSelection() {
+function fillTargetTables() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -12,9 +12,11 @@ function fillSelection() {
             }
         }
     };
-    xhttp.open("GET", 'tables', true);
+    xhttp.open("GET", 'define/tables', true);
     xhttp.send();
+}
 
+function fillTypes() {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
@@ -28,7 +30,7 @@ function fillSelection() {
             }
         }
     };
-    xhttp.open("GET", 'types', true);
+    xhttp.open("GET", 'define/types', true);
     xhttp.send();
 }
 
@@ -47,7 +49,7 @@ function fillTargetAttributes(tableSelection) {
             }
         }
     };
-    xhttp.open("GET", 'tables/' + tableSelection.options[tableSelection.selectedIndex].text + '/attributes', true);
+    xhttp.open("GET", 'define/tables/' + tableSelection.options[tableSelection.selectedIndex].text + '/attributes', true);
     xhttp.send();
 }
 
@@ -66,7 +68,7 @@ function fillOperators(type) {
             }
         }
     };
-    xhttp.open("GET", 'types/' + type.options[type.selectedIndex].text + '/operators', true);
+    xhttp.open("GET", 'define/types/' + type.options[type.selectedIndex].text + '/operators', true);
     xhttp.send();
 }
 
@@ -88,8 +90,7 @@ function fillComparators(operator, type) {
             }
         }
     };
-    xhttp.open("GET", 'types/' + type.options[type.selectedIndex].text + '/operators/'
-        + operator.options[operator.selectedIndex].text + '/comparators', true);
+    xhttp.open("GET", 'define/types/' + type.options[type.selectedIndex].text + '/comparators', true);
     xhttp.send();
 }
 
@@ -131,6 +132,6 @@ function saveRule() {
             console.log('POST SUCCESS: ' + this.responseText);
         }
     };
-    xhttp.open("POST", 'rules', true);
+    xhttp.open("POST", 'define/rules', true);
     xhttp.send(values);
 }

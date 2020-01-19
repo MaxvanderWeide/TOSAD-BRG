@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="styles/style.css">
     <script src="scripts/form-controller.js"></script>
 </head>
-<body onload="fillSelection()">
+<body onload="fillTypes()">
 <div class="container-fluid">
     <div class="god-step">
         <div class="top-step">
@@ -26,7 +26,7 @@
             <input type="text" id="dbInputUser">
             <label for="dbInputPassword">Password:</label>
             <input type="password" id="dbInputPassword">
-            <button type="button" class="btn btn-info">Connect</button>
+            <button type="button" class="btn btn-info" onclick="fillTargetTables()">Connect</button>
         </div>
         <div class="form-step-top">
             <label for="tableSelection">Tables:</label>
