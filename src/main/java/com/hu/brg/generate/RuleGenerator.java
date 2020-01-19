@@ -10,7 +10,7 @@ public class RuleGenerator {
     private RuleDefinition ruleDefinition;
 
 
-    // TODO: change static values
+    // TODO - change static values
     private String applicationName = "BRG";
     private String projectName = "VBMG";
 

@@ -1,4 +1,4 @@
-package com.hu.brg;
+package com.hu.brg.shared.model.response;
 
 import java.util.Map;
 
