@@ -3,13 +3,13 @@ package com.hu.brg.define.controller;
 import com.hu.brg.ErrorResponse;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.generate.RuleGenerator;
-import com.hu.brg.model.definition.Comparator;
-import com.hu.brg.model.definition.Operator;
-import com.hu.brg.model.failurehandling.FailureHandling;
-import com.hu.brg.model.physical.Attribute;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRule;
-import com.hu.brg.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.definition.Comparator;
+import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.failurehandling.FailureHandling;
+import com.hu.brg.shared.model.physical.Attribute;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.model.rule.BusinessRule;
+import com.hu.brg.shared.model.rule.BusinessRuleType;
 import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
 import org.json.JSONArray;
@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class RuleController {

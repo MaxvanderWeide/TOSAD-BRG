@@ -1,6 +1,6 @@
-package com.hu.brg.model.rule;
+package com.hu.brg.shared.model.rule;
 
-import com.hu.brg.model.definition.Operator;
+import com.hu.brg.shared.model.definition.Operator;
 
 import java.util.ArrayList;
 import java.util.List;

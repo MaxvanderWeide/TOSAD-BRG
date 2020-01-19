@@ -1,8 +1,8 @@
-package com.hu.brg.persistence.targetdatabase;
+package com.hu.brg.shared.persistence.targetdatabase;
 
-import com.hu.brg.model.physical.Attribute;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.persistence.BaseDAO;
+import com.hu.brg.shared.model.physical.Attribute;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.persistence.BaseDAO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

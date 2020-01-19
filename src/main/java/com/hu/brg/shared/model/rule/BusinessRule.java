@@ -1,8 +1,8 @@
-package com.hu.brg.model.rule;
+package com.hu.brg.shared.model.rule;
 
 import com.hu.brg.generate.BusinessRuleTrigger;
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.failurehandling.FailureHandling;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.failurehandling.FailureHandling;
 
 public class BusinessRule {
 

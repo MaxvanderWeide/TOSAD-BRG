@@ -1,13 +1,12 @@
 package com.hu.brg.define.builder;
 
-import com.hu.brg.model.definition.Comparator;
-import com.hu.brg.model.definition.Operator;
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.physical.Attribute;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.definition.Comparator;
+import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.physical.Attribute;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.model.rule.BusinessRuleType;
 
-import java.util.List;
 import java.util.Map;
 
 public class RuleDefinitionBuilder {

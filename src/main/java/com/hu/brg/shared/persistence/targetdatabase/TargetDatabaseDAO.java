@@ -1,6 +1,6 @@
-package com.hu.brg.persistence.targetdatabase;
+package com.hu.brg.shared.persistence.targetdatabase;
 
-import com.hu.brg.model.physical.Table;
+import com.hu.brg.shared.model.physical.Table;
 
 import java.util.List;
 

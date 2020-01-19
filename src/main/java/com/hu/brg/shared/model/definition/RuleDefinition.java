@@ -1,8 +1,8 @@
-package com.hu.brg.model.definition;
+package com.hu.brg.shared.model.definition;
 
-import com.hu.brg.model.physical.Attribute;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRuleType;
+import com.hu.brg.shared.model.physical.Attribute;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.model.rule.BusinessRuleType;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package com.hu.brg.model.physical;
+package com.hu.brg.shared.model.physical;
 
 
 import java.util.ArrayList;

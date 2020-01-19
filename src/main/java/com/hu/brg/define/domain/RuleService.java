@@ -1,13 +1,13 @@
-package com.hu.brg.domain;
+package com.hu.brg.define.domain;
 
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRule;
-import com.hu.brg.model.rule.BusinessRuleType;
-import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAO;
-import com.hu.brg.persistence.targetdatabase.TargetDatabaseDAOImpl;
-import com.hu.brg.persistence.tooldatabase.RulesDAO;
-import com.hu.brg.persistence.tooldatabase.RulesDAOImpl;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.model.rule.BusinessRule;
+import com.hu.brg.shared.model.rule.BusinessRuleType;
+import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
+import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
+import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;

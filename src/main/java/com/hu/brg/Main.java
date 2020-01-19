@@ -1,10 +1,10 @@
 package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
-import com.hu.brg.domain.RuleService;
-import com.hu.brg.model.definition.Comparator;
-import com.hu.brg.model.definition.Operator;
-import com.hu.brg.model.rule.BusinessRuleType;
+import com.hu.brg.define.domain.RuleService;
+import com.hu.brg.shared.model.definition.Comparator;
+import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.rule.BusinessRuleType;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;

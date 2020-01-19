@@ -1,8 +1,8 @@
 package com.hu.brg.generate;
 
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.failurehandling.FailureHandling;
-import com.hu.brg.model.rule.BusinessRule;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.failurehandling.FailureHandling;
+import com.hu.brg.shared.model.rule.BusinessRule;
 
 import java.util.List;
 

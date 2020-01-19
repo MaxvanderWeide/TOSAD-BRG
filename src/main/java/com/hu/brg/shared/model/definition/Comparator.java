@@ -1,4 +1,4 @@
-package com.hu.brg.model.definition;
+package com.hu.brg.shared.model.definition;
 
 public class Comparator {
 

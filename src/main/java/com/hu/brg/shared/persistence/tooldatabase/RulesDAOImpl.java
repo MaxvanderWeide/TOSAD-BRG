@@ -1,7 +1,7 @@
-package com.hu.brg.persistence.tooldatabase;
+package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.model.rule.BusinessRule;
-import com.hu.brg.persistence.BaseDAO;
+import com.hu.brg.shared.model.rule.BusinessRule;
+import com.hu.brg.shared.persistence.BaseDAO;
 import oracle.jdbc.OracleTypes;
 
 import java.sql.CallableStatement;

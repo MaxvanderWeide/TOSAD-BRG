@@ -1,4 +1,4 @@
-package com.hu.brg.persistence;
+package com.hu.brg.shared.persistence;
 
 
 import oracle.jdbc.pool.OracleDataSource;

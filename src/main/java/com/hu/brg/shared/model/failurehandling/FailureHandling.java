@@ -1,4 +1,4 @@
-package com.hu.brg.model.failurehandling;
+package com.hu.brg.shared.model.failurehandling;
 
 public class FailureHandling {
     private String message;
