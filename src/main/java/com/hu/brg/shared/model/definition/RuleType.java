@@ -13,7 +13,6 @@ public class RuleType {
     private List<Comparator> comparators;
 
     public RuleType(String type, String code, List<Operator> operators, List<Comparator> comparators) {
-        this.operators = new ArrayList<>();
         this.type = type;
         this.code = code;
         this.operators = operators;
