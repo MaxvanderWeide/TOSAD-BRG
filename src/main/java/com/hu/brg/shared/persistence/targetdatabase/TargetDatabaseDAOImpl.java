@@ -37,7 +37,7 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                         "where TABLE_NAME = '" + tableName + "'");
 
                 while (tableAttributes.next()) {
-                    Attribute attribute = new Attribute(tableAttributes.getString("COLUMN_NAME"));
+                    Attribute attribute = new Attribute(tableAttributes.getString("COLUMN_NAME"), tableAttributes.getString("DATA_TYPE"));
 
                     table.addAttribute(attribute);
                 }
