@@ -18,6 +18,8 @@ public class RuleDefinitionBuilder {
     private Table table;
     private Attribute compareAttribute;
     private Map<String, String> values;
+    private String errorMessage;
+    private int errorCode;
 
     public RuleDefinitionBuilder setType(RuleType type) {
         this.type = type;
@@ -52,7 +54,17 @@ public class RuleDefinitionBuilder {
         return this;
     }
 
+    public RuleDefinitionBuilder setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+        return this;
+    }
+
+    public RuleDefinitionBuilder setErrorCode(int errorCode) {
+        this.errorCode = errorCode;
+        return this;
+    }
+
     public RuleDefinition build() {
-        return new RuleDefinition(type, targetAttribute, operator, comparator, table, compareAttribute, values);
+        return new RuleDefinition(type, targetAttribute, operator, comparator, table, compareAttribute, values, errorMessage, errorCode);
     }
 }
