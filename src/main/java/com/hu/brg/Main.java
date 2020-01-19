@@ -5,6 +5,7 @@ import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.model.definition.Comparator;
 import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.definition.RuleType;
+import com.hu.brg.shared.model.response.ErrorResponse;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -25,6 +26,12 @@ public class Main {
     public static void main(String[] args) {
         ruleService = new RuleService();
 
+        List<Operator> operators = new ArrayList<>();
+        List<Comparator> comparators = new ArrayList<>();
+        comparators.add(new Comparator("Between"));
+        operators.add(new Operator("Between"));
+        ruleService.addType(new RuleType("Range", "Range between values", operators, comparators));
+
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
@@ -41,12 +48,12 @@ public class Main {
                 get(RuleController::getAllTypes);
                 path(":typeName", () -> {
                     path("operators", () -> get(RuleController::getOperatorsWithType));
-                    path("comparator", () -> get(RuleController::getComparatorsWithType));
+                    path("comparators", () -> get(RuleController::getComparatorsWithType));
                 });
             });
 
             path("rules", () -> post(RuleController::saveRuleDefinition));
-        })).start(4200);
+        })).start(4201);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {

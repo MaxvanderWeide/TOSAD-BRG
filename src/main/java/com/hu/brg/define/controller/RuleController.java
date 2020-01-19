@@ -1,6 +1,6 @@
 package com.hu.brg.define.controller;
 
-import com.hu.brg.ErrorResponse;
+import com.hu.brg.shared.model.response.ErrorResponse;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.shared.model.definition.Comparator;
 import com.hu.brg.shared.model.definition.Operator;
@@ -8,7 +8,6 @@ import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.Main;
-import io.javalin.http.NotFoundResponse;
 import io.javalin.plugin.openapi.annotations.*;
 import org.json.JSONObject;
 
@@ -59,15 +58,14 @@ public class RuleController {
     public static void getAllTypes(io.javalin.http.Context context) {
         Map<String, Map<String, String>> types = new HashMap<>();
         Map<String, String> tempTypes = new HashMap<>();
-        try {
-            for (RuleType type : Main.getRuleService().getTypes()) {
-                tempTypes.put(type.getName(), type.getCode());
-            }
-            types.put("Types", tempTypes);
-            context.json(types).status(200);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw new NotFoundResponse("No Types Found");
+        for (RuleType type : Main.getRuleService().getTypes()) {
+            tempTypes.put(type.getName(), type.getCode());
+        }
+        types.put("Types", tempTypes);
+        context.json(types).status(200);
+
+        if (tempTypes.isEmpty()) {
+            context.status(400).result("No Types Found");
         }
     }
 
@@ -85,17 +83,16 @@ public class RuleController {
     )
     public static void getAllTables(io.javalin.http.Context context) {
         // TODO - Add Connection
-        Map<String, ArrayList<String>> tables = new HashMap<>();
-        ArrayList<String> tableList = new ArrayList<>();
-        try {
-            for (Table table : Main.getRuleService().getAllTables()) {
-                tableList.add(table.getName());
-            }
-            tables.put("Tables", tableList);
-            context.json(tables).status(200);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw new NotFoundResponse("No Tables Found");
+        Map<String, List<String>> tables = new HashMap<>();
+        List<String> tableList = new ArrayList<>();
+        for (Table table : Main.getRuleService().getAllTables()) {
+            tableList.add(table.getName());
+        }
+        tables.put("Tables", tableList);
+        context.json(tables).status(200);
+
+        if (tableList.isEmpty()) {
+            context.status(400).result("No Tables Found");
         }
     }
 
@@ -116,15 +113,14 @@ public class RuleController {
         // TODO - Add Connection
         Map<String, List<String>> attributes = new HashMap<>();
         List<String> tempAttribute = new ArrayList<>();
-        try {
-            for (Attribute attribute : Main.getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
-                tempAttribute.add(attribute.getName());
-            }
-            attributes.put("Attributes", tempAttribute);
-            context.json(attributes).status(200);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw new NotFoundResponse("No Table or Attributes Found");
+        for (Attribute attribute : Main.getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
+            tempAttribute.add(attribute.getName());
+        }
+        attributes.put("Attributes", tempAttribute);
+        context.json(attributes).status(200);
+
+        if (tempAttribute.isEmpty()) {
+            context.status(400).result("No Attributes Found");
         }
     }
 
@@ -142,17 +138,16 @@ public class RuleController {
             }
     )
     public static void getOperatorsWithType(io.javalin.http.Context context) {
-        Map<String, ArrayList<String>> operators = new HashMap<>();
-        ArrayList<String> operatorNameList = new ArrayList<>();
-        try {
-            for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
-                operatorNameList.add(operator.getName());
-            }
-            operators.put("Operators", operatorNameList);
-            context.json(operators).status(200);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw new NotFoundResponse("No Type or Operator Found");
+        Map<String, List<String>> operators = new HashMap<>();
+        List<String> operatorNameList = new ArrayList<>();
+        for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
+            operatorNameList.add(operator.getName());
+        }
+        operators.put("Operators", operatorNameList);
+        context.json(operators).status(200);
+
+        if (operatorNameList.isEmpty()) {
+            context.status(400).result("No Operators Found");
         }
     }
 
@@ -172,17 +167,16 @@ public class RuleController {
     public static void getComparatorsWithType(io.javalin.http.Context context) {
         Map<String, Map<String, String>> comparators = new HashMap<>();
         Map<String, String> tempFeCodeBlock = new HashMap<>();
-        try {
-            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
-                    .getComparators()) {
-                tempFeCodeBlock.put("CodeBlock", comparator.getFeCodeBlock()); // TODO : Decouple FE from comparator
-                tempFeCodeBlock.put("CodeReval", comparator.getFeCodeReval());
-                comparators.put(comparator.getComparator(), tempFeCodeBlock);
-            }
-            context.json(comparators).status(200);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            throw new NotFoundResponse("No Type or Comparators Found");
+        for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
+                .getComparators()) {
+            tempFeCodeBlock.put("CodeBlock", comparator.getFeCodeBlock()); // TODO : Decouple FE from comparator
+            tempFeCodeBlock.put("CodeReval", comparator.getFeCodeReval());
+            comparators.put(comparator.getComparator(), tempFeCodeBlock);
+        }
+        context.json(comparators).status(200);
+
+        if (comparators.isEmpty()) {
+            context.status(400).result("No Comparators Found");
         }
     }
 
