@@ -1,15 +1,12 @@
 package com.hu.brg.generate;
 
 import com.hu.brg.shared.model.definition.RuleDefinition;
-import com.hu.brg.shared.model.failurehandling.FailureHandling;
-import com.hu.brg.shared.model.rule.BusinessRule;
 
 import java.util.List;
 
 public class RuleGenerator {
     private String generatedCode;
     private String triggerName;
-    private BusinessRule businessRule;
     private RuleDefinition ruleDefinition;
 
 
@@ -18,24 +15,25 @@ public class RuleGenerator {
     private String projectName = "VBMG";
 
     private String triggerEvent = "";
+    private RuleTrigger ruleTrigger;
 
 
-    public RuleGenerator(BusinessRule businessRule) {
-        this.businessRule = businessRule;
-        this.ruleDefinition = this.businessRule.getRuleDefinition();
+    public RuleGenerator(RuleDefinition ruleDefinition) {
+        this.ruleDefinition = ruleDefinition;
+        this.ruleTrigger = new RuleTrigger(ruleDefinition);
     }
 
     private void generateTriggerName() {
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
                 this.applicationName,
                 this.projectName,
-                this.ruleDefinition.getTargetAttribute().getName().substring(0, 4),
+                this.ruleDefinition.getAttribute().getName().substring(0, 4),
                 this.ruleDefinition.getType().getName())
         ).toUpperCase();
     }
 
     private void formatTriggerEvent() {
-        List<String> triggerEvents = this.businessRule.getBusinessRuleTrigger().getTriggerEvents();
+        List<String> triggerEvents = ruleTrigger.getTriggerEvents();
         int count = 1;
         for (String event : triggerEvents) {
             this.triggerEvent += event;
@@ -48,8 +46,6 @@ public class RuleGenerator {
     public String generateCode() {
         generateTriggerName();
         formatTriggerEvent();
-        FailureHandling failureHandling = this.businessRule.getFailureHandling();
-
 
         this.generatedCode =
                 String.format("create or replace trigger %s\n" +
@@ -62,14 +58,15 @@ public class RuleGenerator {
                         "    %s;\n" +
                         "    if not v_passed\n" +
                         "        then\n" +
-                        "        DBMS_OUTPUT.PUT_LINE('%s');\n" +
+                        "        raise_application_error(%d, %s)\n "+
                         "    end if;\n" +
                         "end;",
                         this.triggerName,
                         this.triggerEvent,
-                        ruleDefinition.getTable().getName(),
-                        this.businessRule.getBusinessRuleTrigger().getTriggerCode(),
-                        failureHandling.getMessage());
+                        this.ruleDefinition.getTable().getName(),
+                        this.ruleTrigger.getTriggerCode(),
+                        this.ruleDefinition.getErrorCode(),
+                        this.ruleDefinition.getErrorMessage());
 
         return this.generatedCode;
     }

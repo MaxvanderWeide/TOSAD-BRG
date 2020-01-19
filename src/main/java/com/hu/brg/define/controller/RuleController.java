@@ -61,7 +61,7 @@ public class RuleController {
         Map<String, String> tempTypes = new HashMap<>();
         try {
             for (RuleType type : Main.getRuleService().getTypes()) {
-                tempTypes.put(type.getName(), type.getDescription());
+                tempTypes.put(type.getName(), type.getCode());
             }
             if (tempTypes != null) {
                 types.put("Types", tempTypes);
