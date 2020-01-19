@@ -25,46 +25,28 @@ public class Main {
     public static void main(String[] args) {
         ruleService = new RuleService();
 
-        // TODO - Remove operators and comparators definition from Main and move them to DB
-        List<Operator> operators = new ArrayList<>();
-        List<Comparator> comparators = new ArrayList<>();
-        comparators.add(new Comparator("Between"));
-        operators.add(new Operator("Between", comparators));
-        operators.add(new Operator("Not Between", comparators));
-        ruleService.addType(new RuleType("Range", "Range between values", operators));
-
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
-        }).routes(() -> {
+        }).routes(() -> path("define", () -> {
+            path("connection", () -> get(RuleController::createConnection));
+
             path("tables", () -> {
                 get(RuleController::getAllTables);
-                path(":tableName", () -> {
-                    path("attributes", () -> {
-                        get(RuleController::getAllAttributesByTable);
-                    });
-                });
+                path(":tableName", () -> path("attributes", () -> get(RuleController::getAllAttributesByTable)));
             });
 
             path("types", () -> {
                 get(RuleController::getAllTypes);
                 path(":typeName", () -> {
-                    path("operators", () -> {
-                        get(RuleController::getOperatorsWithType);
-                        path(":operatorName", () -> {
-                            path("comparators", () -> {
-                                get(RuleController::getComparatorWithOperatorAndType);
-                            });
-                        });
-                    });
+                    path("operators", () -> get(RuleController::getOperatorsWithType));
+                    path("comparator", () -> get(RuleController::getComparatorsWithType));
                 });
             });
 
-            path("rules", () -> {
-                post(RuleController::saveBusinessRule);
-            });
-        }).start(7002);
+            path("rules", () -> post(RuleController::saveRuleDefinition));
+        })).start(4200);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {

@@ -15,7 +15,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     }
 
     @Override
-    public void saveRule(RuleDefinition ruleDefinition) {
+    public boolean saveRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
             String query = "{call INSERT INTO RULES (\"tableName\", \"attribute\", \"ruletypeId\", \"name\", " +
                     "\"description\", \"operator\", \"errorCode\", \"errorMessage\") VALUES (?, ?, ?, ?, ? , ?, ?, ?)" +
@@ -28,10 +28,11 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
             int ruleId = cs.getInt(9);
             cs.close();
 
-            System.out.println(ruleId);
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     @Override
@@ -53,7 +54,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
 
     private void setPreparedStatement(PreparedStatement preparedStatement, RuleDefinition ruleDefinition) throws SQLException {
         preparedStatement.setString(1, ruleDefinition.getTable().getName());
-        preparedStatement.setString(2, ruleDefinition.getTargetAttribute().getName());
+        preparedStatement.setString(2, ruleDefinition.getCompareAttribute().getName());
         preparedStatement.setInt(3, 1);
         preparedStatement.setString(4, "Test");
         preparedStatement.setString(5, "Description");

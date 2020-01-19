@@ -2,7 +2,6 @@ package com.hu.brg.define.domain;
 
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.physical.Table;
-import com.hu.brg.shared.model.rule.BusinessRule;
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
@@ -72,12 +71,11 @@ public class RuleService {
         return null;
     }
 
-    public boolean saveRule(BusinessRule businessRule) {
+    public boolean saveRule(RuleDefinition ruleDefinition) {
         try {
-            rulesDAO.saveRule(businessRule);
-            return true;
+            return rulesDAO.saveRule(ruleDefinition);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
