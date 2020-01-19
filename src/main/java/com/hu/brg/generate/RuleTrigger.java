@@ -1,6 +1,6 @@
 package com.hu.brg.generate;
 
-import com.hu.brg.shared.model.rule.BusinessRule;
+import com.hu.brg.shared.model.definition.RuleDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,28 +8,29 @@ import java.util.List;
 public class RuleTrigger {
     private List<String> triggerEvents = new ArrayList<>();
     private String triggerCode;
-    private BusinessRule businessRule;
+    private RuleDefinition ruleDefinition;
 
-    public RuleTrigger(BusinessRule businessRule) {
-        this.businessRule = businessRule;
+    public RuleTrigger(RuleDefinition ruleDefinition) {
+        this.ruleDefinition = ruleDefinition;
         generateTriggerEvents();
         generateTriggerCode();
     }
 
-    private void generateTriggerCode() {
-        if (this.businessRule.getRuleDefinition().getType().getName().equalsIgnoreCase("range")) {
-            triggerCode = String.format("v_passed := :new.%s %s %s and %s",
-                    this.businessRule.getRuleDefinition().getTargetAttribute().getName(),
-                    this.businessRule.getRuleDefinition().getOperator().getName(),
-                    this.businessRule.getRuleDefinition().getValues().get("minValue"),
-                    this.businessRule.getRuleDefinition().getValues().get("maxValue"));
+    private void generateTriggerEvents() {
+        this.triggerEvents.add("insert");
+        this.triggerEvents.add("update");
+        if (ruleDefinition.getType().getCode().equalsIgnoreCase("MODI")) {
+            this.triggerEvents.add("delete");
         }
     }
 
-    private void generateTriggerEvents() {
-        if (this.businessRule.getRuleDefinition().getType().getName().equalsIgnoreCase("range")) {
-            this.triggerEvents.add("insert");
-            this.triggerEvents.add("update");
+    private void generateTriggerCode() {
+        if (this.ruleDefinition.getType().getName().equalsIgnoreCase("range")) {
+            triggerCode = String.format("v_passed := :new.%s %s %s and %s",
+                    this.ruleDefinition.getAttribute().getName(),
+                    this.ruleDefinition.getOperator().getName(),
+                    this.ruleDefinition.getValues().get(0).getValue(),
+                    this.ruleDefinition.getValues().get(1).getValue());
         }
     }
 

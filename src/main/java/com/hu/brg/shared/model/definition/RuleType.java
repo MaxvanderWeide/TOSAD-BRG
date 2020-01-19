@@ -24,7 +24,7 @@ public class RuleType {
         return type;
     }
 
-    public String getDescription() {
+    public String getCode() {
         return code;
     }
 

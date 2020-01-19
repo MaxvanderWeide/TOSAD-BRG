@@ -5,8 +5,9 @@ public class Attribute {
     private String name;
     private String dataType;
 
-    public Attribute(String name) {
+    public Attribute(String name, String dataType) {
         this.name = name;
+        this.dataType = dataType;
     }
 
     public String getName() {
