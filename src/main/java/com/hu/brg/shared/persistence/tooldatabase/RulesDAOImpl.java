@@ -8,6 +8,7 @@ import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import oracle.jdbc.OracleTypes;
 
+import javax.swing.plaf.SliderUI;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -170,7 +171,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
 
         try (Connection conn = getConnection()) {
             TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
-            PreparedStatement preparedStatement = conn.prepareStatement("" +
+            PreparedStatement preparedStatement = conn.prepareStatement(
                     "SELECT r.\"name\", r.\"attribute\", r.\"table\", t.\"typeCode\", t.\"type\", c.\"id\", c.\"name\", o.\"id\", o.\"name\", r.\"errorCode\", r.\"errorMessage\", r.\"status\" " +
                     "FROM RULES r\n" +
                     "LEFT JOIN TYPES t ON (r.\"typeId\" = t.\"id\")\n" +
@@ -185,10 +186,18 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
                 List<Comparator> comparators = new ArrayList<>();
                 Table typeTable = null;
                 Attribute typeAttribute = null;
-                String operatorName = results.getString(9);
-                String comparatorName = results.getString(7);
-                String tableName = results.getString(3);
+                String ruleName = results.getString(1);
                 String attributeName = results.getString(2);
+                String tableName = results.getString(3);
+                String typeCode = results.getString(4);
+                String typeName = results.getString(5);
+                int comparatorId = results.getInt(6);
+                String comparatorName = results.getString(7);
+                int operatorId = results.getInt(8);
+                String operatorName = results.getString(9);
+                int errorCode = results.getInt(10);
+                String errorMessage = results.getString(11);
+                String status = results.getString(12);
 
                 for (Operator operator : getOperators()) {
                     if (operator.getName().equalsIgnoreCase(operatorName))
@@ -212,13 +221,11 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
                     }
                 }
 
-                RuleType ruleType = new RuleType(results.getString(5), results.getString(4), operators, comparators);
-                rules.add(new RuleDefinition(ruleType, results.getString(1),
-                        typeTable, typeAttribute,
-                        new Operator(results.getInt(8), results.getString(9)),
-                        new Comparator(results.getInt(6), results.getString(7)),
-                        new ArrayList<>(), results.getString(11),
-                        results.getInt(10), results.getString(12)
+                RuleType ruleType = new RuleType(typeName, typeCode, operators, comparators);
+                rules.add(new RuleDefinition(ruleType, ruleName, typeTable, typeAttribute,
+                        new Operator(operatorId, operatorName),
+                        new Comparator(comparatorId, comparatorName),
+                        new ArrayList<>(), errorMessage, errorCode, status
                 ));
             }
         } catch (SQLException e) {

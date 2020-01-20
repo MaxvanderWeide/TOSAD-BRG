@@ -2,7 +2,9 @@ package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.define.domain.RuleService;
+import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.response.ErrorResponse;
+import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -41,7 +43,13 @@ public class Main {
 
             path("rules", () -> post(RuleController::saveRuleDefinition));
         })).start(4201);
+
+        for (RuleDefinition ruleDefinition : new RulesDAOImpl().getRulesByProject(1)) {
+            System.out.println(ruleDefinition.toString());
+        }
     }
+
+
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {
         Info info = new Info().version("1.0").description("User API");
