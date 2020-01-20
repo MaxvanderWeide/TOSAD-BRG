@@ -125,6 +125,24 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         return ruleTypes;
     }
 
+    public List<RuleType> getTypes() {
+        List<RuleType> types = new ArrayList<>();
+
+        try (Connection conn = getConnection()) {
+            PreparedStatement tableSt = conn.prepareStatement("select \"id\", \"name\" from TYPES");
+            ResultSet result = tableSt.executeQuery();
+
+            while(result.next()) {
+                types.add(new RuleType(result.getString(1), result.getString(2), null, null)); // TODO - Get Operators and Comparators
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return types;
+    }
+
     public List<Operator> getOperators() {
         List<Operator> operators = new ArrayList<>();
 

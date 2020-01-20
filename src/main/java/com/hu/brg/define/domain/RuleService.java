@@ -49,7 +49,7 @@ public class RuleService {
     }
 
     public List<RuleType> getTypes() {
-        return Collections.unmodifiableList(types);
+        return Collections.unmodifiableList(this.rulesDAO.getRuleTypes());
     }
 
     public RuleType getTypeByName(String name) {

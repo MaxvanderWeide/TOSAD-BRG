@@ -165,14 +165,13 @@ public class RuleController {
             }
     )
     public static void getComparatorsWithType(io.javalin.http.Context context) {
-        Map<String, Map<String, String>> comparators = new HashMap<>();
-        Map<String, String> tempFeCodeBlock = new HashMap<>();
+        Map<String, List<String>> comparators = new HashMap<>();
+        List<String> tempComparators = new ArrayList<>();
         for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
                 .getComparators()) {
-            tempFeCodeBlock.put("CodeBlock", comparator.getFeCodeBlock()); // TODO : Decouple FE from comparator
-            tempFeCodeBlock.put("CodeReval", comparator.getFeCodeReval());
-            comparators.put(comparator.getComparator(), tempFeCodeBlock);
+            tempComparators.add(comparator.getComparator());
         }
+        comparators.put("Comparators", tempComparators);
         context.json(comparators).status(200);
 
         if (comparators.isEmpty()) {

@@ -94,11 +94,6 @@ function fillComparators(operator, type) {
     xhttp.send();
 }
 
-function evalCodeBlock(comparator) {
-    eval(comparator.options[comparator.selectedIndex].getAttribute("block"))
-}
-
-
 function saveRule() {
     var selectedTable = document.getElementById("tableSelection");
     var selectedTableName = selectedTable.options[selectedTable.selectedIndex].value;
@@ -123,7 +118,7 @@ function saveRule() {
     values["targetAttribute"] = selectedTargetAttributeName;
     values["operatorName"] = selectedOperatorName;
     values["selectedComparatorName"] = selectedComparatorName;
-    values["comparatorValues"] = eval(comparator.options[comparator.selectedIndex].getAttribute('reval'));
+    values["comparatorValues"] = getReval(selectedTypeName);
     values = JSON.stringify(values);
 
     var xhttp = new XMLHttpRequest();
@@ -134,4 +129,12 @@ function saveRule() {
     };
     xhttp.open("POST", 'define/rules', true);
     xhttp.send(values);
+}
+
+function displayBlock(type) {
+    eval(Types[type.options[type.selectedIndex].text].block);
+}
+
+function getReval(type) {
+    eval(Types[type.options[type.selectedIndex].text].reval);
 }
