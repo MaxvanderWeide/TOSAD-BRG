@@ -14,8 +14,6 @@ public class RuleDefinition {
     private Attribute attribute;
     private Operator operator;
     private Comparator comparator;
-    private Table compareTable;
-    private Attribute compareAttribute;
     private List<Value> values;
     private String errorMessage;
     private int errorCode;
@@ -24,7 +22,6 @@ public class RuleDefinition {
     public RuleDefinition(RuleType type, String name,
                           Table table, Attribute attribute,
                           Operator operator, Comparator comparator,
-                          Table compareTable, Attribute compareAttribute,
                           List<Value> values, String errorMessage,
                           int errorCode, String status) {
         this.type = type;
@@ -33,8 +30,6 @@ public class RuleDefinition {
         this.attribute = attribute;
         this.operator = operator;
         this.comparator = comparator;
-        this.compareTable = compareTable;
-        this.compareAttribute = compareAttribute;
         this.values = values;
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
@@ -65,14 +60,6 @@ public class RuleDefinition {
         return comparator;
     }
 
-    public Table getCompareTable() {
-        return compareTable;
-    }
-
-    public Attribute getCompareAttribute() {
-        return compareAttribute;
-    }
-
     public List<Value> getValues() {
         return values;
     }
@@ -98,8 +85,6 @@ public class RuleDefinition {
                 ", attribute=" + attribute.getName() +
                 ", operator=" + operator.getName() +
                 ", comparator=" + comparator +
-                ", compareTable=" + compareTable +
-                ", compareAttribute=" + compareAttribute +
                 ", values=" + values +
                 ", errorMessage='" + errorMessage + '\'' +
                 ", errorCode=" + errorCode +
