@@ -8,6 +8,7 @@ import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import oracle.jdbc.OracleTypes;
 
+import javax.swing.plaf.SliderUI;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,9 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     @Override
     public boolean saveRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
-            String query = "{call INSERT INTO RULES (\"projectId\", \"name\", \"attribute\", \"table\", " +
-                    "\"typeId\", \"comparatorId\", \"operatorId\", \"errorCode\", \"errorMessage\", \"status\") VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?)" +
-                    "RETURNING \"id\" INTO ? }";
+            String query = "{call INSERT INTO RULES (projectId, name, attribute, table, " +
+                    "typeId, comparatorId, operatorId, errorCode, errorMessage, status) VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?)" +
+                    "RETURNING id INTO ? }";
             CallableStatement cs = conn.prepareCall(query);
             setPreparedStatement(cs, ruleDefinition);
             cs.registerOutParameter(11, OracleTypes.NUMBER);
@@ -31,7 +32,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
             int ruleId = cs.getInt(11);
 
             for (Value value : ruleDefinition.getValues()) {
-                query = "INSERT INTO \"VALUES\" (\"ruleId\", \"value\") VALUES (?, ?)";
+                query = "INSERT INTO VALUES (ruleId, value) VALUES (?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setInt(1, ruleId);
                 preparedStatement.setString(2, value.getLiteral());
@@ -53,9 +54,9 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     public void updateRule(int id, RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
 
-            String query = "UPDATE RULES SET \"projectId\" = ?, \"name\" = ?, \"attribute\" = ?, \"table\" = ?, " +
-                    "\"typeId\" = ?, \"comparatorId\" = ?, \"operatorId\" = ?, \"errorCode\" = ?, \"errorMessage\" = ?, \"status\" = ?" +
-                    " WHERE \"id\" = ?";
+            String query = "UPDATE RULES SET projectId = ?, name = ?, attribute = ?, table = ?, " +
+                    "typeId = ?, comparatorId = ?, operatorId = ?, errorCode = ?, errorMessage = ?, status = ?" +
+                    " WHERE id = ?";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             setPreparedStatement(preparedStatement, ruleDefinition);
@@ -92,14 +93,14 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         List<RuleType> ruleTypes = new ArrayList<>();
         try (Connection conn = getConnection()) {
 
-            PreparedStatement typesStatement = conn.prepareStatement("select \"id\", \"type\", \"typeCode\" from types");
+            PreparedStatement typesStatement = conn.prepareStatement("select ID, TYPE, TYPECODE from types");
             ResultSet typesResult = typesStatement.executeQuery();
 
             while (typesResult.next()) {
                 List<Operator> operators = new ArrayList<>();
                 List<Comparator> comparators = new ArrayList<>();
 
-                PreparedStatement operatorsStatement = conn.prepareStatement("select \"id\", \"name\" from operators where \"typeId\" = ?");
+                PreparedStatement operatorsStatement = conn.prepareStatement("select ID, NAME from operators where TYPEID = ?");
                 operatorsStatement.setString(1, typesResult.getString(1));
                 ResultSet operatorsResult = operatorsStatement.executeQuery();
 
@@ -109,7 +110,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
                             operatorsResult.getString(2)));
                 }
 
-                PreparedStatement comparatorsStatement = conn.prepareStatement("select \"id\", \"name\" from comparators where \"typeId\" = ?");
+                PreparedStatement comparatorsStatement = conn.prepareStatement("select ID, NAME from comparators where TYPEID = ?");
                 comparatorsStatement.setString(1, typesResult.getString(1));
                 ResultSet comparatorsResult = comparatorsStatement.executeQuery();
 
@@ -133,7 +134,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         List<Operator> operators = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            PreparedStatement tableSt = conn.prepareStatement("select \"id\", \"name\" from OPERATORS");
+            PreparedStatement tableSt = conn.prepareStatement("select ID, name from OPERATORS");
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
@@ -147,11 +148,50 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         return operators;
     }
 
+    public List<Operator> getOperatorsNoClose() {
+        // TODO - REMOVE THIS FOR A BETTER USE
+        List<Operator> operators = new ArrayList<>();
+
+        try {
+            Connection conn = getConnection();
+            PreparedStatement tableSt = conn.prepareStatement("select ID, name from OPERATORS");
+            ResultSet result = tableSt.executeQuery();
+
+            while (result.next()) {
+                operators.add(new Operator(result.getInt(1), result.getString(2)));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return operators;
+    }
+
+    public List<Comparator> getComparatorsNoClose() {
+        // TODO - REMOVE THIS FOR A BETTER USE
+        List<Comparator> comparators = new ArrayList<>();
+
+        try {
+            Connection conn = getConnection();
+            PreparedStatement tableSt = conn.prepareStatement("select ID, name from COMPARATORS");
+            ResultSet result = tableSt.executeQuery();
+
+            while (result.next()) {
+                comparators.add(new Comparator(result.getInt(1), result.getString(2)));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return comparators;
+    }
+
     public List<Comparator> getComparators() {
         List<Comparator> comparators = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            PreparedStatement tableSt = conn.prepareStatement("select \"id\", \"name\" from comparators");
+            PreparedStatement tableSt = conn.prepareStatement("select ID, name from COMPARATORS");
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
@@ -167,45 +207,58 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
 
     public List<RuleDefinition> getRulesByProject(int id) {
         List<RuleDefinition> rules = new ArrayList<>();
-        Connection conn = getConnection();
-        TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
 
-        PreparedStatement preparedStatement = null;
-        try {
-            preparedStatement = conn.prepareStatement("SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE," +
-                    "r.TYPEID, r.COMPARATORID, r.OPERATORID, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS from RULES r WHERE r.PROJECTID = ?");
+        try (Connection conn = getConnection()) {
+            TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
+            PreparedStatement preparedStatement = conn.prepareStatement(
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, c.ID, c.NAME, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS " +
+                            "FROM RULES r " +
+                            "LEFT JOIN TYPES t ON (r.TYPEID = t.id)" +
+                            "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
+                            "LEFT JOIN COMPARATORS c ON (r.COMPARATORID = c.ID)" +
+                            "WHERE r.PROJECTID = ?");
             preparedStatement.setInt(1, id);
             ResultSet results = preparedStatement.executeQuery();
 
             while (results.next()) {
                 List<Operator> operators = new ArrayList<>();
                 List<Comparator> comparators = new ArrayList<>();
-
+                Table typeTable = null;
+                Attribute typeAttribute = null;
                 String ruleName = results.getString(1);
                 String attributeName = results.getString(2);
                 String tableName = results.getString(3);
                 String typeCode = results.getString(4);
-                int comparatorId = results.getInt(5);
-                int operatorId = results.getInt(6);
-                int errorCode = results.getInt(7);
-                String errorMessage = results.getString(8);
-                String status = results.getString(9);
-                String typeName = "Type";
-                String operatorName = "Operator";
-                String comparatorName = "Comparator";
+                String typeName = results.getString(5);
+                int comparatorId = results.getInt(6);
+                String comparatorName = results.getString(7);
+                int operatorId = results.getInt(8);
+                String operatorName = results.getString(9);
+                int errorCode = results.getInt(10);
+                String errorMessage = results.getString(11);
+                String status = results.getString(12);
 
+                for (Operator operator : getOperatorsNoClose()) {
+                    if (operator.getName().equalsIgnoreCase(operatorName))
+                        operators.add(operator);
+                }
 
-                operators.add(new Operator(operatorId, "Operator"));
+                for (Comparator comparator : getComparatorsNoClose()) {
+                    if (comparator.getName().equalsIgnoreCase(comparatorName))
+                        comparators.add(comparator);
+                }
 
+                for (Table table : targetDatabaseDAO.getTables("TOSAD_TARGET")) {
+                    if (table.getName().equalsIgnoreCase(tableName)) {
+                        typeTable = table;
+                    }
+                }
 
-                comparators.add(new Comparator(comparatorId, "Comparator"));
-
-                Attribute typeAttribute = new Attribute("Attribute", "VARCHAR2");
-                List<Attribute> attributes = new ArrayList<>();
-                attributes.add(typeAttribute);
-                Table typeTable = new Table("Table", attributes);
-
-
+                for (Attribute attribute : typeTable.getAttributes()) {
+                    if (attribute.getName().equalsIgnoreCase(attributeName)) {
+                        typeAttribute = attribute;
+                    }
+                }
 
                 RuleType ruleType = new RuleType(typeName, typeCode, operators, comparators);
                 rules.add(new RuleDefinition(ruleType, ruleName, typeTable, typeAttribute,
@@ -216,80 +269,8 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
 
-
-//        List<RuleDefinition> rules = new ArrayList<>();
-//
-//        try (Connection conn = getConnection()) {
-//            TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
-//            PreparedStatement preparedStatement = conn.prepareStatement(
-//                    "SELECT r.\"name\", r.\"attribute\", r.\"table\", t.\"typeCode\", t.\"type\", c.\"id\", c.\"name\", o.\"id\", o.\"name\", r.\"errorCode\", r.\"errorMessage\", r.\"status\" " +
-//                    "FROM RULES r\n" +
-//                    "LEFT JOIN TYPES t ON (r.\"typeId\" = t.\"id\")\n" +
-//                    "LEFT JOIN OPERATORS o ON (r.\"operatorId\" = o.\"id\")\n" +
-//                    "LEFT JOIN COMPARATORS c ON (r.\"comparatorId\" = c.\"id\")\n" +
-//                    "WHERE r.\"projectId\" = ?");
-//            preparedStatement.setInt(1, id);
-//            ResultSet results = preparedStatement.executeQuery();
-//
-//            while (results.next()) {
-//                List<Operator> operators = new ArrayList<>();
-//                List<Comparator> comparators = new ArrayList<>();
-//                Table typeTable = null;
-//                Attribute typeAttribute = null;
-//                String ruleName = results.getString(1);
-//                String attributeName = results.getString(2);
-//                String tableName = results.getString(3);
-//                String typeCode = results.getString(4);
-//                String typeName = results.getString(5);
-//                int comparatorId = results.getInt(6);
-//                String comparatorName = results.getString(7);
-//                int operatorId = results.getInt(8);
-//                String operatorName = results.getString(9);
-//                int errorCode = results.getInt(10);
-//                String errorMessage = results.getString(11);
-//                String status = results.getString(12);
-//
-//                for (Operator operator : getOperators()) {
-//                    if (operator.getName().equalsIgnoreCase(operatorName))
-//                        operators.add(operator);
-//                }
-//
-//                for (Comparator comparator : getComparators()) {
-//                    if (comparator.getName().equalsIgnoreCase(comparatorName))
-//                        comparators.add(comparator);
-//                }
-//
-//                for (Table table : targetDatabaseDAO.getTables("TOSAD_TARGET")) {
-//                    if (table.getName().equalsIgnoreCase(tableName)) {
-//                        typeTable = table;
-//                    }
-//                }
-//
-//                for (Attribute attribute : typeTable.getAttributes()) {
-//                    if (attribute.getName().equals(attributeName)) {
-//                        typeAttribute = attribute;
-//                    }
-//                }
-//
-//                RuleType ruleType = new RuleType(typeName, typeCode, operators, comparators);
-//                rules.add(new RuleDefinition(ruleType, ruleName, typeTable, typeAttribute,
-//                        new Operator(operatorId, operatorName),
-//                        new Comparator(comparatorId, comparatorName),
-//                        new ArrayList<>(), errorMessage, errorCode, status
-//                ));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
         return rules;
     }
 }
