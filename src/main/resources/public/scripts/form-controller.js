@@ -132,9 +132,10 @@ function saveRule() {
 }
 
 function displayBlock(type) {
+    document.getElementById('comparatorStep').innerHTML = "";
     eval(Types[type.options[type.selectedIndex].text].block);
 }
 
 function getReval(type) {
-    eval(Types[type.options[type.selectedIndex].text].reval);
+    return eval(Types[type].reval);
 }

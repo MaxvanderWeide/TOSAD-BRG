@@ -10,7 +10,6 @@ import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -43,13 +42,15 @@ public class RuleService {
         return ruleDefinition != null;
     }
 
-    public boolean addType(RuleType type) {
+    private void addType(RuleType type) {
         if (type != null) types.add(type);
-        return type != null;
     }
 
     public List<RuleType> getTypes() {
-        return Collections.unmodifiableList(this.rulesDAO.getRuleTypes());
+        for (RuleType brt : this.rulesDAO.getRuleTypes()) {
+            addType(brt);
+        }
+        return Collections.unmodifiableList(types);
     }
 
     public RuleType getTypeByName(String name) {
