@@ -56,7 +56,7 @@ public class RuleGenerator {
                         "    %s;\n" +
                         "    if not v_passed\n" +
                         "        then\n" +
-                        "        raise_application_error(%d, %s)\n " +
+                        "        raise_application_error(%d, '%s');\n " +
                         "    end if;\n" +
                         "end;",
                 this.triggerName,
