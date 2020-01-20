@@ -1,6 +1,10 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.shared.model.definition.*;
+import com.hu.brg.shared.model.definition.Comparator;
+import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.definition.RuleType;
+import com.hu.brg.shared.model.definition.Value;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.persistence.BaseDAO;
@@ -8,8 +12,11 @@ import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import oracle.jdbc.OracleTypes;
 
-import javax.swing.plaf.SliderUI;
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +28,9 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     @Override
     public boolean saveRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
-            String query = "{call INSERT INTO RULES (projectId, name, attribute, table, " +
-                    "typeId, comparatorId, operatorId, errorCode, errorMessage, status) VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?)" +
-                    "RETURNING id INTO ? }";
+            String query = "{call INSERT INTO RULES (PROJECTID, NAME, ATTRIBUTE, TARGETTABLE, " +
+                    "TYPEID, COMPARATORID, OPERATORID, ERRORCODE, ERRORMESSAGE, STATUS) VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?)" +
+                    "RETURNING ID INTO ? }";
             CallableStatement cs = conn.prepareCall(query);
             setPreparedStatement(cs, ruleDefinition);
             cs.registerOutParameter(11, OracleTypes.NUMBER);
@@ -32,7 +39,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
             int ruleId = cs.getInt(11);
 
             for (Value value : ruleDefinition.getValues()) {
-                query = "INSERT INTO VALUES (ruleId, value) VALUES (?, ?)";
+                query = "INSERT INTO VALUES (RULEID, VALUE) VALUES (?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setInt(1, ruleId);
                 preparedStatement.setString(2, value.getLiteral());
@@ -54,9 +61,9 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
     public void updateRule(int id, RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
 
-            String query = "UPDATE RULES SET projectId = ?, name = ?, attribute = ?, table = ?, " +
-                    "typeId = ?, comparatorId = ?, operatorId = ?, errorCode = ?, errorMessage = ?, status = ?" +
-                    " WHERE id = ?";
+            String query = "UPDATE RULES SET PROJECTID = ?, NAME = ?, ATTRIBUTE = ?, TARGETTABLE = ?, " +
+                    "TYPEID = ?, COMPARATORID = ?, OPERATORID = ?, ERRORCODE = ?, ERRORMESSAGE = ?, STATUS = ?" +
+                    " WHERE ID = ?";
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             setPreparedStatement(preparedStatement, ruleDefinition);
@@ -93,14 +100,14 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         List<RuleType> ruleTypes = new ArrayList<>();
         try (Connection conn = getConnection()) {
 
-            PreparedStatement typesStatement = conn.prepareStatement("select ID, TYPE, TYPECODE from types");
+            PreparedStatement typesStatement = conn.prepareStatement("SELECT ID, TYPE, TYPECODE FROM types");
             ResultSet typesResult = typesStatement.executeQuery();
 
             while (typesResult.next()) {
                 List<Operator> operators = new ArrayList<>();
                 List<Comparator> comparators = new ArrayList<>();
 
-                PreparedStatement operatorsStatement = conn.prepareStatement("select ID, NAME from operators where TYPEID = ?");
+                PreparedStatement operatorsStatement = conn.prepareStatement("SELECT ID, NAME FROM operators where TYPEID = ?");
                 operatorsStatement.setString(1, typesResult.getString(1));
                 ResultSet operatorsResult = operatorsStatement.executeQuery();
 
@@ -110,7 +117,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
                             operatorsResult.getString(2)));
                 }
 
-                PreparedStatement comparatorsStatement = conn.prepareStatement("select ID, NAME from comparators where TYPEID = ?");
+                PreparedStatement comparatorsStatement = conn.prepareStatement("SELECT ID, NAME FROM comparators where TYPEID = ?");
                 comparatorsStatement.setString(1, typesResult.getString(1));
                 ResultSet comparatorsResult = comparatorsStatement.executeQuery();
 
@@ -134,7 +141,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         List<Operator> operators = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            PreparedStatement tableSt = conn.prepareStatement("select ID, name from OPERATORS");
+            PreparedStatement tableSt = conn.prepareStatement("SELECT ID, name FROM OPERATORS");
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
@@ -154,7 +161,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
 
         try {
             Connection conn = getConnection();
-            PreparedStatement tableSt = conn.prepareStatement("select ID, name from OPERATORS");
+            PreparedStatement tableSt = conn.prepareStatement("SELECT ID, name FROM OPERATORS");
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
@@ -173,7 +180,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
 
         try {
             Connection conn = getConnection();
-            PreparedStatement tableSt = conn.prepareStatement("select ID, name from COMPARATORS");
+            PreparedStatement tableSt = conn.prepareStatement("SELECT ID, name FROM COMPARATORS");
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
@@ -191,7 +198,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
         List<Comparator> comparators = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            PreparedStatement tableSt = conn.prepareStatement("select ID, name from COMPARATORS");
+            PreparedStatement tableSt = conn.prepareStatement("SELECT ID, name FROM COMPARATORS");
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
