@@ -5,7 +5,6 @@ import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 
 import java.util.List;
-import java.util.Map;
 
 public class RuleDefinitionBuilder {
 

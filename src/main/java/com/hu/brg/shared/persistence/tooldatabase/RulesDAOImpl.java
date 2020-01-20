@@ -34,7 +34,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
                 query = "INSERT INTO \"VALUES\" (\"ruleId\", \"value\") VALUES (?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setInt(1, ruleId);
-                preparedStatement.setString(2, value.getValue());
+                preparedStatement.setString(2, value.getLiteral());
                 preparedStatement.executeUpdate();
 
                 preparedStatement.close();
@@ -196,7 +196,7 @@ public class RulesDAOImpl extends BaseDAO implements RulesDAO {
                 }
 
                 for (Comparator comparator : getComparators()) {
-                    if (comparator.getComparator().equalsIgnoreCase(comparatorName))
+                    if (comparator.getName().equalsIgnoreCase(comparatorName))
                         comparators.add(comparator);
                 }
 

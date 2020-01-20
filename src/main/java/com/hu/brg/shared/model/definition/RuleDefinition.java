@@ -4,7 +4,6 @@ import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 
 import java.util.List;
-import java.util.Map;
 
 public class RuleDefinition {
 
@@ -24,6 +23,7 @@ public class RuleDefinition {
                           Operator operator, Comparator comparator,
                           List<Value> values, String errorMessage,
                           int errorCode, String status) {
+        // TODO - Limit constructor parameters
         this.type = type;
         this.name = name;
         this.table = table;

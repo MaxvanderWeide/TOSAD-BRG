@@ -3,16 +3,16 @@ package com.hu.brg.shared.model.definition;
 public class Comparator {
 
     private int id;
-    private String comparator;
+    private String name;
 
-    public Comparator(int id, String comparator) {
+    public Comparator(int id, String name) {
         this.id = id;
-        this.comparator = comparator;
+        this.name = name;
 
     }
 
-    public String getComparator() {
-        return comparator;
+    public String getName() {
+        return name;
     }
 
     public int getId() {

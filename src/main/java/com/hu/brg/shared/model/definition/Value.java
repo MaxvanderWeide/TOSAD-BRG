@@ -1,13 +1,13 @@
 package com.hu.brg.shared.model.definition;
 
 public class Value {
-    private String value;
+    private String literal;
 
-    public Value(String value) {
-        this.value = value;
+    public Value(String literal) {
+        this.literal = literal;
     }
 
-    public String getValue() {
-        return value;
+    public String getLiteral() {
+        return literal;
     }
 }

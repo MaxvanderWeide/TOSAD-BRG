@@ -60,10 +60,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     @Override
     public void insertRule(String sql) {
-        try (Connection conn = getConnection()) {
-            Statement statement = conn.createStatement();
+        try (Connection conn = getConnection(); Statement statement = conn.createStatement()) {
             statement.execute(sql);
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

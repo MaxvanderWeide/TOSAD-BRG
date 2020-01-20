@@ -5,7 +5,6 @@ import com.hu.brg.shared.model.definition.RuleDefinition;
 import java.util.List;
 
 public class RuleGenerator {
-    private String generatedCode;
     private String triggerName;
     private RuleDefinition ruleDefinition;
 
@@ -47,8 +46,7 @@ public class RuleGenerator {
         generateTriggerName();
         formatTriggerEvent();
 
-        this.generatedCode =
-                String.format("create or replace trigger %s\n" +
+        return String.format("create or replace trigger %s\n" +
                         "    before %s\n" +
                         "    on %s\n" +
                         "    for each row\n" +
@@ -58,16 +56,14 @@ public class RuleGenerator {
                         "    %s;\n" +
                         "    if not v_passed\n" +
                         "        then\n" +
-                        "        raise_application_error(%d, %s)\n "+
+                        "        raise_application_error(%d, %s)\n " +
                         "    end if;\n" +
                         "end;",
-                        this.triggerName,
-                        this.triggerEvent,
-                        this.ruleDefinition.getTable().getName(),
-                        this.ruleTrigger.getTriggerCode(),
-                        this.ruleDefinition.getErrorCode(),
-                        this.ruleDefinition.getErrorMessage());
-
-        return this.generatedCode;
+                this.triggerName,
+                this.triggerEvent,
+                this.ruleDefinition.getTable().getName(),
+                this.ruleTrigger.getTriggerCode(),
+                this.ruleDefinition.getErrorCode(),
+                this.ruleDefinition.getErrorMessage());
     }
 }

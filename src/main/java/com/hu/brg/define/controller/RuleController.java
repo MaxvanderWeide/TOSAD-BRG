@@ -18,31 +18,7 @@ import java.util.Map;
 
 public class RuleController {
 
-    @OpenApi(
-            summary = "Create connection",
-            operationId = "createConnection",
-            path = "/define/connection",
-            method = HttpMethod.POST,
-            tags = {"Define", "Database"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void createConnection(io.javalin.http.Context context) {
-        JSONObject request = new JSONObject(context.body());
-        // TODO - Create connection using this endpoint
-        String service = request.get("service").toString();
-        String engine = request.get("engine").toString();
-        String host = request.get("engine").toString();
-        String port = request.get("port").toString();
-        String username = request.get("username").toString();
-        String password = request.get("password").toString();
-        System.out.println(service + engine + host + port + username + password);
-        context.result("Connection Made").status(200);
-    }
-
+    private RuleController (){}
     @OpenApi(
             summary = "Get all types",
             operationId = "getAllTypes",
@@ -169,7 +145,7 @@ public class RuleController {
         List<String> tempComparators = new ArrayList<>();
         for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
                 .getComparators()) {
-            tempComparators.add(comparator.getComparator());
+            tempComparators.add(comparator.getName());
         }
         comparators.put("Comparators", tempComparators);
         context.json(comparators).status(200);
@@ -193,10 +169,7 @@ public class RuleController {
     )
     public static void saveRuleDefinition(io.javalin.http.Context context) {
         // TODO - Add connection
-        // TODO - Add error handling
         JSONObject jsonObject = new JSONObject(context.body());
-        // TODO - Create Business Rule using builder
-        System.out.println(jsonObject.get("comparatorValues"));
 
         RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
 

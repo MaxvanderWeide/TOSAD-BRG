@@ -1,7 +1,5 @@
 package com.hu.brg.shared.model.definition;
 
-import java.util.List;
-
 public class Operator {
 
     private int id;

@@ -25,7 +25,6 @@ public class Main {
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> path("define", () -> {
-            path("connection", () -> get(RuleController::createConnection));
 
             path("tables", () -> {
                 get(RuleController::getAllTables);

@@ -118,7 +118,7 @@ public class RuleService {
 
     public Comparator getComparatorByName(String name) {
         for(Comparator comparator : this.rulesDAO.getComparators()) {
-            if(comparator.getComparator().equalsIgnoreCase(name))
+            if(comparator.getName().equalsIgnoreCase(name))
                 return comparator;
         }
         return null;

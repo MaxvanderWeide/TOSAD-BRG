@@ -1,8 +1,5 @@
 package com.hu.brg.shared.model.definition;
 
-import com.hu.brg.shared.model.definition.Operator;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class RuleType {
@@ -50,7 +47,7 @@ public class RuleType {
 
     public Comparator getComparatorByName(String name) {
         for (Comparator comparator : comparators) {
-            if (comparator.getComparator().equals(name)) {
+            if (comparator.getName().equals(name)) {
                 return comparator;
             }
         }

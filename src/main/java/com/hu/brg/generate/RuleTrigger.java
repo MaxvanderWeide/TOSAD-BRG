@@ -29,8 +29,8 @@ public class RuleTrigger {
             triggerCode = String.format("v_passed := :new.%s %s %s and %s",
                     this.ruleDefinition.getAttribute().getName(),
                     this.ruleDefinition.getOperator().getName(),
-                    this.ruleDefinition.getValues().get(0).getValue(),
-                    this.ruleDefinition.getValues().get(1).getValue());
+                    this.ruleDefinition.getValues().get(0).getLiteral(),
+                    this.ruleDefinition.getValues().get(1).getLiteral());
         }
     }
 
