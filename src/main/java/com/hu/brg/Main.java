@@ -2,9 +2,6 @@ package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.define.domain.RuleService;
-import com.hu.brg.shared.model.definition.Comparator;
-import com.hu.brg.shared.model.definition.Operator;
-import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.response.ErrorResponse;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
@@ -12,9 +9,6 @@ import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -25,12 +19,6 @@ public class Main {
 
     public static void main(String[] args) {
         ruleService = new RuleService();
-
-        List<Operator> operators = new ArrayList<>();
-        List<Comparator> comparators = new ArrayList<>();
-        comparators.add(new Comparator("Between"));
-        operators.add(new Operator("Between"));
-        ruleService.addType(new RuleType("Range", "Range between values", operators, comparators));
 
         Javalin.create(config -> {
             config.addStaticFiles("/public");
