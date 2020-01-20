@@ -32,26 +32,29 @@ public class RuleTrigger {
                     this.ruleDefinition.getOperator().getName(),
                     this.ruleDefinition.getValues().get(0).getLiteral(),
                     this.ruleDefinition.getValues().get(1).getLiteral());
-        }
-        if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ACMP")) {
+        } else if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ACMP")) {
 
-            if (this.ruleDefinition.getOperator().getName().equalsIgnoreCase("Equals")) {
-                operator = "==";
-            }
-            if (this.ruleDefinition.getOperator().getName().equalsIgnoreCase("NotEquals")) {
-                operator = "!=";
-            }
-            if (this.ruleDefinition.getOperator().getName().equalsIgnoreCase("LessThan")) {
-                operator = "<";
-            }
-            if (this.ruleDefinition.getOperator().getName().equalsIgnoreCase("GreaterThan")) {
-                operator = ">";
-            }
-            if (this.ruleDefinition.getOperator().getName().equalsIgnoreCase("LessOrEqualTo")) {
-                operator = "<=";
-            }
-            if (this.ruleDefinition.getOperator().getName().equalsIgnoreCase("GreaterOrEqualTo")) {
-                operator = ">=";
+            switch (this.ruleDefinition.getOperator().getName().toUpperCase()) {
+                case "EQUALS":
+                    operator = "==";
+                    break;
+                case "NOTEQUALS":
+                    operator = "!=";
+                    break;
+                case "LESSTHAN":
+                    operator = "<";
+                    break;
+                case "GREATERTHAN":
+                    operator = ">";
+                    break;
+                case "LESSOREQUALTO":
+                    operator = "<=";
+                    break;
+                case "GREATEROREQUALTO":
+                    operator = ">=";
+                    break;
+                default:
+                    operator = null;
             }
 
             triggerCode = String.format("v_passed := :new.%s %s '%s'",
