@@ -30,8 +30,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
             while (result.next()) {
                 String tableName = result.getString("TABLE_NAME");
-                Table table = new Table(tableName);
 
+                List<Attribute> attributes = new ArrayList<>();
                 Statement attributeSt = conn.createStatement();
                 ResultSet tableAttributes = attributeSt.executeQuery("select column_name, data_type from USER_TAB_COLUMNS " +
                         "where TABLE_NAME = '" + tableName + "'");
@@ -39,8 +39,10 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                 while (tableAttributes.next()) {
                     Attribute attribute = new Attribute(tableAttributes.getString("COLUMN_NAME"), tableAttributes.getString("DATA_TYPE"));
 
-                    table.addAttribute(attribute);
+                    attributes.add(attribute);
                 }
+
+                Table table = new Table(tableName, attributes);
 
                 tables.add(table);
 

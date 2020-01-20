@@ -1,20 +1,15 @@
 package com.hu.brg.shared.model.physical;
 
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
 
     private String name;
-    private List<Attribute> attributes = new ArrayList<>();
+    private List<Attribute> attributes;
 
-    public Table(String name) {
+    public Table(String name, List<Attribute> attributes) {
         this.name = name;
-    }
-
-    public void addAttribute(Attribute attribute) {
-        this.attributes.add(attribute);
+        this.attributes = attributes;
     }
 
     public List<Attribute> getAttributes() {
