@@ -18,7 +18,7 @@ public class RuleService {
     private List<RuleDefinition> ruleDefinitions = new ArrayList<>();
     private Table selectedTable;
     private List<RuleType> types = new ArrayList<>();
-    private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseDAOImpl();
+    private TargetDatabaseDAO targetDatabaseDao = TargetDatabaseDAOImpl.getDefaultInstance();
     private RulesDAO rulesDAO = DAOServiceProvider.getRulesDAO();
     private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
 

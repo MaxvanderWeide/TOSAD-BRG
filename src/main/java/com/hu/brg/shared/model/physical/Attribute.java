@@ -17,4 +17,11 @@ public class Attribute {
     public String getDataType() {
         return dataType;
     }
+
+    @Override
+    public String toString() {
+        return "Attribute{" +
+                "name='" + name + '\'' +
+                '}';
+    }
 }

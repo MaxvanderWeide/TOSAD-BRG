@@ -81,9 +81,9 @@ public class RuleDefinition {
         return "RuleDefinition{" +
                 "type=" + type +
                 ", name='" + name + '\'' +
-                ", table=" + table.getName() +
-                ", attribute=" + attribute.getName() +
-                ", operator=" + operator.getName() +
+                ", table=" + table +
+                ", attribute=" + attribute +
+                ", operator=" + operator +
                 ", comparator=" + comparator +
                 ", values=" + values +
                 ", errorMessage='" + errorMessage + '\'' +

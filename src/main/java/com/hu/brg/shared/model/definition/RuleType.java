@@ -24,10 +24,6 @@ public class RuleType {
         return code;
     }
 
-    public String toString() {
-        return "" + type + " " + code;
-    }
-
     public List<Operator> getOperators() {
         return operators;
     }
@@ -54,4 +50,11 @@ public class RuleType {
         return null;
     }
 
+    @Override
+    public String toString() {
+        return "RuleType{" +
+                "type='" + type + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }

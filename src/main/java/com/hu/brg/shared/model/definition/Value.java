@@ -10,4 +10,11 @@ public class Value {
     public String getLiteral() {
         return literal;
     }
+
+    @Override
+    public String toString() {
+        return "Value{" +
+                "literal='" + literal + '\'' +
+                '}';
+    }
 }

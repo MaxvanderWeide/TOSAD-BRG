@@ -17,4 +17,12 @@ public class Operator {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Operator{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

@@ -34,7 +34,7 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     public static TargetDatabaseDAO getDefaultInstance() {
         if (instance == null) {
-            instance = createTargetDatabaseDAOImpl("ondora04.hu.nl", 8521, "EDUC17",  "TOSAD", "tosad1234");
+            instance = createTargetDatabaseDAOImpl("ondora04.hu.nl", 8521, "EDUC17",  "TOSAD_TARGET", "tosad1234");
         }
 
         return instance;
