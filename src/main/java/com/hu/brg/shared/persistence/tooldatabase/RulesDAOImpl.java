@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RulesDAOImpl extends ToolDBBaseDAO implements RulesDAO {
+public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
     @Override
     public boolean saveRule(RuleDefinition ruleDefinition) {
@@ -75,7 +75,8 @@ public class RulesDAOImpl extends ToolDBBaseDAO implements RulesDAO {
 
     @Override
     public RuleDefinition getRule(int id) {
-        return null;
+        //TODO: Implement function
+        throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
@@ -83,7 +84,7 @@ public class RulesDAOImpl extends ToolDBBaseDAO implements RulesDAO {
         List<RuleDefinition> rules = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
+            TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
                     "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, c.ID, c.NAME, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS " +
                             "FROM RULES r " +

@@ -3,6 +3,7 @@ package com.hu.brg.shared.persistence.targetdatabase;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.persistence.BaseDAO;
+import com.hu.brg.shared.persistence.DBEngines;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,8 +16,36 @@ import java.util.List;
 
 public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO {
 
+    private static TargetDatabaseDAO instance;
+
+    private String host;
+    private int port;
+    private String serviceName;
+    private String username;
+    private String password;
+
+    private TargetDatabaseDAOImpl(String host, int port, String serviceName, String username, String password) {
+        this.host = host;
+        this.port = port;
+        this.serviceName = serviceName;
+        this.username = username;
+        this.password = password;
+    }
+
+    public static TargetDatabaseDAO getDefaultInstance() {
+        if (instance == null) {
+            instance = createTargetDatabaseDAOImpl("ondora04.hu.nl", 8521, "EDUC17",  "TOSAD", "tosad1234");
+        }
+
+        return instance;
+    }
+
+    public static TargetDatabaseDAOImpl createTargetDatabaseDAOImpl(String host, int port, String serviceName, String username, String password) {
+        return new TargetDatabaseDAOImpl(host, port, serviceName, username, password);
+    }
+
     private Connection getConnection() {
-        return this.getConnection("TOSAD_TARGET", "tosad1234");
+        return this.getConnection(DBEngines.ORACLE, host, port, serviceName, username, password);
     }
 
     @Override

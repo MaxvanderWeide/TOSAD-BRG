@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RuleTypesDAOImpl extends ToolDBBaseDAO implements RuleTypesDAO {
+public class RuleTypesDAOImpl extends ToolDatabaseBaseDAO implements RuleTypesDAO {
 
     @Override
     public List<RuleType> getRuleTypes() {

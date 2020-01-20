@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperatorsDAOImpl extends ToolDBBaseDAO implements OperatorsDAO {
+public class OperatorsDAOImpl extends ToolDatabaseBaseDAO implements OperatorsDAO {
 
     @Override
     public List<Operator> getOperators() {

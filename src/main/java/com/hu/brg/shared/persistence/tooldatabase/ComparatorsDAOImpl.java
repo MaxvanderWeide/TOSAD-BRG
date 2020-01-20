@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ComparatorsDAOImpl extends ToolDBBaseDAO implements ComparatorsDAO {
+public class ComparatorsDAOImpl extends ToolDatabaseBaseDAO implements ComparatorsDAO {
 
     @Override
     public List<Comparator> getComparators() {
