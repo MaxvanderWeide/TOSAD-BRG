@@ -1,14 +1,13 @@
 package com.hu.brg.define.domain;
 
-import com.hu.brg.shared.model.definition.Comparator;
-import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.definition.RuleDefinition;
-import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.definition.RuleType;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.persistence.DAOServiceProvider;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAO;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
-import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +19,8 @@ public class RuleService {
     private Table selectedTable;
     private List<RuleType> types = new ArrayList<>();
     private TargetDatabaseDAO targetDatabaseDao = new TargetDatabaseDAOImpl();
-    private RulesDAO rulesDAO = new RulesDAOImpl();
+    private RulesDAO rulesDAO = DAOServiceProvider.getRulesDAO();
+    private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
 
     public RuleService() {
     }
@@ -47,7 +47,7 @@ public class RuleService {
     }
 
     public List<RuleType> getTypes() {
-        for (RuleType brt : this.rulesDAO.getRuleTypes()) {
+        for (RuleType brt : ruleTypesDAO.getRuleTypes()) {
             addType(brt);
         }
         return Collections.unmodifiableList(types);
@@ -84,43 +84,44 @@ public class RuleService {
         return false;
     }
 
-    public List<Operator> getOperatorsByRuleType(RuleType ruleType) {
-        List<Operator> operators = new ArrayList<>();
-
-        for(RuleType type : this.rulesDAO.getRuleTypes()) {
-            if(type.getCode().equals(ruleType.getCode())) {
-                operators.addAll(type.getOperators());
-            }
-        }
-
-        return operators;
-    }
-
-    public List<Comparator> getComparatorsByRuleType(RuleType ruleType) {
-        List<Comparator> comparators = new ArrayList<>();
-
-        for(RuleType type : this.rulesDAO.getRuleTypes()) {
-            if(type.getCode().equals(ruleType.getCode())) {
-                comparators.addAll(type.getComparators());
-            }
-        }
-
-        return comparators;
-    }
-
-    public Operator getOperatorByName(String name) {
-        for(Operator operator : this.rulesDAO.getOperators()) {
-            if(operator.getName().equalsIgnoreCase(name))
-                return operator;
-        }
-        return null;
-    }
-
-    public Comparator getComparatorByName(String name) {
-        for(Comparator comparator : this.rulesDAO.getComparators()) {
-            if(comparator.getName().equalsIgnoreCase(name))
-                return comparator;
-        }
-        return null;
-    }
+    //TODO: Use correct DAO class
+//    public List<Operator> getOperatorsByRuleType(RuleType ruleType) {
+//        List<Operator> operators = new ArrayList<>();
+//
+//        for(RuleType type : this.rulesDAO.getRuleTypes()) {
+//            if(type.getCode().equals(ruleType.getCode())) {
+//                operators.addAll(type.getOperators());
+//            }
+//        }
+//
+//        return operators;
+//    }
+//
+//    public List<Comparator> getComparatorsByRuleType(RuleType ruleType) {
+//        List<Comparator> comparators = new ArrayList<>();
+//
+//        for(RuleType type : this.rulesDAO.getRuleTypes()) {
+//            if(type.getCode().equals(ruleType.getCode())) {
+//                comparators.addAll(type.getComparators());
+//            }
+//        }
+//
+//        return comparators;
+//    }
+//
+//    public Operator getOperatorByName(String name) {
+//        for(Operator operator : this.rulesDAO.getOperators()) {
+//            if(operator.getName().equalsIgnoreCase(name))
+//                return operator;
+//        }
+//        return null;
+//    }
+//
+//    public Comparator getComparatorByName(String name) {
+//        for(Comparator comparator : this.rulesDAO.getComparators()) {
+//            if(comparator.getName().equalsIgnoreCase(name))
+//                return comparator;
+//        }
+//        return null;
+//    }
 }

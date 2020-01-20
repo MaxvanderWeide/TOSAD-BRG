@@ -18,4 +18,12 @@ public class Comparator {
     public int getId() {
         return id;
     }
+
+    @Override
+    public String toString() {
+        return "Comparator{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
