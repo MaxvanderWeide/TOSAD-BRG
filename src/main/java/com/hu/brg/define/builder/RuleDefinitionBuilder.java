@@ -12,8 +12,6 @@ public class RuleDefinitionBuilder {
     private String name;
     private Attribute attribute;
     private Table table;
-    private Attribute compareAttribute;
-    private Table compareTable;
     private Operator operator;
     private Comparator comparator;
     private List<Value> values;
@@ -57,22 +55,6 @@ public class RuleDefinitionBuilder {
         return this;
     }
 
-    public RuleDefinitionBuilder setCompareTable(Table compareTable) {
-        if (comparator != null) {
-            this.compareTable = compareTable;
-            return this;
-        }
-        return null;
-    }
-
-    public RuleDefinitionBuilder setCompareAttribute(Attribute compareAttribute) {
-        if (comparator != null) {
-            this.compareAttribute = compareAttribute;
-            return this;
-        }
-        return null;
-    }
-
     public RuleDefinitionBuilder setErrorMessage(String errorMessage) {
         this.errorMessage = errorMessage;
         return this;
@@ -89,6 +71,6 @@ public class RuleDefinitionBuilder {
     }
 
     public RuleDefinition build() {
-        return new RuleDefinition(type, name, table, attribute, operator, comparator, compareTable, compareAttribute, values, errorMessage, errorCode, status);
+        return new RuleDefinition(type, name, table, attribute, operator, comparator, values, errorMessage, errorCode, status);
     }
 }
