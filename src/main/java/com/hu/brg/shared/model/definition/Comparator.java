@@ -2,11 +2,13 @@ package com.hu.brg.shared.model.definition;
 
 public class Comparator {
 
+    private int id;
     private String comparator;
     private String feCodeBlock;
     private String feCodeReval;
 
-    public Comparator(String comparator) {
+    public Comparator(int id, String comparator) {
+        this.id = id;
         this.comparator = comparator;
         this.feCodeBlock =
                 "var custInput1 = document.createElement(\"INPUT\");" +
@@ -26,6 +28,10 @@ public class Comparator {
 
     public String getComparator() {
         return comparator;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getFeCodeBlock() {

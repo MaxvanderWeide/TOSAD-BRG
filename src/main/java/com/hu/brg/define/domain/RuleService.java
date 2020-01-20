@@ -1,5 +1,7 @@
 package com.hu.brg.define.domain;
 
+import com.hu.brg.shared.model.definition.Comparator;
+import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.definition.RuleType;
@@ -8,6 +10,7 @@ import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,5 +81,45 @@ public class RuleService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Operator> getOperatorsByRuleType(RuleType ruleType) {
+        List<Operator> operators = new ArrayList<>();
+
+        for(RuleType type : this.rulesDAO.getRuleTypes()) {
+            if(type.getCode().equals(ruleType.getCode())) {
+                operators.addAll(type.getOperators());
+            }
+        }
+
+        return operators;
+    }
+
+    public List<Comparator> getComparatorsByRuleType(RuleType ruleType) {
+        List<Comparator> comparators = new ArrayList<>();
+
+        for(RuleType type : this.rulesDAO.getRuleTypes()) {
+            if(type.getCode().equals(ruleType.getCode())) {
+                comparators.addAll(type.getComparators());
+            }
+        }
+
+        return comparators;
+    }
+
+    public Operator getOperatorByName(String name) {
+        for(Operator operator : this.rulesDAO.getOperators()) {
+            if(operator.getName().equalsIgnoreCase(name))
+                return operator;
+        }
+        return null;
+    }
+
+    public Comparator getComparatorByName(String name) {
+        for(Comparator comparator : this.rulesDAO.getComparators()) {
+            if(comparator.getComparator().equalsIgnoreCase(name))
+                return comparator;
+        }
+        return null;
     }
 }
