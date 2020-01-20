@@ -123,9 +123,16 @@ function saveRule() {
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('POST SUCCESS: ' + this.responseText);
+        if (this.readyState == 4) {
+            if (this.status == 201) {
+                console.log('POST SUCCESS: ' + this.responseText);
+                alert('Rule was created');
+            } else if (this.status == 400) {
+                console.log('POST SUCCESS: ' + this.responseText);
+                alert('Rule was not created');
+            }
         }
+
     };
     xhttp.open("POST", 'define/rules', true);
     xhttp.send(values);

@@ -212,6 +212,10 @@ public class RuleController {
         builder.setOperator(operator);
         builder.setComparator(comparator);
 
-        context.result("Rule Saved").status(200);
+
+        context.result("Rule Saved").status(201);
+        if (builder.build() == null) {
+            context.status(400).result("Rule Not Saved");
+        }
     }
 }
