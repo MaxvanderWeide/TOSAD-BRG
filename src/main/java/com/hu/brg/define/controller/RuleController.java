@@ -199,12 +199,12 @@ public class RuleController {
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
         Comparator comparator = type.getComparatorByName(jsonObject.get("selectedComparatorName").toString());
 
+        builder.setName(jsonObject.get("ruleName").toString());
         builder.setTable(table);
         builder.setType(type);
         builder.setAttribute(attribute);
         builder.setOperator(operator);
         builder.setComparator(comparator);
-
 
         context.result("Rule Saved").status(201);
         if (builder.build() == null) {

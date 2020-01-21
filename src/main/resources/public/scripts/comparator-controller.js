@@ -30,23 +30,26 @@ var Types = {
             "var addAttribute = document.createElement(\"BUTTON\");" +
             "var br = document.createElement(\"br\");" +
             "addAttribute.innerHTML = \"add\";" +
-            "var custInput1 = document.createElement(\"TEXTAREA\");" +
-            "custInput1.setAttribute(\"type\", \"text\");" +
-            "custInput1.setAttribute(\"disabled\", \"disabled\");" +
+            "var custInput1 = document.createElement(\"ul\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"attributes-list\");" +
             "custInput1.style.block = \"block\";" +
             "var attributeInput = document.createElement(\"INPUT\");" +
             "addAttribute.addEventListener(\"click\", function() {" +
-            "   var textareaValue = custInput1.value == \"\" ? attributeInput.value : custInput1.value + \"|\" + attributeInput.value;" +
-            "   document.getElementById(\"custInput1\").innerHTML = textareaValue;" +
+            "   var li = document.createElement(\"li\");" +
+            "   li.innerHTML = attributeInput.value;" +
+            "   document.getElementsByClassName(\"attributes-list\")[0].appendChild(li);" +
             "});" +
             "document.getElementById(\"comparatorStep\").appendChild(attributeInput);" +
             "document.getElementById(\"comparatorStep\").appendChild(addAttribute);" +
             "document.getElementById(\"comparatorStep\").appendChild(br);" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
         reval:
-            "new Array(" +
-            "document.getElementById(\"custInput2\").value)"
+            "var items = new Array();" +
+            "for(const li of document.querySelectorAll(\"ul.attributes-list li\")) {" +
+            "    items.push(li.textContent);" +
+            "}" +
+            "items"
     },
     Tuple_Compare: {
         block:
