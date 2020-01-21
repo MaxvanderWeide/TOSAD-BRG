@@ -42,6 +42,7 @@ public class Compare implements Type {
         if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("literal value")) {
 
             try {
+                // TODO - Useless double d?
                 double d = Double.parseDouble(this.ruleDefinition.getValues().get(0).getLiteral());
                 passed = true;
             } catch (NumberFormatException e) {
