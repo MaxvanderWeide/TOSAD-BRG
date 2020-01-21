@@ -1,7 +1,29 @@
 function fillTargetTables() {
+    var dbEngine = document.getElementById("dbEngine");
+    var dbEngineName = dbEngine.options[dbEngine.selectedIndex].value;
+    var dbHost = document.getElementById("dbInputHost").value;
+    var dbName = document.getElementById("dbName").value;
+    var dbPort = document.getElementById("dbInputPort").value;
+    var dbService = document.getElementById("dbInputService").value;
+    var dbUser = document.getElementById("dbInputUser").value;
+    var dbPassword = document.getElementById("dbInputPassword").value;
+
+    var values = {};
+    values["engine"] = dbEngineName;
+    values["dbName"] = dbName;
+    values["host"] = dbHost;
+    values["port"] = dbPort;
+    values["service"] = dbService;
+    values["username"] = dbUser;
+    values["password"] = dbPassword;
+    values = JSON.stringify(values);
+
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+            console.log("Connected!");
+            document.getElementById("db-info-wrapper").style.display = "none";
+            document.getElementById("disconnectBtn").style.display = "inline-block";
             console.log('GET SUCCESS: ' + this.responseText);
             var responseJSON = JSON.parse(this.responseText);
             var selection = document.getElementById("tableSelection");
@@ -12,9 +34,12 @@ function fillTargetTables() {
             }
         }
     };
-    xhttp.open("GET", 'define/tables', true);
-    xhttp.send();
+    xhttp.open("POST", 'define/tables', false);
+    xhttp.send(values);
+
+    fillTypes();
 }
+
 
 function fillTypes() {
     var xhttp = new XMLHttpRequest();
@@ -30,7 +55,7 @@ function fillTypes() {
             }
         }
     };
-    xhttp.open("GET", 'define/types', true);
+    xhttp.open("GET", 'define/types', false);
     xhttp.send();
 }
 
@@ -145,4 +170,18 @@ function displayBlock(type) {
 
 function getReval(type) {
     return eval(Types[type].reval);
+}
+
+function disconnect() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // console.log('GET SUCCESS: ' + this.responseText);
+            // document.getElementById("disconnectBtn").style.display = "none";
+            // document.getElementById("db-info-wrapper").style.display = "block";
+            window.location.reload();
+        }
+    };
+    xhttp.open("GET", 'define/disconnect', false);
+    xhttp.send();
 }

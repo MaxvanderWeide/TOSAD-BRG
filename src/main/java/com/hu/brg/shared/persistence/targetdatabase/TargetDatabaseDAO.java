@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TargetDatabaseDAO {
     List<Table> getTables(String targetDatabase);
-
     void insertRule(String sql);
+    void closeTargetConnection();
 }

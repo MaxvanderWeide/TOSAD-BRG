@@ -13,3 +13,7 @@
 footer {
     text-align: right;
 }
+
+#disconnectBtn {
+    display: none;
+}

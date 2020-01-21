@@ -12,7 +12,9 @@ import com.hu.brg.shared.persistence.tooldatabase.ComparatorsDAO;
 import com.hu.brg.shared.persistence.tooldatabase.OperatorsDAO;
 import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAO;
 import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
+import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,13 +24,22 @@ public class RuleService {
     private List<RuleDefinition> ruleDefinitions = new ArrayList<>();
     private Table selectedTable;
     private List<RuleType> types = new ArrayList<>();
-    private TargetDatabaseDAO targetDatabaseDao = TargetDatabaseDAOImpl.getDefaultInstance();
+    private TargetDatabaseDAO targetDatabaseDao;
     private RulesDAO rulesDAO = DAOServiceProvider.getRulesDAO();
     private OperatorsDAO operatorsDAO = DAOServiceProvider.getOperatorsDAO();
     private ComparatorsDAO comparatorsDAO = DAOServiceProvider.getComparatorsDAO();
     private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
+    private String dbName;
 
-    public RuleService() {
+    public RuleService(JSONObject jsonObject) {
+        this.targetDatabaseDao = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
+                jsonObject.getString("host"),
+                Integer.valueOf(jsonObject.getString("port")),
+                jsonObject.getString("service"),
+                jsonObject.getString("username"),
+                jsonObject.getString("password")
+        );
+        this.dbName = jsonObject.getString("dbName");
     }
 
     public Table getTable() {
@@ -69,7 +80,7 @@ public class RuleService {
     }
 
     public List<Table> getAllTables() {
-        return targetDatabaseDao.getTables("TOSAD_TARGET");
+        return targetDatabaseDao.getTables(this.dbName);
     }
 
     public Table getTableByName(String name) {
@@ -128,5 +139,15 @@ public class RuleService {
                 return comparator;
         }
         return null;
+    }
+
+    public boolean disconnectTargetDb() {
+        try {
+            this.targetDatabaseDao.closeTargetConnection();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

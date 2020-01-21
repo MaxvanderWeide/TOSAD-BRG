@@ -1,5 +1,6 @@
 package com.hu.brg.define.controller;
 
+import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.model.response.ErrorResponse;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.shared.model.definition.Comparator;
@@ -7,7 +8,6 @@ import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.definition.RuleType;
-import com.hu.brg.Main;
 import io.javalin.plugin.openapi.annotations.*;
 import org.json.JSONObject;
 
@@ -18,7 +18,15 @@ import java.util.Map;
 
 public class RuleController {
 
-    private RuleController (){}
+    private static RuleService ruleService;
+
+    private RuleController() {
+    }
+
+    private static RuleService getRuleService() {
+        return ruleService;
+    }
+
     @OpenApi(
             summary = "Get all types",
             operationId = "getAllTypes",
@@ -34,7 +42,7 @@ public class RuleController {
     public static void getAllTypes(io.javalin.http.Context context) {
         Map<String, Map<String, String>> types = new HashMap<>();
         Map<String, String> tempTypes = new HashMap<>();
-        for (RuleType type : Main.getRuleService().getTypes()) {
+        for (RuleType type : getRuleService().getTypes()) {
             tempTypes.put(type.getName(), type.getCode());
         }
         types.put("Types", tempTypes);
@@ -49,7 +57,7 @@ public class RuleController {
             summary = "Get all tables",
             operationId = "getAllTables",
             path = "/define/tables",
-            method = HttpMethod.GET,
+            method = HttpMethod.POST,
             tags = {"Define", "Tables"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Table[].class)}),
@@ -58,10 +66,11 @@ public class RuleController {
             }
     )
     public static void getAllTables(io.javalin.http.Context context) {
-        // TODO - Add Connection
+        JSONObject jsonObject = new JSONObject(context.body());
+        ruleService = new RuleService(jsonObject);
         Map<String, List<String>> tables = new HashMap<>();
         List<String> tableList = new ArrayList<>();
-        for (Table table : Main.getRuleService().getAllTables()) {
+        for (Table table : getRuleService().getAllTables()) {
             tableList.add(table.getName());
         }
         tables.put("Tables", tableList);
@@ -86,10 +95,9 @@ public class RuleController {
             }
     )
     public static void getAllAttributesByTable(io.javalin.http.Context context) {
-        // TODO - Add Connection
         Map<String, List<String>> attributes = new HashMap<>();
         List<String> tempAttribute = new ArrayList<>();
-        for (Attribute attribute : Main.getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
+        for (Attribute attribute : getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
             tempAttribute.add(attribute.getName());
         }
         attributes.put("Attributes", tempAttribute);
@@ -116,7 +124,7 @@ public class RuleController {
     public static void getOperatorsWithType(io.javalin.http.Context context) {
         Map<String, List<String>> operators = new HashMap<>();
         List<String> operatorNameList = new ArrayList<>();
-        for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
+        for (Operator operator : getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
             operatorNameList.add(operator.getName());
         }
         operators.put("Operators", operatorNameList);
@@ -143,7 +151,7 @@ public class RuleController {
     public static void getComparatorsWithType(io.javalin.http.Context context) {
         Map<String, List<String>> comparators = new HashMap<>();
         List<String> tempComparators = new ArrayList<>();
-        for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
+        for (Comparator comparator : getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
                 .getComparators()) {
             tempComparators.add(comparator.getName());
         }
@@ -168,13 +176,12 @@ public class RuleController {
             }
     )
     public static void saveRuleDefinition(io.javalin.http.Context context) {
-        // TODO - Add connection
         JSONObject jsonObject = new JSONObject(context.body());
 
         RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
 
-        Table table = Main.getRuleService().getTableByName(jsonObject.get("tableName").toString());
-        RuleType type = Main.getRuleService().getTypeByName(jsonObject.get("typeName").toString());
+        Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString());
+        RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
         Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
         Comparator comparator = type.getComparatorByName(jsonObject.get("selectedComparatorName").toString());
@@ -189,6 +196,26 @@ public class RuleController {
         context.result("Rule Saved").status(201);
         if (builder.build() == null) {
             context.status(400).result("Rule Not Saved");
+        }
+    }
+
+    @OpenApi(
+            summary = "Disconnect from database",
+            operationId = "disconnectTargetDb",
+            path = "/define/disconnect",
+            method = HttpMethod.GET,
+            tags = {"Define", "Disconnect"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void disconnectTargetDb(io.javalin.http.Context context) {
+        if (getRuleService().disconnectTargetDb()) {
+            context.status(200);
+        } else {
+            context.status(400);
         }
     }
 }
