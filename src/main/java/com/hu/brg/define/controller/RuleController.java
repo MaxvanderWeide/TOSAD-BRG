@@ -193,6 +193,7 @@ public class RuleController {
         JSONObject jsonObject = new JSONObject(context.body());
 
         RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
+
         Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString(), claims);
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
         Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
@@ -205,6 +206,8 @@ public class RuleController {
         builder.setAttribute(attribute);
         builder.setOperator(operator);
         builder.setComparator(comparator);
+        builder.setErrorMessage(jsonObject.get("errorMessage").toString());
+        builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
 
         context.result("Rule Saved").status(201);
         if (builder.build() == null) {
