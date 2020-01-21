@@ -22,3 +22,7 @@ textarea#custInput1 {
     height: 300px;
     color: black;
 }
+
+ul.attributes-list {
+    list-style: none;
+}

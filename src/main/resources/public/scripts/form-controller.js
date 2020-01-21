@@ -165,6 +165,12 @@ function saveRule() {
 
     var comparator = document.getElementById("comparatorSelection");
 
+    var ruleValues = [];
+
+    for(const li of document.querySelectorAll("ul.attributes-list li")) {
+        ruleValues.push(li.textContent);
+    }
+
     var values = {};
     values["ruleName"] = document.getElementById("ruleName").value;
     values["tableName"] = selectedTableName;
@@ -173,6 +179,7 @@ function saveRule() {
     values["operatorName"] = selectedOperatorName;
     values["selectedComparatorName"] = selectedComparatorName;
     values["comparatorValues"] = getReval(selectedTypeName);
+    values["values"] = ruleValues;
     values = JSON.stringify(values);
 
     var xhttp = new XMLHttpRequest();
