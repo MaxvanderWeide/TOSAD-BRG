@@ -31,3 +31,10 @@ textarea.other-rule {
     width: 500px;
     height: 300px;
 }
+
+.rule-details-wrapper {
+    display: none;
+}
+button.btn.btn-primary[type=submit] {
+    margin-bottom: 40px;
+}

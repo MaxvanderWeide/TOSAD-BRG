@@ -38,6 +38,7 @@ function createConnection() {
                 sessionStorage.setItem("access_token", this.responseText);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
+                document.getElementsByClassName("rule-details-wrapper")[0].style.display = "block";
                 return;
             }
             alert('Could not authenticate and make a connection')
