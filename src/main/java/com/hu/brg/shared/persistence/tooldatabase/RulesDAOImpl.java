@@ -168,44 +168,4 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setString(9, ruleDefinition.getErrorMessage());
         preparedStatement.setString(10, ruleDefinition.getStatus());
     }
-
-
-//    public List<Operator> getOperatorsNoClose() {
-//        // TODO - REMOVE THIS FOR A BETTER USE
-//        List<Operator> operators = new ArrayList<>();
-//
-//        try {
-//            Connection conn = getConnection();
-//            PreparedStatement tableSt = conn.prepareStatement("SELECT ID, NAME FROM OPERATORS");
-//            ResultSet result = tableSt.executeQuery();
-//
-//            while (result.next()) {
-//                operators.add(new Operator(result.getInt(1), result.getString(2)));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return operators;
-//    }
-//
-//    public List<Comparator> getComparatorsNoClose() {
-//        // TODO - REMOVE THIS FOR A BETTER USE
-//        List<Comparator> comparators = new ArrayList<>();
-//
-//        try {
-//            Connection conn = getConnection();
-//            PreparedStatement tableSt = conn.prepareStatement("SELECT ID, NAME FROM COMPARATORS");
-//            ResultSet result = tableSt.executeQuery();
-//
-//            while (result.next()) {
-//                comparators.add(new Comparator(result.getInt(1), result.getString(2)));
-//            }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return comparators;
-//    }
 }
