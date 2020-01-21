@@ -56,7 +56,7 @@ public class OperatorsDAOImpl extends ToolDatabaseBaseDAO implements OperatorsDA
         Operator operator = null;
 
         try (Connection conn = getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID, NAME FROM COMPARATORS WHERE NAME = ?");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID, NAME FROM OPERATORS WHERE NAME = ?");
             preparedStatement.setString(1, name);
             ResultSet result = preparedStatement.executeQuery();
 
