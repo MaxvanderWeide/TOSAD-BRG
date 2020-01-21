@@ -1,7 +1,9 @@
 package com.hu.brg.shared;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 public class ConfigSelector {
@@ -21,11 +23,11 @@ public class ConfigSelector {
     public static String password;
 
     public static void loadConfig() {
-        String appConfigPath = "app.properties";
+
 
         Properties appProps = new Properties();
         try {
-            appProps.load(new FileInputStream(appConfigPath));
+            appProps.load(new FileInputStream(new File("src/app.properties").getAbsolutePath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
