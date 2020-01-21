@@ -10,7 +10,6 @@ public class ConfigSelector {
 
     // RuleGenerator
     public static String applicationName;
-    public static String projectName;
 
     // AuthController
     public static String SECRET_KEY;
@@ -32,7 +31,6 @@ public class ConfigSelector {
             e.printStackTrace();
         }
         applicationName = appProps.getProperty("applicationName");
-        projectName = appProps.getProperty("projectName");
         SECRET_KEY = appProps.getProperty("SECRET_KEY");
         host = appProps.getProperty("host");
         port = Integer.parseInt(appProps.getProperty("port"));
