@@ -1,19 +1,12 @@
 package com.hu.brg.define.domain;
 
-import com.hu.brg.shared.model.definition.Comparator;
-import com.hu.brg.shared.model.definition.Operator;
-import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.persistence.DAOServiceProvider;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
-import com.hu.brg.shared.persistence.tooldatabase.ComparatorsDAO;
-import com.hu.brg.shared.persistence.tooldatabase.OperatorsDAO;
 import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAO;
-import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
 import io.jsonwebtoken.Claims;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,17 +15,10 @@ import java.util.Objects;
 
 public class RuleService {
 
-    private List<RuleDefinition> ruleDefinitions = new ArrayList<>();
-    private Table selectedTable;
     private List<RuleType> types = new ArrayList<>();
     private TargetDatabaseDAO targetDatabaseDao;
-    private RulesDAO rulesDAO = DAOServiceProvider.getRulesDAO();
-    private OperatorsDAO operatorsDAO = DAOServiceProvider.getOperatorsDAO();
-    private ComparatorsDAO comparatorsDAO = DAOServiceProvider.getComparatorsDAO();
     private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
-    private String dbName;
 
-<<<<<<< HEAD
     public RuleService() {
     }
 
@@ -52,37 +38,6 @@ public class RuleService {
 //        if (ruleDefinition != null) ruleDefinitions.add(ruleDefinition);
 //        return ruleDefinition != null;
 //    }
-=======
-    public RuleService() {}
-
-    public void createTargetDatabase(JSONObject jsonObject) {
-        this.targetDatabaseDao = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
-                jsonObject.getString("host"),
-                Integer.valueOf(jsonObject.getString("port")),
-                jsonObject.getString("service"),
-                jsonObject.getString("username"),
-                jsonObject.getString("password")
-        );
-        this.dbName = jsonObject.getString("dbName");
-    }
-
-    public Table getTable() {
-        return selectedTable;
-    }
-
-    public void setTable(Table table) {
-        this.selectedTable = table;
-    }
-
-    public List<RuleDefinition> getRuleDefinitions() {
-        return ruleDefinitions;
-    }
-
-    public boolean addRuleDefinition(RuleDefinition ruleDefinition) {
-        if (ruleDefinition != null) ruleDefinitions.add(ruleDefinition);
-        return ruleDefinition != null;
-    }
->>>>>>> 2ce3b15489fffdba04a1b36c3da46a3be89f32b9
 
     private void addType(RuleType type) {
         if (type != null) types.add(type);

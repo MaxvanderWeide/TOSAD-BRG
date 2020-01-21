@@ -15,8 +15,6 @@ import java.security.Key;
 import io.jsonwebtoken.*;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import io.jsonwebtoken.Jwts;
 

@@ -66,18 +66,11 @@ public class RuleController {
             }
     )
     public static void getAllTables(io.javalin.http.Context context) {
-<<<<<<< HEAD
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
             context.status(404);
             return;
         }
-
-=======
-        JSONObject jsonObject = new JSONObject(context.body());
-        ruleService = new RuleService();
-        ruleService.createTargetDatabase(jsonObject);
->>>>>>> 2ce3b15489fffdba04a1b36c3da46a3be89f32b9
         Map<String, List<String>> tables = new HashMap<>();
         List<String> tableList = new ArrayList<>();
         for (Table table : getRuleService().getAllTables(claims)) {
