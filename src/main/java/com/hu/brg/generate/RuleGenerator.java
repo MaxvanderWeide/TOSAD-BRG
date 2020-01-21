@@ -11,7 +11,7 @@ public class RuleGenerator {
 
     // TODO - change static values
     private String applicationName = "BRG";
-    private String projectName = "VBMG" ;
+    private String projectName = "VBMG";
 
     private String triggerEvent = "";
     private RuleTrigger ruleTrigger;
@@ -33,13 +33,17 @@ public class RuleGenerator {
 
     private void formatTriggerEvent() {
         List<String> triggerEvents = ruleTrigger.getTriggerEvents();
-        int count = 1;
-        for (String event : triggerEvents) {
-            this.triggerEvent += event;
-            if (count != triggerEvents.size())
-                this.triggerEvent += " OR ";
-            count++;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < triggerEvents.size(); i++) {
+            String event = triggerEvents.get(i);
+            stringBuilder.append(event);
+            if (i != triggerEvents.size()) {
+                stringBuilder.append(" OR ");
+            }
         }
+
+        this.triggerEvent = stringBuilder.toString();
     }
 
     public String generateCode() {
