@@ -22,7 +22,7 @@ public class RuleGenerator {
 
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
                 ConfigSelector.applicationName,
-                ConfigSelector.projectName,
+                "hello",
                 this.ruleDefinition.getAttribute().getName().substring(0, 4),
                 this.ruleDefinition.getType().getName())
         ).toUpperCase();
