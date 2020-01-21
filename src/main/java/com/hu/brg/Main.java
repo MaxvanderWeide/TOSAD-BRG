@@ -2,6 +2,7 @@ package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.define.domain.RuleService;
+import com.hu.brg.shared.controller.AuthController;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.response.ErrorResponse;
 import com.hu.brg.shared.persistence.DAOServiceProvider;
@@ -24,24 +25,26 @@ public class Main {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
-        }).routes(() -> path("define", () -> {
+        }).routes(() -> {
+            path("auth", () -> path("connection", () -> post(AuthController::createConnection)));
+            path("define", () -> {
 
-            path("tables", () -> {
-                post(RuleController::getAllTables);
-                path(":tableName", () -> path("attributes", () -> get(RuleController::getAllAttributesByTable)));
-            });
-
-            path("types", () -> {
-                get(RuleController::getAllTypes);
-                path(":typeName", () -> {
-                    path("operators", () -> get(RuleController::getOperatorsWithType));
-                    path("comparators", () -> get(RuleController::getComparatorsWithType));
+                path("tables", () -> {
+                    get(RuleController::getAllTables);
+                    path(":tableName", () -> path("attributes", () -> get(RuleController::getAllAttributesByTable)));
                 });
-            });
 
-            path("rules", () -> post(RuleController::saveRuleDefinition));
-            path("disconnect", () -> get(RuleController::disconnectTargetDb));
-        })).start(4201);
+                path("types", () -> {
+                    get(RuleController::getAllTypes);
+                    path(":typeName", () -> {
+                        path("operators", () -> get(RuleController::getOperatorsWithType));
+                        path("comparators", () -> get(RuleController::getComparatorsWithType));
+                    });
+                });
+
+                path("rules", () -> post(RuleController::saveRuleDefinition));
+            });
+        }).start(4201);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {
