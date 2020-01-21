@@ -1,5 +1,6 @@
 package com.hu.brg.shared.controller;
 
+import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.response.ErrorResponse;
 import com.sun.xml.internal.org.jvnet.mimepull.DecodingException;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
@@ -20,7 +21,7 @@ import io.jsonwebtoken.Jwts;
 
 public class AuthController {
 
-    private static String SECRET_KEY = "oehAhYa1Xdd"; // TODO - Remove static SECRET KEY from opensource
+    private static String SECRET_KEY = ConfigSelector.SECRET_KEY;
 
     @OpenApi(
             summary = "Create Connection",

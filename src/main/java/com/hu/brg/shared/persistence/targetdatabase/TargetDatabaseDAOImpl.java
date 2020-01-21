@@ -1,5 +1,6 @@
 package com.hu.brg.shared.persistence.targetdatabase;
 
+import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.persistence.BaseDAO;
@@ -34,7 +35,7 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     public static TargetDatabaseDAO getDefaultInstance() {
         if (instance == null) {
-            instance = createTargetDatabaseDAOImpl("ondora04.hu.nl", 8521, "EDUC17",  "TOSAD_TARGET", "tosad1234");
+            instance = createTargetDatabaseDAOImpl(ConfigSelector.host, ConfigSelector.port, ConfigSelector.service,  ConfigSelector.username, ConfigSelector.password);
         }
 
         return instance;
@@ -46,10 +47,6 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     private Connection getConnection() {
         return this.getConnection(DBEngines.ORACLE, host, port, serviceName, username, password);
-    }
-
-    public void closeTargetConnection() {
-        this.closeConnection();
     }
 
     @Override
@@ -82,6 +79,7 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                 attributeSt.close();
             }
 
+            this.closeConnection();
             result.close();
             tableSt.close();
 

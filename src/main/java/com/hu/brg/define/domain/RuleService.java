@@ -128,14 +128,4 @@ public class RuleService {
 //        }
 //        return null;
 //    }
-
-    public boolean disconnectTargetDb() {
-        try {
-            this.targetDatabaseDao.closeTargetConnection();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
 }

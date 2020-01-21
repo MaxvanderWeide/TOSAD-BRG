@@ -1,6 +1,7 @@
 package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
+import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.controller.AuthController;
 import com.hu.brg.shared.model.response.ErrorResponse;
 import io.javalin.Javalin;
@@ -16,6 +17,8 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Main {
     public static void main(String[] args) {
+        ConfigSelector.loadConfig();
+
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());

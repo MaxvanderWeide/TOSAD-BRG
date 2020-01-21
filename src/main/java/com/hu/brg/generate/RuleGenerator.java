@@ -1,5 +1,6 @@
 package com.hu.brg.generate;
 
+import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
 import java.util.List;
@@ -7,11 +8,6 @@ import java.util.List;
 public class RuleGenerator {
     private String triggerName;
     private RuleDefinition ruleDefinition;
-
-
-    // TODO - change static values
-    private String applicationName = "BRG";
-    private String projectName = "VBMG";
 
     private String triggerEvent = "";
     private RuleTrigger ruleTrigger;
@@ -23,9 +19,10 @@ public class RuleGenerator {
     }
 
     private void generateTriggerName() {
+
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
-                this.applicationName,
-                this.projectName,
+                ConfigSelector.applicationName,
+                ConfigSelector.projectName,
                 this.ruleDefinition.getAttribute().getName().substring(0, 4),
                 this.ruleDefinition.getType().getName())
         ).toUpperCase();

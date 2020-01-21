@@ -37,6 +37,7 @@ function createConnection() {
             if (this.status == 200) {
                 sessionStorage.setItem("access_token", this.responseText);
                 sessionStorage.setItem("values", values);
+                fillTargetTables();
                 return;
             }
             alert('Could not authenticate and make a connection')
