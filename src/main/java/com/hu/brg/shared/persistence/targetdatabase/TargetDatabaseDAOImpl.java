@@ -48,6 +48,10 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
         return this.getConnection(DBEngines.ORACLE, host, port, serviceName, username, password);
     }
 
+    public void closeTargetConnection() {
+        this.closeConnection();
+    }
+
     @Override
     public List<Table> getTables(String targetDatabase) {
         try (Connection conn = getConnection()) {
@@ -97,6 +101,4 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
             e.printStackTrace();
         }
     }
-
-
 }

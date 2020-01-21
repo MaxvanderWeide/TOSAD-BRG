@@ -14,22 +14,32 @@
     <script src="scripts/form-controller.js"></script>
     <script src="scripts/comparator-controller.js"></script>
 </head>
-<body onload="fillTypes()">
+<body>
 <div class="container-fluid">
     <div class="god-step">
         <div class="top-step">
             <h1>Business Rule Generator</h1>
             <p>Open Source Business Rule Generator</p>
         </div>
-        <div class="form-step">
-            <label for="dbInputUrl">Url:</label>
-            <input type="text" id="dbInputUrl">
+        <div class="form-step" id="db-info-wrapper">
+            <select id="dbEngine">
+                <option value="ORACLE">Oracle</option>
+            </select>
+            <label for="dbName">Database:</label>
+            <input type="text" id="dbName" value="TOSAD_TARGET">
+            <label for="dbInputHost">Host:</label>
+            <input type="text" id="dbInputHost" value="ondora04.hu.nl">
+            <label for="dbInputPort">Port:</label>
+            <input type="text" id="dbInputPort" value="8521">
+            <label for="dbInputService">service name:</label>
+            <input type="text" id="dbInputService" value="EDUC17">
             <label for="dbInputUser">User:</label>
-            <input type="text" id="dbInputUser">
+            <input type="text" id="dbInputUser" value="TOSAD_TARGET">
             <label for="dbInputPassword">Password:</label>
-            <input type="password" id="dbInputPassword">
+            <input type="password" id="dbInputPassword" value="tosad1234">
             <button type="button" class="btn btn-info" onclick="fillTargetTables()">Connect</button>
         </div>
+        <button type="button" class="btn btn-info" id="disconnectBtn" onclick="disconnect()">LET ME OUT</button>
         <div class="form-step-top">
             <label for="tableSelection">Tables:</label>
             <select id="tableSelection" class="form-input" onchange="fillTargetAttributes(this)">

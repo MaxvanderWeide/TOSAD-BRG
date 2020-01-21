@@ -36,7 +36,7 @@ public class OperatorsDAOImpl extends ToolDatabaseBaseDAO implements OperatorsDA
         List<Operator> operators = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            PreparedStatement operatorsStatement = conn.prepareStatement("SELECT ID, NAME FROM OPERATORS where TYPEID = ?");
+            PreparedStatement operatorsStatement = conn.prepareStatement("SELECT o.ID, o.NAME FROM OPERATOR_TYPES o_t JOIN OPERATORS o ON (o_t.operator_id = o.id) where o_t.TYPE_ID = ?");
             operatorsStatement.setInt(1, typeId);
             ResultSet operatorsResult = operatorsStatement.executeQuery();
 

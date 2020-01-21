@@ -20,8 +20,6 @@ public class Main {
     private static RuleService ruleService;
 
     public static void main(String[] args) {
-        ruleService = new RuleService();
-
         Javalin.create(config -> {
             config.addStaticFiles("/public");
             config.registerPlugin(getConfiguredOpenApiPlugin());
@@ -29,7 +27,7 @@ public class Main {
         }).routes(() -> path("define", () -> {
 
             path("tables", () -> {
-                get(RuleController::getAllTables);
+                post(RuleController::getAllTables);
                 path(":tableName", () -> path("attributes", () -> get(RuleController::getAllAttributesByTable)));
             });
 
@@ -42,11 +40,8 @@ public class Main {
             });
 
             path("rules", () -> post(RuleController::saveRuleDefinition));
+            path("disconnect", () -> get(RuleController::disconnectTargetDb));
         })).start(4201);
-
-        for (RuleDefinition ruleDefinition : DAOServiceProvider.getRulesDAO().getRulesByProjectId(1)) {
-            System.out.println(ruleDefinition.toString());
-        }
     }
 
 
@@ -63,9 +58,5 @@ public class Main {
                     doc.json("503", ErrorResponse.class);
                 });
         return new OpenApiPlugin(options);
-    }
-
-    public static RuleService getRuleService() {
-        return ruleService;
     }
 }
