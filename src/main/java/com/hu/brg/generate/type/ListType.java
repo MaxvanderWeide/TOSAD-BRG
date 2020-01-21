@@ -7,9 +7,8 @@ import java.util.List;
 
 public class ListType implements Type {
     RuleDefinition ruleDefinition;
-    String triggerCode;
-    String operatorSymbol;
-    String value = "";
+    private String operatorSymbol;
+    private String listValue = "";
 
     public ListType(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;
@@ -30,16 +29,16 @@ public class ListType implements Type {
 
     private void setValue() {
         List<Value> values = ruleDefinition.getValues();
-        this.value += "(";
-        int count = 1;
-        for (Value value : values) {
-            // TODO - Change below to String builder
-            this.value += "'" + value.getLiteral() + "'";
-            if (count != values.size())
-                this.value += ",";
-            count++;
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("(");
+        for (int i = 0; i < values.size(); i++) {
+            stringBuilder.append("'"+values.get(i).getLiteral()+"'");
+            if (i != values.size()){
+                stringBuilder.append(",");
+            }
         }
-        this.value += ")";
+        stringBuilder.append(")");
     }
 
     @Override
@@ -47,12 +46,9 @@ public class ListType implements Type {
         setOperatorSymbol();
         setValue();
 
-        // "v_passed := :new.status in ('geregistreerd','goedgekeurd')"
-        triggerCode = String.format("v_passed := :new.%s %s %s",
+        return String.format("v_passed := :new.%s %s %s",
                 this.ruleDefinition.getAttribute().getName(),
                 this.operatorSymbol,
-                this.value);
-
-        return this.triggerCode;
+                this.listValue);
     }
 }
