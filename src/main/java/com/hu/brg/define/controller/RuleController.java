@@ -193,7 +193,6 @@ public class RuleController {
         JSONObject jsonObject = new JSONObject(context.body());
 
         RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
-
         Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString(), claims);
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
         Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());

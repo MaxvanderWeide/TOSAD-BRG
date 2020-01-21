@@ -52,7 +52,7 @@ public class RuleService {
 
     public RuleType getTypeByName(String name) {
         for (RuleType brt : types) {
-            if (brt.getName().equals(name)) {
+            if (brt.getName().equalsIgnoreCase(name)) {
                 return brt;
             }
         }

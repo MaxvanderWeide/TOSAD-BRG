@@ -14,7 +14,7 @@
     <script src="scripts/form-controller.js"></script>
     <script src="scripts/comparator-controller.js"></script>
 </head>
-<body onload="fillTypes();">
+<body onload="loadFromStorage(); fillTypes();">
 <div class="container-fluid">
     <div class="god-step">
         <div class="top-step">
@@ -26,17 +26,17 @@
                 <option value="ORACLE">Oracle</option>
             </select>
             <label for="dbName">Database:</label>
-            <input type="text" id="dbName" value="TOSAD_TARGET">
+            <input type="text" id="dbName">
             <label for="dbInputHost">Host:</label>
-            <input type="text" id="dbInputHost" value="ondora04.hu.nl">
+            <input type="text" id="dbInputHost">
             <label for="dbInputPort">Port:</label>
-            <input type="text" id="dbInputPort" value="8521">
+            <input type="text" id="dbInputPort">
             <label for="dbInputService">service name:</label>
-            <input type="text" id="dbInputService" value="EDUC17">
+            <input type="text" id="dbInputService">
             <label for="dbInputUser">User:</label>
-            <input type="text" id="dbInputUser" value="TOSAD_TARGET">
+            <input type="text" id="dbInputUser">
             <label for="dbInputPassword">Password:</label>
-            <input type="password" id="dbInputPassword" value="tosad1234">
+            <input type="password" id="dbInputPassword">
             <input type="submit" class="btn btn-info" value="Connect" onclick="createConnection(this); fillTargetTables()">
         </div>
         <div class="form-step-top">

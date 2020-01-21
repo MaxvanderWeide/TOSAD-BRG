@@ -1,3 +1,16 @@
+function loadFromStorage() {
+    if (sessionStorage.getItem("values") != null) {
+        var values = JSON.parse(sessionStorage.getItem("values"));
+        document.getElementById("dbEngine").options[dbEngine.selectedIndex].value = values['engine'];
+        document.getElementById("dbInputHost").value = values['host'];
+        document.getElementById("dbName").value = values['dbName'];
+        document.getElementById("dbInputPort").value = values['port'];
+        document.getElementById("dbInputService").value = values['service'];
+        document.getElementById("dbInputUser").value = values['username'];
+        document.getElementById("dbInputPassword").value = values['password'];
+    }
+}
+
 function createConnection() {
     var dbEngine = document.getElementById("dbEngine");
     var dbEngineName = dbEngine.options[dbEngine.selectedIndex].value;
@@ -23,6 +36,7 @@ function createConnection() {
         if (this.readyState == 4) {
             if (this.status == 200) {
                 sessionStorage.setItem("access_token", this.responseText);
+                sessionStorage.setItem("values", values);
                 return;
             }
             alert('Could not authenticate and make a connection')
