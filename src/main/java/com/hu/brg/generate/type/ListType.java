@@ -34,7 +34,7 @@ public class ListType implements Type {
         stringBuilder.append("(");
         for (int i = 0; i < values.size(); i++) {
             stringBuilder.append("'").append(values.get(i).getLiteral()).append("'");
-            if (i+1 != values.size()){
+            if (i + 1 != values.size()) {
                 stringBuilder.append(",");
             }
         }

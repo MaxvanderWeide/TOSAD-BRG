@@ -35,7 +35,7 @@ public class RuleGenerator {
         for (int i = 0; i < triggerEvents.size(); i++) {
             String event = triggerEvents.get(i);
             stringBuilder.append(event);
-            if (i != triggerEvents.size() - 1) {
+            if (i + 1 != triggerEvents.size()) {
                 stringBuilder.append(" OR ");
             }
         }

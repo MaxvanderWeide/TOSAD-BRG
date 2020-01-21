@@ -180,6 +180,8 @@ function saveRule() {
     values["operatorName"] = selectedOperatorName;
     values["selectedComparatorName"] = selectedComparatorName;
     values["comparatorValues"] = getReval(selectedTypeName);
+    values["errorMessage"] = document.getElementById("errorMessage").value;
+    values["errorCode"] = document.getElementById("errorCode").value;
     values["values"] = ruleValues;
     values = JSON.stringify(values);
 
