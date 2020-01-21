@@ -1,6 +1,7 @@
 package com.hu.brg.generate;
 
 import com.hu.brg.generate.type.Compare;
+import com.hu.brg.generate.type.ListType;
 import com.hu.brg.generate.type.Range;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
@@ -35,6 +36,8 @@ public class RuleTrigger {
                 this.ruleDefinition.getType().getCode().equalsIgnoreCase("TCMP") ||
                 this.ruleDefinition.getType().getCode().equalsIgnoreCase("ICMP")) {
             this.triggerCode = new Compare(this.ruleDefinition).generate();
+        } else if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ALIS")) {
+            this.triggerCode = new ListType(this.ruleDefinition).generate();
         }
     }
 
