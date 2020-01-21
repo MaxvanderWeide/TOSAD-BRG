@@ -1,5 +1,7 @@
 package com.hu.brg.generate;
 
+import com.hu.brg.generate.type.Compare;
+import com.hu.brg.generate.type.Range;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
 import java.util.ArrayList;
@@ -27,40 +29,9 @@ public class RuleTrigger {
 
     private void generateTriggerCode() {
         if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ARNG")) {
-            triggerCode = String.format("v_passed := :new.%s %s %s and %s",
-                    this.ruleDefinition.getAttribute().getName(),
-                    this.ruleDefinition.getOperator().getName(),
-                    this.ruleDefinition.getValues().get(0).getLiteral(),
-                    this.ruleDefinition.getValues().get(1).getLiteral());
+            this.triggerCode = new Range(this.ruleDefinition).generate();
         } else if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ACMP")) {
-
-            switch (this.ruleDefinition.getOperator().getName().toUpperCase()) {
-                case "EQUALS":
-                    operator = "==";
-                    break;
-                case "NOTEQUALS":
-                    operator = "!=";
-                    break;
-                case "LESSTHAN":
-                    operator = "<";
-                    break;
-                case "GREATERTHAN":
-                    operator = ">";
-                    break;
-                case "LESSOREQUALTO":
-                    operator = "<=";
-                    break;
-                case "GREATEROREQUALTO":
-                    operator = ">=";
-                    break;
-                default:
-                    operator = null;
-            }
-
-            triggerCode = String.format("v_passed := :new.%s %s '%s'",
-                    this.ruleDefinition.getAttribute().getName(),
-                    operator,
-                    this.ruleDefinition.getValues().get(0).getLiteral());
+            this.triggerCode = new Compare(this.ruleDefinition).generate();
         }
     }
 
