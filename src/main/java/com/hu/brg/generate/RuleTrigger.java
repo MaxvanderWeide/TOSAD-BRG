@@ -30,7 +30,10 @@ public class RuleTrigger {
     private void generateTriggerCode() {
         if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ARNG")) {
             this.triggerCode = new Range(this.ruleDefinition).generate();
-        } else if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("ACMP")) {
+        } else if (
+                this.ruleDefinition.getType().getCode().equalsIgnoreCase("ACMP") ||
+                this.ruleDefinition.getType().getCode().equalsIgnoreCase("TCMP") ||
+                this.ruleDefinition.getType().getCode().equalsIgnoreCase("ICMP")) {
             this.triggerCode = new Compare(this.ruleDefinition).generate();
         }
     }
