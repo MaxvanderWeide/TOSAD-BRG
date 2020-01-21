@@ -11,7 +11,7 @@ public class RuleGenerator {
 
     // TODO - change static values
     private String applicationName = "BRG";
-    private String projectName = "VBMG";
+    private String projectName = "VBMG" ;
 
     private String triggerEvent = "";
     private RuleTrigger ruleTrigger;

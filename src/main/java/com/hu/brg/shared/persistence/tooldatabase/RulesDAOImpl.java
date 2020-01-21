@@ -56,7 +56,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     }
 
     @Override
-    public void updateRule(int id, RuleDefinition ruleDefinition) {
+    public void updateRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
 
             String query = "UPDATE RULES SET PROJECTID = ?, NAME = ?, ATTRIBUTE = ?, TARGETTABLE = ?, " +
@@ -65,7 +65,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             setPreparedStatement(preparedStatement, ruleDefinition);
-            preparedStatement.setInt(11, id);
+            preparedStatement.setInt(11, ruleDefinition.getProjectId());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -131,7 +131,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 }
 
                 RuleType ruleType = new RuleType(typeName, typeCode, operators, comparators);
-                rules.add(new RuleDefinition(ruleType, ruleName, typeTable, typeAttribute,
+                rules.add(new RuleDefinition(id, ruleType, ruleName, typeTable, typeAttribute,
                         new Operator(operatorId, operatorName),
                         new Comparator(comparatorId, comparatorName),
                         new ArrayList<>(), errorMessage, errorCode, status
@@ -149,11 +149,11 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
     private void setPreparedStatement(PreparedStatement preparedStatement, RuleDefinition ruleDefinition) throws SQLException {
 
-        preparedStatement.setInt(1, 1); // TODO - change projectId to dynamic value
+        preparedStatement.setInt(1, ruleDefinition.getProjectId());
         preparedStatement.setString(2, ruleDefinition.getName());
         preparedStatement.setString(3, ruleDefinition.getAttribute().getName());
         preparedStatement.setString(4, ruleDefinition.getTable().getName());
-        preparedStatement.setString(5, "1");
+        preparedStatement.setString(5, "1"); //TODO: (RULE)TYPEID needs to be dynamic
 
         if (ruleDefinition.getComparator() == null) {
             preparedStatement.setNull(6, Types.INTEGER);
