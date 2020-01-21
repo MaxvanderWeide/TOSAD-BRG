@@ -6,7 +6,7 @@ import com.hu.brg.shared.model.definition.Value;
 import java.util.List;
 
 public class ListType implements Type {
-    RuleDefinition ruleDefinition;
+    private RuleDefinition ruleDefinition;
     private String operatorSymbol;
     private String listValue = "";
 
@@ -33,12 +33,14 @@ public class ListType implements Type {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("(");
         for (int i = 0; i < values.size(); i++) {
-            stringBuilder.append("'"+values.get(i).getLiteral()+"'");
+            stringBuilder.append("'").append(values.get(i).getLiteral()).append("'");
             if (i != values.size()){
                 stringBuilder.append(",");
             }
         }
         stringBuilder.append(")");
+
+        listValue = stringBuilder.toString();
     }
 
     @Override

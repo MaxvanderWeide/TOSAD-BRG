@@ -3,10 +3,10 @@ package com.hu.brg.generate.type;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
 public class Compare implements Type {
-    RuleDefinition ruleDefinition;
-    String triggerCode;
-    String operatorSymbol;
-    String value;
+    private RuleDefinition ruleDefinition;
+    private String triggerCode;
+    private String operatorSymbol;
+    private String value;
 
     public Compare(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;
@@ -49,12 +49,11 @@ public class Compare implements Type {
                 System.out.println(this.ruleDefinition.getValues().get(0).getLiteral() + " is geen getal");
             }
 
-            if(passed)
+            if(passed) {
                 this.value = String.format("%s", this.ruleDefinition.getValues().get(0).getLiteral());
-            else
+            } else {
                 this.value = String.format("'%s'", this.ruleDefinition.getValues().get(0).getLiteral());
-
-
+            }
         } else if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("entity attribute") ||
                 this.ruleDefinition.getComparator().getName().equalsIgnoreCase("inter-entity attribute")) {
                 this.value = String.format("%s.%s", this.ruleDefinition.getTable().getName(), this.ruleDefinition.getAttribute().getName());
