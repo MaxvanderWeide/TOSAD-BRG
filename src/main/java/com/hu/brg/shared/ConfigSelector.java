@@ -27,7 +27,7 @@ public class ConfigSelector {
 
         Properties appProps = new Properties();
         try {
-            appProps.load(new FileInputStream(new File("src/app.properties").getAbsolutePath()));
+            appProps.load(new FileInputStream(new File("app.properties").getAbsolutePath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
