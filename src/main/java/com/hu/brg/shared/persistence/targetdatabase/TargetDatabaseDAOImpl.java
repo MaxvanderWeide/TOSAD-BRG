@@ -50,12 +50,12 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
     }
 
     @Override
-    public List<Table> getTables(String targetDatabase) {
+    public List<Table> getTables(String targetSchema) {
         try (Connection conn = getConnection()) {
             List<Table> tables = new ArrayList<>();
 
             PreparedStatement tableSt = conn.prepareStatement("select TABLE_NAME from ALL_TABLES where owner = ?");
-            tableSt.setString(1, targetDatabase);
+            tableSt.setString(1, targetSchema);
             ResultSet result = tableSt.executeQuery();
 
             while (result.next()) {
