@@ -63,7 +63,7 @@ public class RuleService {
         // TODO - Maybe remove this from service?
         this.targetDatabaseDao = claims != null ? TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
                 claims.get("host").toString(),
-                Integer.valueOf(claims.get("port").toString()),
+                Integer.parseInt(claims.get("port").toString()),
                 claims.get("service").toString(),
                 claims.get("username").toString(),
                 claims.get("password").toString()
