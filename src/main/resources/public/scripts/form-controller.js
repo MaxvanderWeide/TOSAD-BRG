@@ -166,6 +166,7 @@ function saveRule() {
     var comparator = document.getElementById("comparatorSelection");
 
     var values = {};
+    values["ruleName"] = document.getElementById("ruleName").value;
     values["tableName"] = selectedTableName;
     values["typeName"] = selectedTypeName;
     values["targetAttribute"] = selectedTargetAttributeName;

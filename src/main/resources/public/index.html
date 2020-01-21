@@ -40,6 +40,8 @@
             <button type="submit" class="btn btn-primary" onclick="createConnection(this); fillTargetTables()">Connect</button>
         </div>
         <div class="form-step-top">
+            <label for="ruleName">Rule name:</label>
+            <input type="text" id="ruleName">
             <label for="tableSelection">Tables:</label>
             <select id="tableSelection" class="form-input" onchange="fillTargetAttributes(this)">
                 <option disabled selected>Select a table</option>
