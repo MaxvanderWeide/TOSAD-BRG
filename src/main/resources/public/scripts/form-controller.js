@@ -1,4 +1,17 @@
-function fillTargetTables() {
+function loadFromStorage() {
+    if (sessionStorage.getItem("values") != null) {
+        var values = JSON.parse(sessionStorage.getItem("values"));
+        document.getElementById("dbEngine").options[dbEngine.selectedIndex].value = values['engine'];
+        document.getElementById("dbInputHost").value = values['host'];
+        document.getElementById("dbName").value = values['dbName'];
+        document.getElementById("dbInputPort").value = values['port'];
+        document.getElementById("dbInputService").value = values['service'];
+        document.getElementById("dbInputUser").value = values['username'];
+        document.getElementById("dbInputPassword").value = values['password'];
+    }
+}
+
+function createConnection() {
     var dbEngine = document.getElementById("dbEngine");
     var dbEngineName = dbEngine.options[dbEngine.selectedIndex].value;
     var dbHost = document.getElementById("dbInputHost").value;
@@ -20,10 +33,25 @@ function fillTargetTables() {
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200) {
+                sessionStorage.setItem("access_token", this.responseText);
+                sessionStorage.setItem("values", values);
+                return;
+            }
+            alert('Could not authenticate and make a connection')
+        }
+
+    };
+    xhttp.open("POST", 'auth/connection', true);
+    xhttp.send(values);
+}
+
+function fillTargetTables() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log("Connected!");
-            document.getElementById("db-info-wrapper").style.display = "none";
-            document.getElementById("disconnectBtn").style.display = "inline-block";
             console.log('GET SUCCESS: ' + this.responseText);
             var responseJSON = JSON.parse(this.responseText);
             var selection = document.getElementById("tableSelection");
@@ -34,10 +62,9 @@ function fillTargetTables() {
             }
         }
     };
-    xhttp.open("POST", 'define/tables', false);
-    xhttp.send(values);
-
-    fillTypes();
+    xhttp.open("GET", 'define/tables', false);
+    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
+    xhttp.send();
 }
 
 
@@ -75,6 +102,7 @@ function fillTargetAttributes(tableSelection) {
         }
     };
     xhttp.open("GET", 'define/tables/' + tableSelection.options[tableSelection.selectedIndex].text + '/attributes', true);
+    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
     xhttp.send();
 }
 
@@ -160,6 +188,7 @@ function saveRule() {
 
     };
     xhttp.open("POST", 'define/rules', true);
+    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
     xhttp.send(values);
 }
 
@@ -170,18 +199,4 @@ function displayBlock(type) {
 
 function getReval(type) {
     return eval(Types[type].reval);
-}
-
-function disconnect() {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            // console.log('GET SUCCESS: ' + this.responseText);
-            // document.getElementById("disconnectBtn").style.display = "none";
-            // document.getElementById("db-info-wrapper").style.display = "block";
-            window.location.reload();
-        }
-    };
-    xhttp.open("GET", 'define/disconnect', false);
-    xhttp.send();
 }
