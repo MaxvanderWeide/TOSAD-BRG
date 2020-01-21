@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,12 +156,13 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setString(5, "1");
 
         if (ruleDefinition.getComparator() == null) {
-            preparedStatement.setString(6, null);
+            preparedStatement.setNull(6, Types.INTEGER);
         } else {
             preparedStatement.setInt(6, ruleDefinition.getComparator().getId());
         }
 
-        preparedStatement.setString(6, null);
+        //TODO: Bart: Not necessery I think because the code abbove sets the value?
+//        preparedStatement.setString(6, null);
         preparedStatement.setInt(7, ruleDefinition.getOperator().getId());
         preparedStatement.setInt(8, ruleDefinition.getErrorCode());
         preparedStatement.setString(9, ruleDefinition.getErrorMessage());
