@@ -2,11 +2,11 @@ package com.hu.brg.generate.type;
 
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
-public class Range implements Type {
+public class RangeType implements Type {
     private RuleDefinition ruleDefinition;
     private String triggerCode;
 
-    public Range(RuleDefinition ruleDefinition) {
+    public RangeType(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;
     }
 

@@ -2,13 +2,13 @@ package com.hu.brg.generate.type;
 
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
-public class Compare implements Type {
+public class CompareType implements Type {
     private RuleDefinition ruleDefinition;
     private String triggerCode;
     private String operatorSymbol;
     private String value;
 
-    public Compare(RuleDefinition ruleDefinition) {
+    public CompareType(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;
     }
 
