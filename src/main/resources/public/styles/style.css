@@ -26,3 +26,8 @@ textarea#custInput1 {
 ul.attributes-list {
     list-style: none;
 }
+
+textarea.other-rule {
+    width: 500px;
+    height: 300px;
+}
