@@ -17,3 +17,8 @@ footer {
 #disconnectBtn {
     display: none;
 }
+
+textarea#custInput1 {
+    height: 300px;
+    color: black;
+}
