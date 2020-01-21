@@ -12,7 +12,6 @@ public class RuleTrigger {
     private List<String> triggerEvents = new ArrayList<>();
     private String triggerCode;
     private RuleDefinition ruleDefinition;
-    private String operator = "";
 
     public RuleTrigger(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;

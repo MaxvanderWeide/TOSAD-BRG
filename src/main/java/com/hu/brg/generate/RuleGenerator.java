@@ -2,6 +2,8 @@ package com.hu.brg.generate;
 
 import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
+import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAOImpl;
 
 import java.util.List;
 
@@ -9,6 +11,11 @@ public class RuleGenerator {
     private String triggerName;
     private RuleDefinition ruleDefinition;
 
+    //test
+    private ProjectsDAO projectsDAO = new ProjectsDAOImpl();
+
+    private String projectName;
+    private String applicationName = "BRG";
     private String triggerEvent = "";
     private RuleTrigger ruleTrigger;
 
@@ -16,13 +23,14 @@ public class RuleGenerator {
     public RuleGenerator(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;
         this.ruleTrigger = new RuleTrigger(ruleDefinition);
+        this.projectName = projectsDAO.getProjectName(ruleDefinition.getProjectId());
     }
 
     private void generateTriggerName() {
 
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
                 ConfigSelector.applicationName,
-                "hello",
+                this.projectName,
                 this.ruleDefinition.getAttribute().getName().substring(0, 4),
                 this.ruleDefinition.getType().getName())
         ).toUpperCase();
@@ -35,7 +43,7 @@ public class RuleGenerator {
         for (int i = 0; i < triggerEvents.size(); i++) {
             String event = triggerEvents.get(i);
             stringBuilder.append(event);
-            if (i + 1 != triggerEvents.size()) {
+            if (i != triggerEvents.size() - 1) {
                 stringBuilder.append(" OR ");
             }
         }
