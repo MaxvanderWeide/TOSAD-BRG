@@ -1,13 +1,14 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.shared.model.definition.Comparator;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProjectsDAOImpl extends ToolDatabaseBaseDAO implements ProjectsDAO {
+
+    ProjectsDAOImpl() {
+    }
 
     @Override
     public String getProjectName(int id) {

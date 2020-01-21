@@ -2,9 +2,9 @@ package com.hu.brg.define.domain;
 
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.physical.Table;
-import com.hu.brg.shared.persistence.DAOServiceProvider;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAO;
 import io.jsonwebtoken.Claims;
 

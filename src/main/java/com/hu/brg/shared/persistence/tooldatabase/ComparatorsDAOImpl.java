@@ -11,6 +11,9 @@ import java.util.List;
 
 public class ComparatorsDAOImpl extends ToolDatabaseBaseDAO implements ComparatorsDAO {
 
+    ComparatorsDAOImpl() {
+    }
+
     @Override
     public List<Comparator> getComparators() {
         List<Comparator> comparators = new ArrayList<>();

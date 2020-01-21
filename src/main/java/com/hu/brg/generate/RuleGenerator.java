@@ -2,8 +2,8 @@ package com.hu.brg.generate;
 
 import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
-import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAOImpl;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class RuleGenerator {
     private RuleDefinition ruleDefinition;
 
     //test
-    private ProjectsDAO projectsDAO = new ProjectsDAOImpl();
+    private ProjectsDAO projectsDAO = DAOServiceProvider.getProjectsDAO();
 
     private String projectName;
     private String applicationName = "BRG";
