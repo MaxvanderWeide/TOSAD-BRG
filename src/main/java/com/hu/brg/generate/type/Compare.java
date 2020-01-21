@@ -55,7 +55,7 @@ public class Compare implements Type {
                 this.value = String.format("'%s'", this.ruleDefinition.getValues().get(0).getLiteral());
             }
         } else if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("entity attribute") ||
-                this.ruleDefinition.getComparator().getName().equalsIgnoreCase("inter-entity attribute")) {
+                this.ruleDefinition.getComparator().getName().equalsIgnoreCase("interentity attribute")) {
                 this.value = String.format("%s.%s", this.ruleDefinition.getTable().getName(), this.ruleDefinition.getAttribute().getName());
         }
     }
