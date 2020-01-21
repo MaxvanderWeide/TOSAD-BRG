@@ -62,7 +62,7 @@ function fillTargetTables() {
             }
         }
     };
-    xhttp.open("GET", 'define/tables', false);
+    xhttp.open("GET", 'define/tables', true);
     xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
     xhttp.send();
 }
@@ -82,7 +82,7 @@ function fillTypes() {
             }
         }
     };
-    xhttp.open("GET", 'define/types', false);
+    xhttp.open("GET", 'define/types', true);
     xhttp.send();
 }
 
