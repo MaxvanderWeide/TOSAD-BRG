@@ -1,5 +1,5 @@
 var Types = {
-    Range: {
+    Attribute_Range: {
         block:
             "var custInput1 = document.createElement(\"INPUT\");" +
             "custInput1.setAttribute(\"type\", \"text\");" +
