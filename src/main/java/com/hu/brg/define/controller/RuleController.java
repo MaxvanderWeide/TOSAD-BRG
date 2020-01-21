@@ -67,7 +67,8 @@ public class RuleController {
     )
     public static void getAllTables(io.javalin.http.Context context) {
         JSONObject jsonObject = new JSONObject(context.body());
-        ruleService = new RuleService(jsonObject);
+        ruleService = new RuleService();
+        ruleService.createTargetDatabase(jsonObject);
         Map<String, List<String>> tables = new HashMap<>();
         List<String> tableList = new ArrayList<>();
         for (Table table : getRuleService().getAllTables()) {

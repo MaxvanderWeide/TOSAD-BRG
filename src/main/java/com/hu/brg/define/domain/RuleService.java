@@ -31,7 +31,9 @@ public class RuleService {
     private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
     private String dbName;
 
-    public RuleService(JSONObject jsonObject) {
+    public RuleService() {}
+
+    public void createTargetDatabase(JSONObject jsonObject) {
         this.targetDatabaseDao = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
                 jsonObject.getString("host"),
                 Integer.valueOf(jsonObject.getString("port")),
