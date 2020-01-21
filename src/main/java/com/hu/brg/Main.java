@@ -1,11 +1,8 @@
 package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
-import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.controller.AuthController;
-import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.response.ErrorResponse;
-import com.hu.brg.shared.persistence.DAOServiceProvider;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -18,8 +15,6 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Main {
-    private static RuleService ruleService;
-
     public static void main(String[] args) {
         Javalin.create(config -> {
             config.addStaticFiles("/public");

@@ -32,6 +32,7 @@ public class RuleService {
     private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
     private String dbName;
 
+<<<<<<< HEAD
     public RuleService() {
     }
 
@@ -51,6 +52,37 @@ public class RuleService {
 //        if (ruleDefinition != null) ruleDefinitions.add(ruleDefinition);
 //        return ruleDefinition != null;
 //    }
+=======
+    public RuleService() {}
+
+    public void createTargetDatabase(JSONObject jsonObject) {
+        this.targetDatabaseDao = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
+                jsonObject.getString("host"),
+                Integer.valueOf(jsonObject.getString("port")),
+                jsonObject.getString("service"),
+                jsonObject.getString("username"),
+                jsonObject.getString("password")
+        );
+        this.dbName = jsonObject.getString("dbName");
+    }
+
+    public Table getTable() {
+        return selectedTable;
+    }
+
+    public void setTable(Table table) {
+        this.selectedTable = table;
+    }
+
+    public List<RuleDefinition> getRuleDefinitions() {
+        return ruleDefinitions;
+    }
+
+    public boolean addRuleDefinition(RuleDefinition ruleDefinition) {
+        if (ruleDefinition != null) ruleDefinitions.add(ruleDefinition);
+        return ruleDefinition != null;
+    }
+>>>>>>> 2ce3b15489fffdba04a1b36c3da46a3be89f32b9
 
     private void addType(RuleType type) {
         if (type != null) types.add(type);

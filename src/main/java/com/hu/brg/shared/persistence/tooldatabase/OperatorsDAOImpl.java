@@ -44,6 +44,9 @@ public class OperatorsDAOImpl extends ToolDatabaseBaseDAO implements OperatorsDA
                 operators.add(new Operator(operatorsResult.getInt(1),
                         operatorsResult.getString(2)));
             }
+
+            operatorsResult.close();
+            operatorsStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

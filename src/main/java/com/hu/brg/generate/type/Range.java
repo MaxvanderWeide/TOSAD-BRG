@@ -3,8 +3,8 @@ package com.hu.brg.generate.type;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
 public class Range implements Type {
-    RuleDefinition ruleDefinition;
-    String triggerCode;
+    private RuleDefinition ruleDefinition;
+    private String triggerCode;
 
     public Range(RuleDefinition ruleDefinition) {
         this.ruleDefinition = ruleDefinition;

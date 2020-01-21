@@ -7,6 +7,7 @@ import java.util.List;
 
 public class RuleDefinition {
 
+    private int projectId;
     private RuleType type;
     private String name;
     private Table table;
@@ -18,12 +19,14 @@ public class RuleDefinition {
     private int errorCode;
     private String status;
 
-    public RuleDefinition(RuleType type, String name,
-                          Table table, Attribute attribute,
-                          Operator operator, Comparator comparator,
-                          List<Value> values, String errorMessage,
-                          int errorCode, String status) {
+    public RuleDefinition(int projectId, RuleType type,
+                          String name, Table table,
+                          Attribute attribute, Operator operator,
+                          Comparator comparator, List<Value> values,
+                          String errorMessage, int errorCode,
+                          String status) {
         // TODO - Limit constructor parameters
+        this.projectId = projectId;
         this.type = type;
         this.name = name;
         this.table = table;
@@ -34,6 +37,10 @@ public class RuleDefinition {
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
         this.status = status;
+    }
+
+    public int getProjectId() {
+        return projectId;
     }
 
     public RuleType getType() {
@@ -79,7 +86,8 @@ public class RuleDefinition {
     @Override
     public String toString() {
         return "RuleDefinition{" +
-                "type=" + type +
+                "projectId= " + projectId +
+                ", type=" + type +
                 ", name='" + name + '\'' +
                 ", table=" + table +
                 ", attribute=" + attribute +

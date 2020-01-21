@@ -8,6 +8,7 @@ import java.util.List;
 
 public class RuleDefinitionBuilder {
 
+    private int projectId;
     private String name;
     private Attribute attribute;
     private Table table;
@@ -18,6 +19,11 @@ public class RuleDefinitionBuilder {
     private int errorCode;
     private RuleType type;
     private String status;
+
+    public RuleDefinitionBuilder setProjectId(int projectId) {
+        this.projectId = projectId;
+        return this;
+    }
 
     public RuleDefinitionBuilder setType(RuleType type) {
         this.type = type;
@@ -70,6 +76,6 @@ public class RuleDefinitionBuilder {
     }
 
     public RuleDefinition build() {
-        return new RuleDefinition(type, name, table, attribute, operator, comparator, values, errorMessage, errorCode, status);
+        return new RuleDefinition(projectId, type, name, table, attribute, operator, comparator, values, errorMessage, errorCode, status);
     }
 }
