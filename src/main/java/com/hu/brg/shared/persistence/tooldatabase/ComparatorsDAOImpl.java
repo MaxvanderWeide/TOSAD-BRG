@@ -44,6 +44,9 @@ public class ComparatorsDAOImpl extends ToolDatabaseBaseDAO implements Comparato
                 comparators.add(new Comparator(comparatorsResult.getInt(1),
                         comparatorsResult.getString(2)));
             }
+
+            comparatorsResult.close();
+            comparatorsStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -12,8 +12,4 @@ public interface RulesDAO {
 
     RuleDefinition getRule(int id);
     List<RuleDefinition> getRulesByProjectId(int id);
-
-//    List<RuleType> getRuleTypes();
-//    List<Operator> getOperators();
-//    List<Comparator> getComparators();
 }
