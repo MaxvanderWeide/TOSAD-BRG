@@ -33,6 +33,7 @@ public class ListType implements Type {
         this.value += "(";
         int count = 1;
         for (Value value : values) {
+            // TODO - Change below to String builder
             this.value += "'" + value.getLiteral() + "'";
             if (count != values.size())
                 this.value += ",";

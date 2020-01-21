@@ -44,8 +44,6 @@ public class Main {
         })).start(4201);
     }
 
-
-
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {
         Info info = new Info().version("1.0").description("User API");
         OpenApiOptions options = new OpenApiOptions(info)
