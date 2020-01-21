@@ -42,21 +42,20 @@ public class Compare implements Type {
         if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("literal value")) {
 
             try {
-                // TODO - Useless double d?
-                double d = Double.parseDouble(this.ruleDefinition.getValues().get(0).getLiteral());
+                Double.parseDouble(this.ruleDefinition.getValues().get(0).getLiteral());
                 passed = true;
             } catch (NumberFormatException e) {
                 System.out.println(this.ruleDefinition.getValues().get(0).getLiteral() + " is geen getal");
             }
 
-            if(passed) {
+            if (passed) {
                 this.value = String.format("%s", this.ruleDefinition.getValues().get(0).getLiteral());
             } else {
                 this.value = String.format("'%s'", this.ruleDefinition.getValues().get(0).getLiteral());
             }
         } else if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("entity attribute") ||
                 this.ruleDefinition.getComparator().getName().equalsIgnoreCase("interentity attribute")) {
-                this.value = String.format("%s.%s", this.ruleDefinition.getTable().getName(), this.ruleDefinition.getAttribute().getName());
+            this.value = String.format("%s.%s", this.ruleDefinition.getTable().getName(), this.ruleDefinition.getAttribute().getName());
         }
     }
 
