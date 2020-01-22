@@ -31,8 +31,24 @@ public class Project {
         return TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(dbEngine, host, port, serviceName, username, password);
     }
 
+    public DBEngine getDbEngine() {
+        return dbEngine;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getServiceName() {
+        return serviceName;
     }
 
     public String getTargetSchema() {
