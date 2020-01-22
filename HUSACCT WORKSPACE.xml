@@ -11,7 +11,7 @@
         <Project>
           <name>TOSAD</name>
           <paths>
-            <path>/Users/jamiedekloet/Documents/School/Hbo-ICT/Jaar 2/TOSAD/TOSAD-BRG</path>
+            <path><<!PATH>></path>
           </paths>
           <programmingLanguage>Java</programmingLanguage>
           <version>1.0</version>
