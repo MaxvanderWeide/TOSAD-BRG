@@ -82,25 +82,27 @@ function fillTypes() {
                 option.text = k;
                 selection.add(option)
             }
+
         }
     };
     xhttp.open("GET", 'define/types', true);
     xhttp.send();
 }
 
-function fillTargetAttributes(tableSelection) {
+function fillTargetAttributes(tableSelection, entityRuleType = false) {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             console.log('GET SUCCESS: ' + this.responseText);
             const responseJSON = JSON.parse(this.responseText);
-            const selection = document.getElementById("attributeSelection");
+            const selection = entityRuleType ? document.getElementById("custInput1") : document.getElementById("attributeSelection");
             selection.options.length = 1;
             for (const k in responseJSON.Attributes) {
                 const option = document.createElement("option");
                 option.text = k + ' - ' + responseJSON.Attributes[k];
                 selection.add(option)
             }
+            console.log(selection);
         }
     };
     xhttp.open("GET", 'define/tables/' + tableSelection.options[tableSelection.selectedIndex].text + '/attributes', true);
@@ -142,16 +144,16 @@ function saveRule() {
 
     const ruleValues = [];
 
-    if(selectedTypeName === "Attribute_List") {
+    if (selectedTypeName === "Attribute_List") {
         for (const li of document.querySelectorAll("ul.attributes-list li")) {
             ruleValues.push(li.textContent);
             console.log(li.textContent);
         }
     } else {
-        if(["Tuple", "Entity"].indexOf(selectedTypeName.split("_")[0].trim()) > -1) {
+        if (["Tuple", "Entity"].indexOf(selectedTypeName.split("_")[0].trim()) > -1) {
             ruleValues.push(selectedTableName);
         }
-        for(const item of $("[id^=custInput]")) {
+        for (const item of $("[id^=custInput]")) {
             const itemsArray = item.value.split("-");
             if (itemsArray.length > 1) {
                 ruleValues.push(itemsArray[1].trim());
@@ -198,4 +200,16 @@ function displayBlock(type) {
 
 function getReval(type) {
     return eval(Types[type].reval);
+}
+
+function bindFillTargetAttributes(element) {
+    const typeName = element.options[element.selectedIndex].text;
+    const typeNameSplit = typeName.split("_");
+    if (typeNameSplit[0].trim() === "Entity" ||
+        typeNameSplit[0].trim() === "Tuple") {
+        document.getElementById("tableSelection").addEventListener("change", function() {
+            console.log("heeeeeeey");
+            fillTargetAttributes(this, true);
+        });
+    }
 }
