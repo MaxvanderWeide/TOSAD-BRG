@@ -20,12 +20,12 @@ import java.util.List;
 
 public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
-    RulesDAOImpl() {
-    }
+    RulesDAOImpl() {}
 
     @Override
     public boolean saveRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
+
             String query = "{call INSERT INTO RULES (PROJECTID, NAME, ATTRIBUTE, TARGETTABLE, " +
                     "TYPEID, OPERATORID, ERRORCODE, ERRORMESSAGE, STATUS) VALUES (?, ?, ?, ? , ?, ?, ?, ?, ?)" +
                     "RETURNING ID INTO ? }";
@@ -46,9 +46,6 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 preparedStatement.close();
             }
 
-            cs.close();
-
-            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -219,6 +216,28 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
         return rules;
     }
+
+    @Override
+    public boolean ruleExists(String name) {
+        try(Connection conn = getConnection()) {
+            PreparedStatement PreparedStatement = conn.prepareStatement(
+                    "select case when exists (select 1 from RULES where NAME = ?) then 'Y' else 'N' end as rec_exists from dual"
+            );
+            PreparedStatement.setString(1, name);
+            ResultSet ruleExists = PreparedStatement.executeQuery();
+
+            while (ruleExists.next()) {
+                if(ruleExists.getString(1).equals("Y")) {
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
     private void setPreparedStatement(PreparedStatement preparedStatement, RuleDefinition ruleDefinition) throws SQLException {
 
