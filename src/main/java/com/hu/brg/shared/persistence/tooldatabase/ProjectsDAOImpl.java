@@ -1,7 +1,5 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.shared.model.definition.Comparator;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

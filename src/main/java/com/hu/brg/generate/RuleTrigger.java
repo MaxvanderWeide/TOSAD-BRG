@@ -22,7 +22,7 @@ public class RuleTrigger {
     private void generateTriggerEvents() {
         this.triggerEvents.add("insert");
         this.triggerEvents.add("update");
-        if (ruleDefinition.getType().getCode().equalsIgnoreCase("MODI")) {
+        if (this.ruleDefinition.getType().getCode().equalsIgnoreCase("MODI")) {
             this.triggerEvents.add("delete");
         }
     }

@@ -39,7 +39,7 @@ public class Compare implements Type {
 
     private void setValue() {
         boolean passed = false;
-        if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("literal value")) {
+        if (this.ruleDefinition.getType().getSubType().equalsIgnoreCase("attribute")) {
 
             try {
                 Double.parseDouble(this.ruleDefinition.getValues().get(0).getLiteral());
@@ -53,8 +53,8 @@ public class Compare implements Type {
             } else {
                 this.value = String.format("'%s'", this.ruleDefinition.getValues().get(0).getLiteral());
             }
-        } else if (this.ruleDefinition.getComparator().getName().equalsIgnoreCase("entity attribute") ||
-                this.ruleDefinition.getComparator().getName().equalsIgnoreCase("interentity attribute")) {
+        } else if (this.ruleDefinition.getType().getSubType().equalsIgnoreCase("tuple") ||
+                this.ruleDefinition.getType().getSubType().equalsIgnoreCase("interentity")) {
             this.value = String.format("%s.%s", this.ruleDefinition.getTable().getName(), this.ruleDefinition.getAttribute().getName());
         }
     }

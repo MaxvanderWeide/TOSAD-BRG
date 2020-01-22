@@ -3,7 +3,6 @@ package com.hu.brg.define.controller;
 import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.model.response.ErrorResponse;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
-import com.hu.brg.shared.model.definition.Comparator;
 import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
@@ -145,34 +144,6 @@ public class RuleController {
     }
 
     @OpenApi(
-            summary = "get Comparator by Type",
-            operationId = "getComparatorsWithType",
-            path = "/define/types/:typeName/comparators",
-            method = HttpMethod.GET,
-            pathParams = {@OpenApiParam(name = "typeName", description = "Type Name")},
-            tags = {"Define", "Types", "Comparators"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Comparator[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void getComparatorsWithType(io.javalin.http.Context context) {
-        Map<String, List<String>> comparators = new HashMap<>();
-        List<String> tempComparators = new ArrayList<>();
-        for (Comparator comparator : getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
-                .getComparators()) {
-            tempComparators.add(comparator.getName());
-        }
-        comparators.put("Comparators", tempComparators);
-        context.json(comparators).status(200);
-
-        if (comparators.isEmpty()) {
-            context.status(400).result("No Comparators Found");
-        }
-    }
-
-    @OpenApi(
             summary = "Save the rule definition",
             operationId = "saveRuleDefinition",
             path = "/define/rules",
@@ -198,14 +169,12 @@ public class RuleController {
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
         Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
-        Comparator comparator = type.getComparatorByName(jsonObject.get("selectedComparatorName").toString());
 
         builder.setName(jsonObject.get("ruleName").toString());
         builder.setTable(table);
         builder.setType(type);
         builder.setAttribute(attribute);
         builder.setOperator(operator);
-        builder.setComparator(comparator);
         builder.setErrorMessage(jsonObject.get("errorMessage").toString());
         builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
 

@@ -1,6 +1,5 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
-import com.hu.brg.shared.model.definition.Comparator;
 import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.persistence.DAOServiceProvider;
@@ -23,10 +22,12 @@ public class RuleTypesDAOImpl extends ToolDatabaseBaseDAO implements RuleTypesDA
             ResultSet typesResult = typesStatement.executeQuery();
 
             while (typesResult.next()) {
+                String subType = null;
                 List<Operator> operators = DAOServiceProvider.getOperatorsDAO().getOperatorsByTypeId(typesResult.getInt(1));
-                List<Comparator> comparators = DAOServiceProvider.getComparatorsDAO().getComparatorsByTypeId(typesResult.getInt(1));
-
-                ruleTypes.add(new RuleType(typesResult.getString(2), typesResult.getString(3), operators, comparators));
+                if(!typesResult.getString(3).equalsIgnoreCase("MODI")) {
+                    subType = typesResult.getString(2).split("_")[0];
+                }
+                ruleTypes.add(new RuleType(typesResult.getString(2), subType, typesResult.getString(3), operators));
             }
 
             typesStatement.close();

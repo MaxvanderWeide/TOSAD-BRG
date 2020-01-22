@@ -5,15 +5,15 @@ import java.util.List;
 public class RuleType {
 
     private String type;
+    private String subType;
     private String code;
     private List<Operator> operators;
-    private List<Comparator> comparators;
 
-    public RuleType(String type, String code, List<Operator> operators, List<Comparator> comparators) {
+    public RuleType(String type, String subType, String code, List<Operator> operators) {
         this.type = type;
+        this.subType = subType;
         this.code = code;
         this.operators = operators;
-        this.comparators = comparators;
     }
 
     public String getName() {
@@ -28,6 +28,10 @@ public class RuleType {
         return operators;
     }
 
+    public String getSubType() {
+        return subType;
+    }
+
     public Operator getOperatorByName(String name) {
         for (Operator operator : operators) {
             if (operator.getName().equalsIgnoreCase(name)) {
@@ -37,23 +41,11 @@ public class RuleType {
         return null;
     }
 
-    public List<Comparator> getComparators() {
-        return comparators;
-    }
-
-    public Comparator getComparatorByName(String name) {
-        for (Comparator comparator : comparators) {
-            if (comparator.getName().equals(name)) {
-                return comparator;
-            }
-        }
-        return null;
-    }
-
     @Override
     public String toString() {
         return "RuleType{" +
                 "type='" + type + '\'' +
+                ", subType='" + subType + '\'' +
                 ", code='" + code + '\'' +
                 '}';
     }

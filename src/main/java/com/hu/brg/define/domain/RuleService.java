@@ -100,18 +100,7 @@ public class RuleService {
 //
 //        return operators;
 //    }
-//
-//    public List<Comparator> getComparatorsByRuleType(RuleType ruleType) {
-//        List<Comparator> comparators = new ArrayList<>();
-//
-//        for(RuleType type : this.ruleTypesDAO.getRuleTypes()) {
-//            if(type.getCode().equals(ruleType.getCode())) {
-//                comparators.addAll(type.getComparators());
-//            }
-//        }
-//
-//        return comparators;
-//    }
+
 //
 //    public Operator getOperatorByName(String name) {
 //        for(Operator operator : this.operatorsDAO.getOperators()) {
@@ -121,11 +110,5 @@ public class RuleService {
 //        return null;
 //    }
 //
-//    public Comparator getComparatorByName(String name) {
-//        for(Comparator comparator : this.comparatorsDAO.getComparators()) {
-//            if(comparator.getName().equalsIgnoreCase(name))
-//                return comparator;
-//        }
-//        return null;
-//    }
+
 }
