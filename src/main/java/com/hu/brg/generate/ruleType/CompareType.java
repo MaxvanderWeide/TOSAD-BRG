@@ -54,7 +54,7 @@ public class CompareType implements Type {
             }
         } else if (this.ruleDefinition.getType().getSubType().equalsIgnoreCase("tuple") ||
                 this.ruleDefinition.getType().getSubType().equalsIgnoreCase("interentity")) {
-            this.value = String.format("%s.%s", this.ruleDefinition.getTable().getName(), this.ruleDefinition.getAttribute().getName());
+            this.value = String.format("%s.%s", this.ruleDefinition.getValues().get(0).getLiteral(), this.ruleDefinition.getValues().get(1).getLiteral());
         }
     }
 

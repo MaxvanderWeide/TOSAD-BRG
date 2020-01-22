@@ -95,7 +95,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         try (Connection conn = getConnection()) {
             TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.ID, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID, r.PROJECTID " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
@@ -110,14 +110,16 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 String ruleName = results.getString(1);
                 String attributeName = results.getString(2);
                 String tableName = results.getString(3);
-                String typeCode = results.getString(4);
-                String typeName = results.getString(5);
-                int operatorId = results.getInt(6);
-                String operatorName = results.getString(7);
-                int errorCode = results.getInt(8);
-                String errorMessage = results.getString(9);
-                String status = results.getString(10);
-                int ID = results.getInt(11);
+                int typeId = results.getInt(4);
+                String typeCode = results.getString(5);
+                String typeName = results.getString(6);
+                int operatorId = results.getInt(7);
+                String operatorName = results.getString(8);
+                int errorCode = results.getInt(9);
+                String errorMessage = results.getString(10);
+                String status = results.getString(11);
+                int ID = results.getInt(12);
+                int projectId = results.getInt(13);
 
                 operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
 
@@ -128,7 +130,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 }
 
                 if(!results.getString(4).equalsIgnoreCase("MODI")) {
-                    subType = results.getString(5).split("_")[0];
+                    subType = results.getString(6).split("_")[0];
                 }
 
                 List<Value> values = new ArrayList<>();
@@ -140,8 +142,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                     values.add(new Value(valuesResult.getString(1)));
                 }
 
-                RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
-                return new RuleDefinition(1, ruleType, ruleName, typeTable, new Attribute(attributeName), // TODO - change static projectId
+                RuleType ruleType = new RuleType(typeId, typeName, subType, typeCode, operators);
+                return new RuleDefinition(projectId, ruleType, ruleName, typeTable, new Attribute(attributeName), // TODO - change static projectId
                         new Operator(operatorId, operatorName),
                         values, errorMessage, errorCode, status, ID
                 );
@@ -163,7 +165,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         try (Connection conn = getConnection()) {
             TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.ID, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
@@ -179,14 +181,15 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 String ruleName = results.getString(1);
                 String attributeName = results.getString(2);
                 String tableName = results.getString(3);
-                String typeCode = results.getString(4);
-                String typeName = results.getString(5);
-                int operatorId = results.getInt(6);
-                String operatorName = results.getString(7);
-                int errorCode = results.getInt(8);
-                String errorMessage = results.getString(9);
-                String status = results.getString(10);
-                int ID = results.getInt(11);
+                int typeId = results.getInt(4);
+                String typeCode = results.getString(5);
+                String typeName = results.getString(6);
+                int operatorId = results.getInt(7);
+                String operatorName = results.getString(8);
+                int errorCode = results.getInt(9);
+                String errorMessage = results.getString(10);
+                String status = results.getString(11);
+                int ID = results.getInt(12);
 
                 operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
 
@@ -197,19 +200,19 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 }
 
                 if(!results.getString(4).equalsIgnoreCase("MODI")) {
-                    subType = results.getString(5).split("_")[0];
+                    subType = results.getString(6).split("_")[0];
                 }
 
                 List<Value> values = new ArrayList<>();
                 PreparedStatement valuesPreparedStatement = conn.prepareStatement("SELECT VALUE FROM RULE_VALUES WHERE RULEID = ?");
-                valuesPreparedStatement.setInt(1, results.getInt(11));
+                valuesPreparedStatement.setInt(1, ID);
                 ResultSet valuesResult = valuesPreparedStatement.executeQuery();
 
                 while (valuesResult.next()) {
                     values.add(new Value(valuesResult.getString(1)));
                 }
 
-                RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
+                RuleType ruleType = new RuleType(typeId, typeName, subType, typeCode, operators);
                 rules.add(new RuleDefinition(id, ruleType, ruleName, typeTable, new Attribute(attributeName),
                         new Operator(operatorId, operatorName),
                         values, errorMessage, errorCode, status, ID
@@ -253,7 +256,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setString(2, ruleDefinition.getName());
         preparedStatement.setString(3, ruleDefinition.getAttribute().getName());
         preparedStatement.setString(4, ruleDefinition.getTable().getName());
-        preparedStatement.setString(5, "1"); //TODO: (RULE)TYPEID needs to be dynamic
+        preparedStatement.setInt(5, ruleDefinition.getType().getId()); //TODO: (RULE)TYPEID needs to be dynamic
         preparedStatement.setInt(6, ruleDefinition.getOperator().getId());
         preparedStatement.setInt(7, ruleDefinition.getErrorCode());
         preparedStatement.setString(8, ruleDefinition.getErrorMessage());
