@@ -178,8 +178,10 @@ public class RuleController {
         Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[1].trim());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
         List<Value> values = new ArrayList<>();
-        values.add(new Value("1")); //TODO: daadwerkelijke values meegeven
-        values.add(new Value("5")); //TODO: daadwerkelijke values meegeven
+
+        for(int i = 0; i < jsonObject.getJSONArray("values").length(); i++) {
+            values.add(new Value(jsonObject.getJSONArray("values").get(i).toString()));
+        }
 
         builder.setName(jsonObject.get("ruleName").toString());
         builder.setTable(table);
