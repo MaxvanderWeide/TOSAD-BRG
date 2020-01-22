@@ -162,10 +162,12 @@ function saveRule() {
     const selectedOperator = document.getElementById("operatorSelection");
     const selectedOperatorName = selectedOperator.options[selectedOperator.selectedIndex].value;
 
-    const selectedComparator = document.getElementById("comparatorSelection");
-    const selectedComparatorName = selectedComparator.options[selectedComparator.selectedIndex].value;
+    let selectedComparatorName = null;
+    if (document.getElementById("comparatorSelection") != undefined) {
+        const selectedComparator = document.getElementById("comparatorSelection");
+        selectedComparatorName = selectedComparator.options[selectedComparator.selectedIndex].value;
+    }
 
-    const comparator = document.getElementById("comparatorSelection");
 
     const ruleValues = [];
 
