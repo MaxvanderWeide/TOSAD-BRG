@@ -148,6 +148,9 @@ function saveRule() {
             console.log(li.textContent);
         }
     } else {
+        if(["Tuple", "Entity"].indexOf(selectedTypeName.split("_")[0].trim()) > -1) {
+            ruleValues.push(selectedTableName);
+        }
         for(const item of $("[id^=custInput]")) {
             const itemsArray = item.value.split("-");
             if (itemsArray.length > 1) {
