@@ -12,4 +12,6 @@ public interface RulesDAO {
 
     RuleDefinition getRule(int id);
     List<RuleDefinition> getRulesByProjectId(int id);
+
+    boolean ruleExists(String name);
 }

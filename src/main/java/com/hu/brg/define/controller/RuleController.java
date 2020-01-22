@@ -1,9 +1,9 @@
 package com.hu.brg.define.controller;
 
-import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.define.domain.RuleService;
-import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.*;
 import com.hu.brg.shared.model.definition.RuleType;
+import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.web.ErrorResponse;
@@ -12,6 +12,8 @@ import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import com.hu.brg.shared.model.definition.RuleType;
+import com.hu.brg.shared.persistence.tooldatabase.TooldbFacade;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 
@@ -174,8 +176,11 @@ public class RuleController {
 
         Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString(), claims);
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
-        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
+        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[1].trim());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
+        List values = new ArrayList();
+        values.add(new Value("1")); //TODO: daadwerkelijke values meegeven
+        values.add(new Value("5")); //TODO: daadwerkelijke values meegeven
 
         builder.setName(jsonObject.get("ruleName").toString());
         builder.setTable(table);
@@ -183,12 +188,22 @@ public class RuleController {
         builder.setAttribute(attribute);
         builder.setOperator(operator);
         builder.setProjectId(Integer.parseInt(claims.get("projectId").toString()));
+        builder.setValues(values);
         builder.setErrorMessage(jsonObject.get("errorMessage").toString());
         builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
+        builder.setStatus("Opgeslagen"); //TODO: kan weg??
 
-        context.result("Rule Saved").status(201);
+        RuleDefinition ruleDefinition = builder.build();
+
         if (builder.build() == null) {
             context.status(400).result("Rule Not Saved");
+        } else {
+            TooldbFacade tooldbFacade = new TooldbFacade();
+            if(!tooldbFacade.saveBusinessrule(ruleDefinition)) {
+                context.status(400).result("Rule Already Exists!");
+            } else {
+                context.result("Rule Saved").status(201);
+            }
         }
     }
 }
