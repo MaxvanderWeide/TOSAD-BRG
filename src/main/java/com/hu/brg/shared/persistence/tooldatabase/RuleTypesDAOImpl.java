@@ -2,7 +2,6 @@ package com.hu.brg.shared.persistence.tooldatabase;
 
 import com.hu.brg.shared.model.definition.Operator;
 import com.hu.brg.shared.model.definition.RuleType;
-import com.hu.brg.shared.persistence.DAOServiceProvider;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RuleTypesDAOImpl extends ToolDatabaseBaseDAO implements RuleTypesDAO {
+
+    RuleTypesDAOImpl() {
+    }
 
     @Override
     public List<RuleType> getRuleTypes() {

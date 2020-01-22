@@ -11,6 +11,9 @@ import java.util.List;
 
 public class OperatorsDAOImpl extends ToolDatabaseBaseDAO implements OperatorsDAO {
 
+    OperatorsDAOImpl() {
+    }
+
     @Override
     public List<Operator> getOperators() {
         List<Operator> operators = new ArrayList<>();

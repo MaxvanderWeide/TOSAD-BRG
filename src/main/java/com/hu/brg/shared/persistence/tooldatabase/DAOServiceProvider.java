@@ -1,15 +1,9 @@
-package com.hu.brg.shared.persistence;
-
-import com.hu.brg.shared.persistence.tooldatabase.OperatorsDAO;
-import com.hu.brg.shared.persistence.tooldatabase.OperatorsDAOImpl;
-import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAO;
-import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAOImpl;
-import com.hu.brg.shared.persistence.tooldatabase.RulesDAO;
-import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
+package com.hu.brg.shared.persistence.tooldatabase;
 
 public class DAOServiceProvider {
 
     private static OperatorsDAO operatorsDAO;
+    private static ProjectsDAO projectsDAO;
     private static RulesDAO rulesDAO;
     private static RuleTypesDAO ruleTypesDAO;
 
@@ -19,6 +13,14 @@ public class DAOServiceProvider {
         }
 
         return operatorsDAO;
+    }
+
+    public static ProjectsDAO getProjectsDAO() {
+        if (projectsDAO == null) {
+            projectsDAO = new ProjectsDAOImpl();
+        }
+
+        return projectsDAO;
     }
 
     public static RulesDAO getRulesDAO() {

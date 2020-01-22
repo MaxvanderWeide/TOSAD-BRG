@@ -1,6 +1,9 @@
 # TOSAD-BRG
 Business Rule Generator for TOSAD 2019-2020
 
+#### Important Notice
+This project will be archived after `29/01/2020`, and will not receive any updates after that date.
+
 ## Deploy
 Clone the project and/or create a Maven Project<br>
 Run `mvn package` to build. <br>
@@ -27,7 +30,23 @@ This will take the following as data:
     service = dbService;
     username = dbUser;
     password = dbPassword;
+_The Username and Password will not be stored in the system. The other data might be used to save the project for your convenience_
     
 #### Run API & Tool
 When running `src\main\java\com\hu\brg\Main.java`, you have access to `localhost:4201`. This is a fully working Tool (FE) 
 that a customer would use.
+
+## Data
+#### Storage
+When creating a business rule, some data might be saved:
+- The data input from the FE/request.
+- The engine, scheme, host, port and service of the given project (should be given as a bearer token).
+
+#### Cookies
+This project does not store any cookies in the browser.
+
+#### Session
+The data requested by the application (database data, username and password) might be stored in the session storage.
+
+## Issues
+Issues can be reported on the Issues page. Flag the issue if you can. You can expect the issue to be resolved before `29/01/2020`.

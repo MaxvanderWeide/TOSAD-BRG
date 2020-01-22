@@ -1,5 +1,5 @@
 package com.hu.brg.shared.persistence;
 
-public enum DBEngines {
+public enum DBEngine {
     ORACLE;
 }

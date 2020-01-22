@@ -6,7 +6,6 @@ import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.definition.Value;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
-import com.hu.brg.shared.persistence.DAOServiceProvider;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import oracle.jdbc.OracleTypes;
@@ -21,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
+
+    RulesDAOImpl() {
+    }
 
     @Override
     public boolean saveRule(RuleDefinition ruleDefinition) {
@@ -91,7 +93,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             valuesPreparedStatement.setInt(1, id);
             ResultSet valuesResult = valuesPreparedStatement.executeQuery();
 
-            while(valuesResult.next()) {
+            while (valuesResult.next()) {
                 values.add(new Value(valuesResult.getString(1)));
             }
 
@@ -165,7 +167,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             valuesPreparedStatement.setInt(1, id);
             ResultSet valuesResult = valuesPreparedStatement.executeQuery();
 
-            while(valuesResult.next()) {
+            while (valuesResult.next()) {
                 values.add(new Value(valuesResult.getString(1)));
             }
 

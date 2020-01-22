@@ -2,9 +2,10 @@ package com.hu.brg.define.domain;
 
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.physical.Table;
-import com.hu.brg.shared.persistence.DAOServiceProvider;
+import com.hu.brg.shared.persistence.DBEngine;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAO;
 import io.jsonwebtoken.Claims;
 
@@ -62,8 +63,9 @@ public class RuleService {
     public List<Table> getAllTables(Claims claims) {
         // TODO - Maybe remove this from service?
         this.targetDatabaseDao = claims != null ? TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
+                DBEngine.ORACLE,
                 claims.get("host").toString(),
-                Integer.valueOf(claims.get("port").toString()),
+                Integer.parseInt(claims.get("port").toString()),
                 claims.get("service").toString(),
                 claims.get("username").toString(),
                 claims.get("password").toString()
