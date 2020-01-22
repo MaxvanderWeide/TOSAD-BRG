@@ -45,7 +45,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
                 preparedStatement.close();
             }
-
+            cs.close();
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
