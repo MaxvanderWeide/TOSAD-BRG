@@ -190,6 +190,7 @@ public class RuleController {
         builder.setValues(values);
         builder.setErrorMessage(jsonObject.get("errorMessage").toString());
         builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
+        builder.setStatus("status");
 
         RuleDefinition ruleDefinition = builder.build();
         if(!ruleService.saveRule(ruleDefinition)) {
