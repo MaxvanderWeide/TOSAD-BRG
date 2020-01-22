@@ -16,7 +16,6 @@ public class RuleGenerator {
     private ProjectsDAO projectsDAO = DAOServiceProvider.getProjectsDAO();
 
     private Project project;
-    private String applicationName = "BRG";
     private String triggerEvent = "";
     private RuleTrigger ruleTrigger;
 
