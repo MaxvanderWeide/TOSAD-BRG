@@ -6,7 +6,6 @@ import com.hu.brg.shared.model.web.ErrorResponse;
 import com.hu.brg.shared.persistence.DBEngine;
 import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
-import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAOImpl;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
@@ -56,6 +55,8 @@ public class AuthController {
                     Integer.valueOf(jsonObject.getString("port")),
                     jsonObject.getString("service"));
 
+            project.setUsername(jsonObject.getString("username"));
+            project.setPassword(jsonObject.getString("password"));
             int projectId = projects.getProjectId(project); // TODO - Simplify this?
             if (projectId == 0) {
                 projects.saveProject(project);
@@ -70,8 +71,8 @@ public class AuthController {
                     .claim("dbName", project.getName())
                     .claim("host", project.getHost())
                     .claim("service", project.getServiceName())
-                    .claim("username", jsonObject.getString("username"))
-                    .claim("password", jsonObject.getString("password"))
+                    .claim("password", project.getPassword())
+                    .claim("username", project.getUsername())
                     .claim("projectId", projectId)
                     .claim("port", project.getPort())
                     .signWith(signatureAlgorithm, signingKey);
