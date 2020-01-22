@@ -8,9 +8,9 @@ function loadRules() {
             $(".spinner-holder").hide();
             if (this.status == 200) {
                 const responseJSON = JSON.parse(this.responseText);
-                const values = ["hoi", "doei"]; // TODO - change static values
                 for (const k in responseJSON) {
                     const item = responseJSON[k];
+                    const values = JSON.parse(item["Values"]);
                     const itemWrapper = document.createElement("div");
                     itemWrapper.setAttribute("class", "rule-item");
                     const ruleWrapper = document.createElement("div");
@@ -27,6 +27,7 @@ function loadRules() {
                     generatedRuleWrapper.setAttribute("class", "generated-rule-wrapper");
                     const ul = document.createElement("ul");
 
+
                     for (const value of values) {
                         $(ul).append("<li>" + value + "</li>")
                     }
@@ -42,7 +43,7 @@ function loadRules() {
                     $(ruleBottomBlock).append(ul);
                     $(ruleInfoWrapper).append(ruleLeftBlock, ruleRightBlock, ruleBottomBlock);
                     $(generatedRuleWrapper).append("<span class='generated-rule-title'>Generated rule</span>");
-                    $(generatedRuleWrapper).append("<div class='generated-rule'>create trigger blablabla</div>");
+                    $(generatedRuleWrapper).append("<div class='generated-rule'>Click the \"Generate Code\" button to generate and insert the rule into your database</div>");
                     $(itemWrapper).append("<div class='rule-name'>" + k + "</div>");
                     $(ruleWrapper).append(ruleInfoWrapper, generatedRuleWrapper);
                     $(itemWrapper).append(ruleWrapper);
@@ -60,7 +61,6 @@ function loadRules() {
 }
 
 function generateCode(element) {
-
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState == 4) {

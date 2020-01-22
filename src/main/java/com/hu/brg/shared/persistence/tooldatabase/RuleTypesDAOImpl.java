@@ -29,7 +29,7 @@ public class RuleTypesDAOImpl extends ToolDatabaseBaseDAO implements RuleTypesDA
                 if(!typesResult.getString(3).equalsIgnoreCase("MODI")) {
                     subType = typesResult.getString(2).split("_")[0];
                 }
-                ruleTypes.add(new RuleType(typesResult.getString(2), subType, typesResult.getString(3), operators));
+                ruleTypes.add(new RuleType(typesResult.getInt(1), typesResult.getString(2), subType, typesResult.getString(3), operators));
             }
 
             typesStatement.close();

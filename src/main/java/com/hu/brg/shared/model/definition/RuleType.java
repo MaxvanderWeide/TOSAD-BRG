@@ -4,16 +4,26 @@ import java.util.List;
 
 public class RuleType {
 
+    private int id;
     private String type;
     private String subType;
     private String code;
     private List<Operator> operators;
 
-    public RuleType(String type, String subType, String code, List<Operator> operators) {
+    public RuleType(int id, String type, String subType, String code, List<Operator> operators) {
+        this.id = id;
         this.type = type;
         this.subType = subType;
         this.code = code;
         this.operators = operators;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public String getName() {
@@ -44,9 +54,11 @@ public class RuleType {
     @Override
     public String toString() {
         return "RuleType{" +
-                "ruleType='" + type + '\'' +
+                "id=" + id +
+                ", type='" + type + '\'' +
                 ", subType='" + subType + '\'' +
                 ", code='" + code + '\'' +
+                ", operators=" + operators +
                 '}';
     }
 }
