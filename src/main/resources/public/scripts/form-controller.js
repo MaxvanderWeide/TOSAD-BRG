@@ -37,7 +37,7 @@ function createConnection() {
             if (this.status == 200) {
                 sessionStorage.setItem("access_token", this.responseText);
                 sessionStorage.setItem("values", values);
-                fillTargetTables();
+                // fillTargetTables();
                 document.getElementsByClassName("rule-details-wrapper")[0].style.display = "block";
                 return;
             }

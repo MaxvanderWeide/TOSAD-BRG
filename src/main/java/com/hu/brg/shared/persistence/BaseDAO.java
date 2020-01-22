@@ -5,6 +5,7 @@ import oracle.jdbc.pool.OracleDataSource;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLRecoverableException;
 
 public abstract class BaseDAO {
     private Connection connection;
@@ -23,6 +24,8 @@ public abstract class BaseDAO {
                     }
                 }
             }
+        } catch (SQLRecoverableException e) {
+            return null;
         } catch (SQLException e) {
             e.printStackTrace();
         }

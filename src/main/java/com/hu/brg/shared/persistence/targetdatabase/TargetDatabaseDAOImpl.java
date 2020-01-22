@@ -52,6 +52,11 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
         return this.getConnection(dbEngine, host, port, serviceName, username, password);
     }
 
+    public boolean testConnection() {
+        Connection connection = getConnection();
+        return connection != null;
+    }
+
     @Override
     public List<Table> getTables(String targetSchema) {
         try (Connection conn = getConnection()) {

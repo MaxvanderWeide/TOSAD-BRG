@@ -4,6 +4,8 @@ import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import com.hu.brg.shared.persistence.DBEngine;
+import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
+import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
@@ -60,6 +62,18 @@ public class AuthController {
             project.setPassword(jsonObject.getString("password"));
             int projectId = projects.getProjectId(project);
             if (projectId == 0) {
+                TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
+                        DBEngine.ORACLE,
+                        project.getHost(),
+                        project.getPort(),
+                        project.getServiceName(),
+                        project.getUsername(),
+                        project.getPassword()
+                );
+                if (!targetDatabaseDAO.testConnection()) {
+                    context.status(403);
+                    return;
+                }
                 projects.saveProject(project);
                 projectId = project.getId();
             }
