@@ -2,7 +2,6 @@ package com.hu.brg.define.controller;
 
 import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.model.definition.*;
-import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
@@ -12,7 +11,6 @@ import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
-import com.hu.brg.shared.persistence.tooldatabase.TooldbFacade;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 
@@ -192,12 +190,10 @@ public class RuleController {
         builder.setValues(values);
         builder.setErrorMessage(jsonObject.get("errorMessage").toString());
         builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
-        builder.setStatus("Opgeslagen"); //TODO: kan weg??
 
         RuleDefinition ruleDefinition = builder.build();
-        TooldbFacade tooldbFacade = new TooldbFacade();
-        if(!tooldbFacade.saveBusinessrule(ruleDefinition)) {
-            context.status(400).result("Rule Already Exists!");
+        if(!ruleService.saveRule(ruleDefinition)) {
+            context.status(400).result("Rule not created");
         } else {
             context.result(String.valueOf(ruleDefinition.getProjectId())).status(201);
         }
