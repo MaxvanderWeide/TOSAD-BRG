@@ -16,7 +16,7 @@ public class ProjectsDAOImpl extends ToolDatabaseBaseDAO implements ProjectsDAO 
     }
 
     @Override
-    public boolean saveProject(Project project) {
+    public Project saveProject(Project project) {
         try (Connection conn = getConnection()) {
             String query = "{call INSERT INTO PROJECTS (HOST, PORT, SERVICE, DBENGINE, NAME) " +
                     "VALUES (?, ?, ?, ?, ?)" +
@@ -30,15 +30,16 @@ public class ProjectsDAOImpl extends ToolDatabaseBaseDAO implements ProjectsDAO 
             cs.registerOutParameter(6, OracleTypes.NUMBER);
             cs.executeUpdate();
 
-            int ruleId = cs.getInt(6);
+            int id = cs.getInt(6);
+            project.setId(id);
 
             cs.close();
 
-            return true;
+            return project;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     @Override

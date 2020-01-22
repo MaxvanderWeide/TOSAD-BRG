@@ -6,6 +6,7 @@ import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 
 public class Project {
 
+    private int id;
     private DBEngine dbEngine;
     private String name;
     private String host;
@@ -31,6 +32,10 @@ public class Project {
         return TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(dbEngine, host, port, serviceName, username, password);
     }
 
+    public int getId() {
+        return id;
+    }
+
     public DBEngine getDbEngine() {
         return dbEngine;
     }
@@ -53,6 +58,10 @@ public class Project {
 
     public String getTargetSchema() {
         return targetSchema;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setTargetSchema(String targetSchema) {
