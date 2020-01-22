@@ -94,9 +94,9 @@ public class RuleService {
 //    public List<Operator> getOperatorsByRuleType(RuleType ruleType) {
 //        List<Operator> operators = new ArrayList<>();
 //
-//        for(RuleType type : this.ruleTypesDAO.getRuleTypes()) {
-//            if(type.getCode().equals(ruleType.getCode())) {
-//                operators.addAll(type.getOperators());
+//        for(RuleType ruleType : this.ruleTypesDAO.getRuleTypes()) {
+//            if(ruleType.getCode().equals(ruleType.getCode())) {
+//                operators.addAll(ruleType.getOperators());
 //            }
 //        }
 //

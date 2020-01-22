@@ -44,7 +44,7 @@ public class RuleType {
     @Override
     public String toString() {
         return "RuleType{" +
-                "type='" + type + '\'' +
+                "ruleType='" + type + '\'' +
                 ", subType='" + subType + '\'' +
                 ", code='" + code + '\'' +
                 '}';

@@ -1,8 +1,8 @@
 package com.hu.brg.generate;
 
-import com.hu.brg.generate.type.CompareType;
-import com.hu.brg.generate.type.ListType;
-import com.hu.brg.generate.type.RangeType;
+import com.hu.brg.generate.ruleType.CompareType;
+import com.hu.brg.generate.ruleType.ListType;
+import com.hu.brg.generate.ruleType.RangeType;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 
 import java.util.ArrayList;

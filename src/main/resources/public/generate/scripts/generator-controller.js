@@ -3,7 +3,7 @@ loadRules();
 function loadRules() {
     const values = {};
     values["typeCode"] = "ACMP";
-    values["type"] = "Compare";
+    values["ruleType"] = "Compare";
     values["subType"] = "Attribute";
     values["table"] = "Producten";
     values["attribute"] = "prijs";

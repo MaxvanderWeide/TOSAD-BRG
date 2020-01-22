@@ -81,7 +81,7 @@ public class RuleDefinition {
     public String toString() {
         return "RuleDefinition{" +
                 "projectId= " + projectId +
-                ", type=" + type +
+                ", ruleType=" + type +
                 ", name='" + name + '\'' +
                 ", table=" + table +
                 ", attribute=" + attribute +
