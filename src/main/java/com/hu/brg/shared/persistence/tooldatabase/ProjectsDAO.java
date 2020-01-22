@@ -4,6 +4,7 @@ import com.hu.brg.shared.model.definition.Project;
 
 public interface ProjectsDAO {
     Project saveProject(Project project);
+    int getProjectId(Project project);
 
     Project getProjectById(int id);
 }

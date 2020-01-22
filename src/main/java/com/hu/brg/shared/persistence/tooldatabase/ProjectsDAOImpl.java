@@ -43,6 +43,33 @@ public class ProjectsDAOImpl extends ToolDatabaseBaseDAO implements ProjectsDAO 
     }
 
     @Override
+    public int getProjectId(Project project) {
+        int projectId = 0;
+        try (Connection conn = getConnection()) {
+
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT ID FROM PROJECTS " +
+                    "WHERE HOST = ? AND PORT = ? AND SERVICE = ? AND DBENGINE = ?");
+            preparedStatement.setString(1, project.getHost());
+            preparedStatement.setInt(2, project.getPort());
+            preparedStatement.setString(3, project.getServiceName());
+            preparedStatement.setString(4, project.getDbEngine().name());
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                project.setId(resultSet.getInt(1));
+                projectId = project.getId();
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return projectId;
+    }
+
+    @Override
     public Project getProjectById(int id) {
         Project result = null;
         try (Connection conn = getConnection()) {

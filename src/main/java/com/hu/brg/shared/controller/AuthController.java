@@ -1,7 +1,12 @@
 package com.hu.brg.shared.controller;
 
 import com.hu.brg.shared.ConfigSelector;
+import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.shared.persistence.DBEngine;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
+import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
+import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAOImpl;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
@@ -36,6 +41,7 @@ public class AuthController {
     public static void createConnection(io.javalin.http.Context context) {
         try {
 
+            ProjectsDAO projects = DAOServiceProvider.getProjectsDAO();
             JSONObject jsonObject = new JSONObject(context.body());
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -44,18 +50,30 @@ public class AuthController {
 
             byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
+            Project project = new Project(DBEngine.valueOf(jsonObject.getString("engine")),
+                    jsonObject.getString("dbName"),
+                    jsonObject.getString("host"),
+                    Integer.valueOf(jsonObject.getString("port")),
+                    jsonObject.getString("service"));
+
+            int projectId = projects.getProjectId(project); // TODO - Simplify this?
+            if (projectId == 0) {
+                projects.saveProject(project);
+                projectId = project.getId();
+            }
 
             JwtBuilder builder = Jwts.builder()
                     .setIssuedAt(now)
                     .setSubject("3dwC-782de-4e")
                     .setIssuer("hu-brg-opensource")
-                    .claim("engine", jsonObject.getString("engine"))
-                    .claim("dbName", jsonObject.getString("dbName"))
-                    .claim("host", jsonObject.getString("host"))
-                    .claim("service", jsonObject.getString("service"))
+                    .claim("engine", project.getDbEngine().name())
+                    .claim("dbName", project.getName())
+                    .claim("host", project.getHost())
+                    .claim("service", project.getServiceName())
                     .claim("username", jsonObject.getString("username"))
                     .claim("password", jsonObject.getString("password"))
-                    .claim("port", Integer.valueOf(jsonObject.getString("port")))
+                    .claim("projectId", projectId)
+                    .claim("port", project.getPort())
                     .signWith(signatureAlgorithm, signingKey);
 
             long expMillis = nowMillis + 3600000;
