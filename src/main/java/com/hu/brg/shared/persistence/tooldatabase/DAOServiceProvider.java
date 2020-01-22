@@ -7,6 +7,8 @@ public class DAOServiceProvider {
     private static RulesDAO rulesDAO;
     private static RuleTypesDAO ruleTypesDAO;
 
+    private DAOServiceProvider() {}
+
     public static OperatorsDAO getOperatorsDAO() {
         if (operatorsDAO == null) {
             operatorsDAO = new OperatorsDAOImpl();

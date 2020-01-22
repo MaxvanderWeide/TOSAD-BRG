@@ -20,6 +20,8 @@ public class ConfigSelector {
     public static final String USERNAME;
     public static final String PASSWORD;
 
+    private ConfigSelector() {}
+
     static {
         Properties appProps = new Properties();
         try (FileInputStream fileInputStream = new FileInputStream(new File("app.properties").getAbsolutePath())){

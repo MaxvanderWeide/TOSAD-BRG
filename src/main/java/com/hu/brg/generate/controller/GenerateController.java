@@ -18,6 +18,8 @@ import static com.hu.brg.shared.controller.AuthController.decodeJWT;
 
 public class GenerateController {
 
+    private GenerateController() {}
+
     @OpenApi(
             summary = "get Rule Definitions using the ProjectId",
             operationId = "getRuleDefinitions",

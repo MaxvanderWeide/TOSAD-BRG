@@ -2,7 +2,6 @@ package com.hu.brg;
 
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.generate.controller.GenerateController;
-import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.controller.AuthController;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.Javalin;
@@ -36,9 +35,7 @@ public class Main {
 
                 path("types", () -> {
                     get(RuleController::getAllTypes);
-                    path(":typeName", () -> {
-                        path("operators", () -> get(RuleController::getOperatorsWithType));
-                    });
+                    path(":typeName", () -> path("operators", () -> get(RuleController::getOperatorsWithType)));
                 });
 
                 path("rules", () -> post(RuleController::saveRuleDefinition));

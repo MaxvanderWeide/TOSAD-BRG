@@ -44,7 +44,7 @@ public class CompareType implements Type {
                 Double.parseDouble(this.ruleDefinition.getValues().get(0).getLiteral());
                 passed = true;
             } catch (NumberFormatException e) {
-                System.out.println(this.ruleDefinition.getValues().get(0).getLiteral() + " is geen getal");
+                e.printStackTrace();
             }
 
             if (passed) {
