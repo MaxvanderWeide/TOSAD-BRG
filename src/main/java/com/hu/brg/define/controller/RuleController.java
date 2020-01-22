@@ -12,7 +12,6 @@ import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
-import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.persistence.tooldatabase.TooldbFacade;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
@@ -76,7 +75,7 @@ public class RuleController {
     public static void getAllTables(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(404);
+            context.status(403);
             return;
         }
         Map<String, List<String>> tables = new HashMap<>();
@@ -108,7 +107,7 @@ public class RuleController {
     public static void getAllAttributesByTable(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(404);
+            context.status(403);
             return;
         }
 
@@ -167,7 +166,7 @@ public class RuleController {
     public static void saveRuleDefinition(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(404);
+            context.status(403);
             return;
         }
         JSONObject jsonObject = new JSONObject(context.body());

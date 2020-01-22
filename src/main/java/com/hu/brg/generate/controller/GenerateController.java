@@ -31,10 +31,9 @@ public class GenerateController {
     public static void getRuleDefinitions(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(404);
+            context.status(403);
             return;
         }
-
         try {
             Map<String, List<RuleDefinition>> ruleDefintions = new HashMap<>();
             List<RuleDefinition> tempRuleDefinitions = DAOServiceProvider.getRulesDAO().getRulesByProjectId(Integer.parseInt(claims.get("projectId").toString()));
