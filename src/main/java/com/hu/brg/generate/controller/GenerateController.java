@@ -1,8 +1,18 @@
 package com.hu.brg.generate.controller;
 
+import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.plugin.openapi.annotations.*;
+import io.jsonwebtoken.Claims;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.hu.brg.shared.controller.AuthController.decodeJWT;
 
 public class GenerateController {
 
@@ -19,6 +29,20 @@ public class GenerateController {
             }
     )
     public static void getRuleDefinitions(io.javalin.http.Context context) {
-        context.status(400);
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(404);
+            return;
+        }
+
+        try {
+            Map<String, List<RuleDefinition>> ruleDefintions = new HashMap<>();
+            List<RuleDefinition> tempRuleDefinitions = DAOServiceProvider.getRulesDAO().getRulesByProjectId(Integer.parseInt(claims.get("projectId").toString()));
+            ruleDefintions.put("Rules", tempRuleDefinitions);
+            context.json(ruleDefintions).status(200);
+        } catch (Exception e) {
+            e.printStackTrace();
+            context.status(400);
+        }
     }
 }
