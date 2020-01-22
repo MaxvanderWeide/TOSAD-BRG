@@ -1,6 +1,7 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
 import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.definition.Value;
@@ -193,7 +194,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     }
     
     private List<RuleDefinition> parseResultSet(int projectId, List<Value> values, ResultSet resultSet) throws SQLException {
-        TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
+        Project project = DAOServiceProvider.getProjectsDAO().getProjectById(projectId);
+        TargetDatabaseDAO targetDatabaseDAO = project.createDAO();
 
         List<RuleDefinition> rules = new ArrayList<>();
         while (resultSet.next()) {
@@ -213,7 +215,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
             operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
 
-            for (Table table : targetDatabaseDAO.getTables("TOSAD_TARGET")) {
+            for (Table table : targetDatabaseDAO.getTables(project.getTargetSchema())) {
                 if (table.getName().equalsIgnoreCase(tableName)) {
                     typeTable = table;
                 }
