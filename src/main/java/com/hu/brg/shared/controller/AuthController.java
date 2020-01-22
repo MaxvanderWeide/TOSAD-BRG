@@ -23,7 +23,9 @@ import java.util.Date;
 
 public class AuthController {
 
-    private static String SECRET_KEY = ConfigSelector.SECRET_KEY;
+    private AuthController() {}
+
+    private static String secretKey = ConfigSelector.SECRET_KEY;
 
     @OpenApi(
             summary = "Create Connection",
@@ -47,7 +49,7 @@ public class AuthController {
             long nowMillis = System.currentTimeMillis();
             Date now = new Date(nowMillis);
 
-            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SECRET_KEY);
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
             Project project = new Project(DBEngine.valueOf(jsonObject.getString("engine")),
                     jsonObject.getString("dbName"),
@@ -90,10 +92,9 @@ public class AuthController {
     }
 
     public static Claims decodeJWT(String jwt) {
-        // TODO - Move this decode to somewhere safer?
         try {
             return Jwts.parser()
-                    .setSigningKey(DatatypeConverter.parseBase64Binary(SECRET_KEY))
+                    .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
                     .parseClaimsJws(jwt).getBody();
         } catch (Exception e) {
             return null;

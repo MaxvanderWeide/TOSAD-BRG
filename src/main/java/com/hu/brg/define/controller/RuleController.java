@@ -182,6 +182,7 @@ public class RuleController {
         builder.setType(type);
         builder.setAttribute(attribute);
         builder.setOperator(operator);
+        builder.setProjectId(Integer.parseInt(claims.get("projectId").toString()));
         builder.setErrorMessage(jsonObject.get("errorMessage").toString());
         builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
 
