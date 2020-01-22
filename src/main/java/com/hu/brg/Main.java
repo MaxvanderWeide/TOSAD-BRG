@@ -1,15 +1,29 @@
 package com.hu.brg;
 
+import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.define.controller.RuleController;
+import com.hu.brg.define.domain.RuleService;
+import com.hu.brg.generate.RuleGenerator;
 import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.controller.AuthController;
+import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.model.definition.RuleType;
+import com.hu.brg.shared.model.definition.Value;
+import com.hu.brg.shared.model.physical.Attribute;
+import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.shared.persistence.tooldatabase.RuleTypesDAOImpl;
+import com.hu.brg.shared.persistence.tooldatabase.RulesDAOImpl;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -36,7 +50,6 @@ public class Main {
                     get(RuleController::getAllTypes);
                     path(":typeName", () -> {
                         path("operators", () -> get(RuleController::getOperatorsWithType));
-                        path("comparators", () -> get(RuleController::getComparatorsWithType));
                     });
                 });
 

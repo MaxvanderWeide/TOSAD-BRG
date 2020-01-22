@@ -13,7 +13,6 @@ public class RuleDefinition {
     private Table table;
     private Attribute attribute;
     private Operator operator;
-    private Comparator comparator;
     private List<Value> values;
     private String errorMessage;
     private int errorCode;
@@ -22,7 +21,7 @@ public class RuleDefinition {
     public RuleDefinition(int projectId, RuleType type,
                           String name, Table table,
                           Attribute attribute, Operator operator,
-                          Comparator comparator, List<Value> values,
+                          List<Value> values,
                           String errorMessage, int errorCode,
                           String status) {
         // TODO - Limit constructor parameters
@@ -32,7 +31,6 @@ public class RuleDefinition {
         this.table = table;
         this.attribute = attribute;
         this.operator = operator;
-        this.comparator = comparator;
         this.values = values;
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
@@ -63,10 +61,6 @@ public class RuleDefinition {
         return operator;
     }
 
-    public Comparator getComparator() {
-        return comparator;
-    }
-
     public List<Value> getValues() {
         return values;
     }
@@ -92,7 +86,6 @@ public class RuleDefinition {
                 ", table=" + table +
                 ", attribute=" + attribute +
                 ", operator=" + operator +
-                ", comparator=" + comparator +
                 ", values=" + values +
                 ", errorMessage='" + errorMessage + '\'' +
                 ", errorCode=" + errorCode +

@@ -13,7 +13,6 @@ public class RuleDefinitionBuilder {
     private Attribute attribute;
     private Table table;
     private Operator operator;
-    private Comparator comparator;
     private List<Value> values;
     private String errorMessage;
     private int errorCode;
@@ -45,11 +44,6 @@ public class RuleDefinitionBuilder {
         return this;
     }
 
-    public RuleDefinitionBuilder setComparator(Comparator comparator) {
-        this.comparator = comparator;
-        return this;
-    }
-
     public RuleDefinitionBuilder setTable(Table table) {
         this.table = table;
         return this;
@@ -76,6 +70,6 @@ public class RuleDefinitionBuilder {
     }
 
     public RuleDefinition build() {
-        return new RuleDefinition(projectId, type, name, table, attribute, operator, comparator, values, errorMessage, errorCode, status);
+        return new RuleDefinition(projectId, type, name, table, attribute, operator, values, errorMessage, errorCode, status);
     }
 }

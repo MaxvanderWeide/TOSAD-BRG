@@ -127,28 +127,6 @@ function fillOperators(type) {
     xhttp.send();
 }
 
-function fillComparators(operator, type) {
-
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('GET SUCCESS: ' + this.responseText);
-            const responseJSON = JSON.parse(this.responseText);
-            const selection = document.getElementById("comparatorSelection");
-            selection.options.length = 1;
-            for (const k in responseJSON) {
-                const option = document.createElement("option");
-                option.setAttribute("reval", responseJSON[k].CodeReval);
-                option.setAttribute("block", responseJSON[k].CodeBlock);
-                option.text = k;
-                selection.add(option)
-            }
-        }
-    };
-    xhttp.open("GET", 'define/types/' + type.options[type.selectedIndex].text + '/comparators', true);
-    xhttp.send();
-}
-
 function saveRule() {
     const selectedTable = document.getElementById("tableSelection");
     const selectedTableName = selectedTable.options[selectedTable.selectedIndex].value;
@@ -162,13 +140,6 @@ function saveRule() {
     const selectedOperator = document.getElementById("operatorSelection");
     const selectedOperatorName = selectedOperator.options[selectedOperator.selectedIndex].value;
 
-    let selectedComparatorName = null;
-    if (document.getElementById("comparatorSelection") != undefined) {
-        const selectedComparator = document.getElementById("comparatorSelection");
-        selectedComparatorName = selectedComparator.options[selectedComparator.selectedIndex].value;
-    }
-
-
     const ruleValues = [];
 
     for(const li of document.querySelectorAll("ul.attributes-list li")) {
@@ -181,7 +152,6 @@ function saveRule() {
     values["typeName"] = selectedTypeName;
     values["targetAttribute"] = selectedTargetAttributeName;
     values["operatorName"] = selectedOperatorName;
-    values["selectedComparatorName"] = selectedComparatorName;
     values["comparatorValues"] = getReval(selectedTypeName);
     values["errorMessage"] = document.getElementById("errorMessage").value;
     values["errorCode"] = document.getElementById("errorCode").value;
