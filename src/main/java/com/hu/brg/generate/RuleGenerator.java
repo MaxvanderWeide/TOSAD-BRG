@@ -1,76 +1,78 @@
 package com.hu.brg.generate;
 
-import com.hu.brg.model.definition.RuleDefinition;
-import com.hu.brg.model.failurehandling.FailureHandling;
-import com.hu.brg.model.rule.BusinessRule;
+import com.hu.brg.shared.ConfigSelector;
+import com.hu.brg.shared.model.definition.Project;
+import com.hu.brg.shared.model.definition.RuleDefinition;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
+import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
 
 import java.util.List;
 
 public class RuleGenerator {
-    private String generatedCode;
     private String triggerName;
-    private BusinessRule businessRule;
     private RuleDefinition ruleDefinition;
 
+    //test
+    private ProjectsDAO projectsDAO = DAOServiceProvider.getProjectsDAO();
 
-    // TODO: change static values
-    private String applicationName = "BRG";
-    private String projectName = "VBMG";
-
+    private Project project;
     private String triggerEvent = "";
+    private RuleTrigger ruleTrigger;
 
 
-    public RuleGenerator(BusinessRule businessRule) {
-        this.businessRule = businessRule;
-        this.ruleDefinition = this.businessRule.getRuleDefinition();
+    public RuleGenerator(RuleDefinition ruleDefinition) {
+        this.ruleDefinition = ruleDefinition;
+        this.ruleTrigger = new RuleTrigger(ruleDefinition);
+        this.project = projectsDAO.getProjectById(ruleDefinition.getProjectId());
     }
 
     private void generateTriggerName() {
+
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
-                this.applicationName,
-                this.projectName,
-                this.ruleDefinition.getTargetAttribute().getName().substring(0, 4),
-                this.ruleDefinition.getType().getName())
+                ConfigSelector.APPLICATION_NAME,
+                this.project.getName(),
+                this.ruleDefinition.getAttribute().getName().substring(0, 4),
+                this.ruleDefinition.getType().getType())
         ).toUpperCase();
     }
 
     private void formatTriggerEvent() {
-        List<String> triggerEvents = this.businessRule.getBusinessRuleTrigger().getTriggerEvents();
-        int count = 1;
-        for (String event : triggerEvents) {
-            this.triggerEvent += event;
-            if (count != triggerEvents.size())
-                this.triggerEvent += " OR ";
-            count++;
+        List<String> triggerEvents = ruleTrigger.getTriggerEvents();
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < triggerEvents.size(); i++) {
+            String event = triggerEvents.get(i);
+            stringBuilder.append(event);
+            if (i != triggerEvents.size() - 1) {
+                stringBuilder.append(" or ");
+            }
         }
+
+        this.triggerEvent = stringBuilder.toString();
     }
 
     public String generateCode() {
         generateTriggerName();
         formatTriggerEvent();
-        FailureHandling failureHandling = this.businessRule.getFailureHandling();
 
-
-        this.generatedCode =
-                String.format("create or replace trigger %s\n" +
-                        "    before %s\n" +
-                        "    on %s\n" +
-                        "    for each row\n" +
-                        "declare\n" +
-                        "    v_passed boolean;\n" +
-                        "begin\n" +
-                        "    %s;\n" +
-                        "    if not v_passed\n" +
-                        "        then\n" +
-                        "        DBMS_OUTPUT.PUT_LINE('%s');\n" +
-                        "    end if;\n" +
+        return String.format("create or replace trigger %s %n" +
+                        "    before %s %n" +
+                        "    on %s %n" +
+                        "    for each row %n" +
+                        "declare %n" +
+                        "    v_passed boolean; %n" +
+                        "begin %n" +
+                        "    %s; %n" +
+                        "    if not v_passed %n" +
+                        "        then %n" +
+                        "        raise_application_error(%d, '%s'); %n " +
+                        "    end if; %n" +
                         "end;",
-                        this.triggerName,
-                        this.triggerEvent,
-                        ruleDefinition.getTable().getName(),
-                        this.businessRule.getBusinessRuleTrigger().getTriggerCode(),
-                        failureHandling.getMessage());
-
-        return this.generatedCode;
+                this.triggerName,
+                this.triggerEvent,
+                this.ruleDefinition.getTable().getName(),
+                this.ruleTrigger.getTriggerCode(),
+                this.ruleDefinition.getErrorCode(),
+                this.ruleDefinition.getErrorMessage());
     }
 }

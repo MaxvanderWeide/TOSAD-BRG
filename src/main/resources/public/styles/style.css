@@ -13,3 +13,28 @@
 footer {
     text-align: right;
 }
+
+#disconnectBtn {
+    display: none;
+}
+
+textarea#custInput1 {
+    height: 300px;
+    color: black;
+}
+
+ul.attributes-list {
+    list-style: none;
+}
+
+textarea.other-rule {
+    width: 500px;
+    height: 300px;
+}
+
+.rule-details-wrapper {
+    display: none;
+}
+button.btn.btn-primary[type=submit] {
+    margin-bottom: 40px;
+}

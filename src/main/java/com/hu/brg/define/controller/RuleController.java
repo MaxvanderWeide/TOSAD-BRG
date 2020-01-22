@@ -1,18 +1,17 @@
 package com.hu.brg.define.controller;
 
-import com.hu.brg.ErrorResponse;
+import com.hu.brg.define.domain.RuleService;
+import com.hu.brg.shared.model.definition.*;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
-import com.hu.brg.generate.RuleGenerator;
-import com.hu.brg.model.definition.Comparator;
-import com.hu.brg.model.definition.Operator;
-import com.hu.brg.model.failurehandling.FailureHandling;
-import com.hu.brg.model.physical.Attribute;
-import com.hu.brg.model.physical.Table;
-import com.hu.brg.model.rule.BusinessRule;
-import com.hu.brg.model.rule.BusinessRuleType;
-import com.hu.brg.Main;
-import io.javalin.plugin.openapi.annotations.*;
-import org.json.JSONArray;
+import com.hu.brg.shared.model.physical.Attribute;
+import com.hu.brg.shared.model.physical.Table;
+import com.hu.brg.shared.model.web.ErrorResponse;
+import io.javalin.plugin.openapi.annotations.HttpMethod;
+import io.javalin.plugin.openapi.annotations.OpenApi;
+import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiParam;
+import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -20,16 +19,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hu.brg.shared.controller.AuthController.decodeJWT;
+
 public class RuleController {
 
-    @OpenApi( // TODO - Add to openapi.json
+    private static RuleService ruleService;
+
+    private RuleController() {
+    }
+
+    private static RuleService getRuleService() {
+        return ruleService == null ? ruleService = new RuleService() : ruleService;
+    }
+
+    @OpenApi(
             summary = "Get all types",
             operationId = "getAllTypes",
-            path = "/types",
+            path = "/define/types",
             method = HttpMethod.GET,
-            tags = {"Types"},
+            tags = {"Define", "Types"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = BusinessRuleType[].class)}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = RuleType[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
@@ -37,27 +47,23 @@ public class RuleController {
     public static void getAllTypes(io.javalin.http.Context context) {
         Map<String, Map<String, String>> types = new HashMap<>();
         Map<String, String> tempTypes = new HashMap<>();
-        try {
-            for (BusinessRuleType type : Main.getRuleService().getTypes()) {
-                tempTypes.put(type.getName(), type.getDescription());
-            }
-            types.put("Types", tempTypes);
-            context.json(types);
-            context.status(200);
-        } catch (NullPointerException e) {
-            // TODO - Add proper error response
-            e.printStackTrace();
-            context.result("No Types Found");
-            context.status(400);
+        for (RuleType type : getRuleService().getTypes()) {
+            tempTypes.put(type.getType(), type.getCode());
+        }
+        types.put("Types", tempTypes);
+        context.json(types).status(200);
+
+        if (tempTypes.isEmpty()) {
+            context.status(404).result("No Types Found");
         }
     }
 
-    @OpenApi( // TODO - Add to openapi.json
+    @OpenApi(
             summary = "Get all tables",
             operationId = "getAllTables",
-            path = "/tables",
+            path = "/define/tables",
             method = HttpMethod.GET,
-            tags = {"Tables"},
+            tags = {"Define", "Tables"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Table[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
@@ -65,30 +71,31 @@ public class RuleController {
             }
     )
     public static void getAllTables(io.javalin.http.Context context) {
-        Map<String, ArrayList<String>> tables = new HashMap<>();
-        ArrayList<String> tableList = new ArrayList<>();
-        try {
-            for (Table table : Main.getRuleService().getAllTables()) {
-                tableList.add(table.getName());
-            }
-            tables.put("Tables", tableList);
-            context.json(tables);
-            context.status(200);
-        } catch (NullPointerException e) {
-            // TODO - Add proper error response
-            e.printStackTrace();
-            context.result("No Tables Found");
-            context.status(400);
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+        Map<String, List<String>> tables = new HashMap<>();
+        List<String> tableList = new ArrayList<>();
+        for (Table table : getRuleService().getAllTables(claims)) {
+            tableList.add(table.getName());
+        }
+        tables.put("Tables", tableList);
+        context.json(tables).status(200);
+
+        if (tableList.isEmpty()) {
+            context.status(404).result("No Tables Found");
         }
     }
 
-    @OpenApi( // TODO - Add to openapi.json
+    @OpenApi(
             summary = "Get all attributes by table",
             operationId = "getAllAttributesByTable",
-            path = "/tables/:tableName/attributes",
+            path = "/define/tables/:tableName/attributes",
             method = HttpMethod.GET,
-            pathParams = {@OpenApiParam(name = "tableName", type = String.class, description = "The table name")},
-            tags = {"Tables", "Attributes"},
+            pathParams = {@OpenApiParam(name = "tableName", description = "Table Name")},
+            tags = {"Define", "Tables", "Attributes"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
@@ -96,30 +103,32 @@ public class RuleController {
             }
     )
     public static void getAllAttributesByTable(io.javalin.http.Context context) {
-        Map<String, Map<String, String>> attributes = new HashMap<>();
-        Map<String, String> tempAttribute = new HashMap<>();
-        try {
-            for (Attribute attribute : Main.getRuleService().getTableByName(context.pathParam("tableName", String.class).get()).getAttributes()) {
-                tempAttribute.put(attribute.getName(), attribute.getType());
-            }
-            attributes.put("Attributes", tempAttribute);
-            context.json(attributes);
-            context.status(200);
-        } catch (NullPointerException e) {
-            // TODO - Add proper error response
-            e.printStackTrace();
-            context.result("No Table Attributes Found");
-            context.status(400);
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+
+        Map<String, List<String>> attributes = new HashMap<>();
+        List<String> tempAttribute = new ArrayList<>();
+        for (Attribute attribute : getRuleService().getTableByName(context.pathParam("tableName", String.class).get(), claims).getAttributes()) {
+            tempAttribute.add(attribute.getName());
+        }
+        attributes.put("Attributes", tempAttribute);
+        context.json(attributes).status(200);
+
+        if (tempAttribute.isEmpty()) {
+            context.status(404).result("No Attributes Found");
         }
     }
 
-    @OpenApi( // TODO - Add to openapi.json
-            summary = "get Operators by Type Name",
+    @OpenApi(
+            summary = "get Operators by Type",
             operationId = "getOperatorsWithType",
-            path = "/types/:typeName/operators",
+            path = "/define/types/:typeName/operators",
             method = HttpMethod.GET,
-            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name")},
-            tags = {"Types"},
+            pathParams = {@OpenApiParam(name = "typeName", description = "Type Name")},
+            tags = {"Define", "Types", "Operators"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Operator[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
@@ -127,114 +136,66 @@ public class RuleController {
             }
     )
     public static void getOperatorsWithType(io.javalin.http.Context context) {
-        Map<String, ArrayList<String>> operators = new HashMap<>();
-        ArrayList<String> operatorNameList = new ArrayList<>();
-        try {
-            for (Operator operator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
-                operatorNameList.add(operator.getName());
-            }
-            operators.put("Operators", operatorNameList);
-            context.json(operators);
-            context.status(200);
-        } catch (NullPointerException e) {
-            // TODO - Add proper error response
-            e.printStackTrace();
-            context.result("No Operators or Types Found");
-            context.status(400);
+        Map<String, List<String>> operators = new HashMap<>();
+        List<String> operatorNameList = new ArrayList<>();
+        for (Operator operator : getRuleService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
+            operatorNameList.add(operator.getName());
+        }
+        operators.put("Operators", operatorNameList);
+        context.json(operators).status(200);
+
+        if (operatorNameList.isEmpty()) {
+            context.status(404).result("No Operators Found");
         }
     }
 
-    @OpenApi( // TODO - Add to openapi.json
-            summary = "get Comparator with Operator and Table",
-            operationId = "getOperatorsWithType",
-            path = "/types/:typeName/operators/:operatorName/comparators",
-            method = HttpMethod.GET,
-            pathParams = {@OpenApiParam(name = "typeName", type = String.class, description = "The type name"),
-                          @OpenApiParam(name = "operatorName", type = String.class, description = "The operator name")},
-            tags = {"Types"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Comparator[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void getComparatorWithOperatorAndType(io.javalin.http.Context context) {
-        // TODO - Better Map structure
-        Map<String, Map<String, String>> comparators = new HashMap<>();
-        Map<String, String> tempFeCodeBlock = new HashMap<>();
-        try {
-            for (Comparator comparator : Main.getRuleService().getTypeByName(context.pathParam("typeName", String.class).get())
-                    .getOperatorByName(context.pathParam("operatorName", String.class).get()).getComparators()) {
-                tempFeCodeBlock.put("CodeBlock", comparator.getFeCodeBlock());
-                tempFeCodeBlock.put("CodeReval", comparator.getFeCodeReval());
-                comparators.put(comparator.getComparator(), tempFeCodeBlock);
-            }
-            context.json(comparators);
-            context.status(200);
-        } catch (NullPointerException e) {
-            // TODO - Add proper error response
-            e.printStackTrace();
-            context.result("No Operators, Types or Comparators Found");
-            context.status(400);
-        }
-    }
-
-    @OpenApi( // TODO - Add to openapi.json
-            summary = "Save the business rule",
-            operationId = "saveBusinessRule",
-            path = "/rules",
+    @OpenApi(
+            summary = "Save the rule definition",
+            operationId = "saveRuleDefinition",
+            path = "/define/rules",
             method = HttpMethod.POST,
-            tags = {"Rule"},
+            tags = {"Define", "Rule"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
-    public static void saveBusinessRule(io.javalin.http.Context context) {
-        try {
-            JSONObject jsonObject = new JSONObject(context.body());
-            // TODO - Create Business Rule using builder
-            System.out.println(jsonObject.get("comparatorValues"));
+    public static void saveRuleDefinition(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+        JSONObject jsonObject = new JSONObject(context.body());
 
-            RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
+        RuleDefinitionBuilder builder = new RuleDefinitionBuilder();
 
-            Table table = Main.getRuleService().getTableByName(jsonObject.get("tableName").toString());
-            BusinessRuleType type = Main.getRuleService().getTypeByName(jsonObject.get("typeName").toString());
-            Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[0].trim());
-            Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
-            Comparator comparator = operator.getComparatorByName(jsonObject.get("selectedComparatorName").toString());
-            FailureHandling newFailureHandling = new FailureHandling("failMessage");
-            Map<String, String> values = new HashMap<>();
-            JSONArray jsonArray = (JSONArray)jsonObject.get("comparatorValues");
-            if (jsonArray != null) {
-                boolean firstSkip = true;
-                int len = jsonArray.length();
-                for (int i=0;i<len;i++){
-                    values.put(firstSkip ? "minValue" : "maxValue", jsonArray.get(i).toString());
-                    firstSkip = false;
-                }
-            }
+        Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString(), claims);
+        RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
+        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[1].trim());
+        Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
+        List<Value> values = new ArrayList<>();
 
-            builder.setTable(table);
-            builder.setType(type);
-            builder.setAttribute(attribute);
-            builder.setOperator(operator);
-            builder.setComparator(comparator);
-            builder.setValues(null, values);
+        for(int i = 0; i < jsonObject.getJSONArray("values").length(); i++) {
+            values.add(new Value(jsonObject.getJSONArray("values").get(i).toString()));
+        }
 
-            BusinessRule newBusinessRule = new BusinessRule("Name", "Description", "codeName", builder.build(), newFailureHandling);
-            Main.getRuleService().saveRule(newBusinessRule);
-            RuleGenerator ruleGenerator = new RuleGenerator(newBusinessRule);
-            String generated = ruleGenerator.generateCode();
-            System.out.println(generated); // TODO - Remove testing
-            context.result("Rule Saved");
-            context.status(200);
-        } catch (NullPointerException e) {
-            // TODO - Add proper error response
-            e.printStackTrace();
-            context.result("Business rule not saved");
-            context.status(400);
+        builder.setName(jsonObject.get("ruleName").toString());
+        builder.setTable(table);
+        builder.setType(type);
+        builder.setAttribute(attribute);
+        builder.setOperator(operator);
+        builder.setProjectId(Integer.parseInt(claims.get("projectId").toString()));
+        builder.setValues(values);
+        builder.setErrorMessage(jsonObject.get("errorMessage").toString());
+        builder.setErrorCode(Integer.parseInt(jsonObject.get("errorCode").toString()));
+
+        RuleDefinition ruleDefinition = builder.build();
+        if(!ruleService.saveRule(ruleDefinition)) {
+            context.status(400).result("Rule not created");
+        } else {
+            context.result(String.valueOf(ruleDefinition.getProjectId())).status(201);
         }
     }
 }
