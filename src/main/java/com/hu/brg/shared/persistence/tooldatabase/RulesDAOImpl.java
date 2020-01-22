@@ -35,6 +35,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             cs.executeUpdate();
 
             int ruleId = cs.getInt(10);
+            ruleDefinition.setId(ruleId);
 
             for (Value value : ruleDefinition.getValues()) {
                 query = "INSERT INTO RULE_VALUES (RULEID, VALUE) VALUES (?, ?)";
