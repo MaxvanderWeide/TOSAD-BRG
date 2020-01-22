@@ -54,7 +54,7 @@ public class AuthController {
             Project project = new Project(DBEngine.valueOf(jsonObject.getString("engine")),
                     jsonObject.getString("dbName"),
                     jsonObject.getString("host"),
-                    Integer.valueOf(jsonObject.getString("port")),
+                    Integer.parseInt(jsonObject.getString("port")),
                     jsonObject.getString("service"));
 
             project.setUsername(jsonObject.getString("username"));

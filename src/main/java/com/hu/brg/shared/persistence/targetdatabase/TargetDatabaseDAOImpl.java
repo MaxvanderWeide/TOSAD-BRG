@@ -37,8 +37,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     public static TargetDatabaseDAO getDefaultInstance() {
         if (instance == null) {
-            instance = createTargetDatabaseDAOImpl(DBEngine.ORACLE, ConfigSelector.host, ConfigSelector.port, ConfigSelector.service,  ConfigSelector.username,
-                    ConfigSelector.password);
+            instance = createTargetDatabaseDAOImpl(DBEngine.ORACLE, ConfigSelector.HOST, ConfigSelector.PORT, ConfigSelector.SERVICE,  ConfigSelector.USERNAME,
+                    ConfigSelector.PASSWORD);
         }
 
         return instance;
@@ -65,9 +65,10 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                 String tableName = result.getString("TABLE_NAME");
 
                 List<Attribute> attributes = new ArrayList<>();
-                Statement attributeSt = conn.createStatement();
-                ResultSet tableAttributes = attributeSt.executeQuery("select column_name, data_type from USER_TAB_COLUMNS " +
-                        "where TABLE_NAME = '" + tableName + "'");
+                PreparedStatement attributesResult = conn.prepareStatement("select column_name, data_type from USER_TAB_COLUMNS " +
+                        "where TABLE_NAME = ?");
+                attributesResult.setString(1, tableName);
+                ResultSet tableAttributes = attributesResult.executeQuery();
 
                 while (tableAttributes.next()) {
                     Attribute attribute = new Attribute(tableAttributes.getString("COLUMN_NAME"), tableAttributes.getString("DATA_TYPE"));
@@ -78,8 +79,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                 Table table = new Table(tableName, attributes);
 
                 tables.add(table);
-
-                attributeSt.close();
+                attributesResult.close();
+                tableAttributes.close();
             }
 
             this.closeConnection();

@@ -29,7 +29,7 @@ public class RuleGenerator {
     private void generateTriggerName() {
 
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
-                ConfigSelector.applicationName,
+                ConfigSelector.APPLICATION_NAME,
                 this.project.getName(),
                 this.ruleDefinition.getAttribute().getName().substring(0, 4),
                 this.ruleDefinition.getType().getName())
@@ -55,18 +55,18 @@ public class RuleGenerator {
         generateTriggerName();
         formatTriggerEvent();
 
-        return String.format("create or replace trigger %s\n" +
-                        "    before %s\n" +
-                        "    on %s\n" +
-                        "    for each row\n" +
-                        "declare\n" +
-                        "    v_passed boolean;\n" +
-                        "begin\n" +
-                        "    %s;\n" +
-                        "    if not v_passed\n" +
-                        "        then\n" +
-                        "        raise_application_error(%d, '%s');\n " +
-                        "    end if;\n" +
+        return String.format("create or replace trigger %s %n" +
+                        "    before %s %n" +
+                        "    on %s %n" +
+                        "    for each row %n" +
+                        "declare %n" +
+                        "    v_passed boolean; %n" +
+                        "begin %n" +
+                        "    %s; %n" +
+                        "    if not v_passed %n" +
+                        "        then %n" +
+                        "        raise_application_error(%d, '%s'); %n " +
+                        "    end if; %n" +
                         "end;",
                 this.triggerName,
                 this.triggerEvent,

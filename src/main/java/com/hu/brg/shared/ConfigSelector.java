@@ -3,40 +3,37 @@ package com.hu.brg.shared;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Properties;
 
 public class ConfigSelector {
 
     // RuleGenerator
-    public static String applicationName;
+    public static final String APPLICATION_NAME;
 
     // AuthController
-    public static String SECRET_KEY;
+    public static final String SECRET_KEY;
 
     // Default
-    public static String host;
-    public static int port;
-    public static String service;
-    public static String username;
-    public static String password;
+    public static final String HOST;
+    public static final int PORT;
+    public static final String SERVICE;
+    public static final String USERNAME;
+    public static final String PASSWORD;
 
-    public static void loadConfig() {
-
-
+    static {
         Properties appProps = new Properties();
-        try {
-            appProps.load(new FileInputStream(new File("app.properties").getAbsolutePath()));
+        try (FileInputStream fileInputStream = new FileInputStream(new File("app.properties").getAbsolutePath())){
+            appProps.load(fileInputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        applicationName = appProps.getProperty("applicationName");
+        APPLICATION_NAME = appProps.getProperty("applicationName");
         SECRET_KEY = appProps.getProperty("SECRET_KEY");
-        host = appProps.getProperty("host");
-        port = Integer.parseInt(appProps.getProperty("port"));
-        service = appProps.getProperty("service");
-        username = appProps.getProperty("username");
-        password = appProps.getProperty("password");
+        HOST = appProps.getProperty("host");
+        PORT = Integer.parseInt(appProps.getProperty("port"));
+        SERVICE = appProps.getProperty("service");
+        USERNAME = appProps.getProperty("username");
+        PASSWORD = appProps.getProperty("password");
     }
 
 }

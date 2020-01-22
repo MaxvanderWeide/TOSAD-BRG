@@ -194,7 +194,7 @@ public class RuleController {
 
         RuleDefinition ruleDefinition = builder.build();
 
-        if (builder.build() == null) {
+        if (ruleDefinition == null) {
             context.status(400).result("Rule Not Saved");
         } else {
             TooldbFacade tooldbFacade = new TooldbFacade();

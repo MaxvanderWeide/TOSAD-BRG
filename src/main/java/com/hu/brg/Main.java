@@ -19,7 +19,6 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class Main {
     public static void main(String[] args) {
-        ConfigSelector.loadConfig();
 
         Javalin.create(config -> {
             config.addStaticFiles("/public");
