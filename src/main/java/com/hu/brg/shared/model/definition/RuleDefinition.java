@@ -17,6 +17,7 @@ public class RuleDefinition {
     private String errorMessage;
     private int errorCode;
     private String status;
+    private int id;
 
     public RuleDefinition(int projectId, RuleType type,
                           String name, Table table,
@@ -76,6 +77,10 @@ public class RuleDefinition {
     public String getStatus() {
         return status;
     }
+
+    public int getId() { return this.id; }
+
+    public void setId(int id) { this.id = id; }
 
     @Override
     public String toString() {

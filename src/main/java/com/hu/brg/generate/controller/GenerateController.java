@@ -43,6 +43,7 @@ public class GenerateController {
                 definitionMap.put("Table", definition.getTable().getName());
                 definitionMap.put("ErrorMessage", definition.getErrorMessage());
                 definitionMap.put("Attribute", definition.getAttribute().getName());
+                definitionMap.put("ID", String.valueOf(definition.getId()));
                 definitionMap.put("ErrorCode", String.valueOf(definition.getErrorCode()));
                 definitionMap.put("Operator", definition.getOperator().getName());
                 definitions.put(definition.getName(), definitionMap);

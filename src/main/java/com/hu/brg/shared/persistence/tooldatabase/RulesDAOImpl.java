@@ -35,6 +35,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             cs.executeUpdate();
 
             int ruleId = cs.getInt(10);
+            ruleDefinition.setId(ruleId);
 
             for (Value value : ruleDefinition.getValues()) {
                 query = "INSERT INTO RULE_VALUES (RULEID, VALUE) VALUES (?, ?)";
@@ -177,7 +178,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setString(8, ruleDefinition.getErrorMessage());
         preparedStatement.setString(9, ruleDefinition.getStatus());
     }
-    
+
     private List<RuleDefinition> parseResultSet(ResultSet resultSet, String targetDbUsername, String targetDbPassword) throws SQLException {
         List<RuleDefinition> rules = new ArrayList<>();
         while (resultSet.next()) {
