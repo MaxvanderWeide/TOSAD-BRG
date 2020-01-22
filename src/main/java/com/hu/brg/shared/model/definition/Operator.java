@@ -23,6 +23,7 @@ public class Operator {
         return "Operator{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", hash='" + hashCode() + '\'' +
                 '}';
     }
 }
