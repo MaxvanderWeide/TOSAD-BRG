@@ -114,7 +114,6 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             while (results.next()) {
                 List<Operator> operators = new ArrayList<>();
                 Table typeTable = null;
-                Attribute typeAttribute = null;
                 String subType = null;
                 String ruleName = results.getString(1);
                 String attributeName = results.getString(2);
@@ -135,18 +134,12 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                     }
                 }
 
-                for (Attribute attribute : typeTable.getAttributes()) {
-                    if (attribute.getName().equalsIgnoreCase(attributeName)) {
-                        typeAttribute = attribute;
-                    }
-                }
-
                 if(!results.getString(4).equalsIgnoreCase("MODI")) {
                     subType = results.getString(5).split("_")[0];
                 }
 
                 RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
-                return new RuleDefinition(1, ruleType, ruleName, typeTable, typeAttribute, // TODO - change static projectId
+                return new RuleDefinition(1, ruleType, ruleName, typeTable, new Attribute(attributeName), // TODO - change static projectId
                         new Operator(operatorId, operatorName),
                         values, errorMessage, errorCode, status
                 );
@@ -188,7 +181,6 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             while (results.next()) {
                 List<Operator> operators = new ArrayList<>();
                 Table typeTable = null;
-                Attribute typeAttribute = null;
                 String subType = null;
                 String ruleName = results.getString(1);
                 String attributeName = results.getString(2);
@@ -209,18 +201,12 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                     }
                 }
 
-                for (Attribute attribute : typeTable.getAttributes()) {
-                    if (attribute.getName().equalsIgnoreCase(attributeName)) {
-                        typeAttribute = attribute;
-                    }
-                }
-
                 if(!results.getString(4).equalsIgnoreCase("MODI")) {
                     subType = results.getString(5).split("_")[0];
                 }
 
                 RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
-                rules.add(new RuleDefinition(id, ruleType, ruleName, typeTable, typeAttribute,
+                rules.add(new RuleDefinition(id, ruleType, ruleName, typeTable, new Attribute(attributeName),
                         new Operator(operatorId, operatorName),
                         values, errorMessage, errorCode, status
                 ));
