@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +31,10 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                     "RETURNING ID INTO ? }";
             CallableStatement cs = conn.prepareCall(query);
             setPreparedStatement(cs, ruleDefinition);
-            cs.registerOutParameter(11, OracleTypes.NUMBER);
+            cs.registerOutParameter(10, OracleTypes.NUMBER);
             cs.executeUpdate();
 
-            int ruleId = cs.getInt(11);
+            int ruleId = cs.getInt(10);
 
             for (Value value : ruleDefinition.getValues()) {
                 query = "INSERT INTO RULE_VALUES (RULEID, VALUE) VALUES (?, ?)";
