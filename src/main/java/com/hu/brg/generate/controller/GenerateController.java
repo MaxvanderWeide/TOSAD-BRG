@@ -36,7 +36,7 @@ public class GenerateController {
 
         try {
             Map<String, Map<String, String>> definitions = new HashMap<>();
-            for (RuleDefinition definition : DAOServiceProvider.getRulesDAO().getRulesByProjectId(Integer.parseInt(claims.get("projectId").toString()))) {
+            for (RuleDefinition definition : DAOServiceProvider.getRulesDAO().getRulesByProjectId(Integer.parseInt(claims.get("projectId").toString()), claims.get("username").toString(), claims.get("password").toString())) {
                 Map<String, String> definitionMap = new HashMap<>();
                 definitionMap.put("Type", definition.getType().getName());
                 definitionMap.put("TypeCode", definition.getType().getCode());
