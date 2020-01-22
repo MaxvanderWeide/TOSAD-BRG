@@ -24,10 +24,9 @@ public abstract class BaseDAO {
                     }
                 }
             }
-        } catch (SQLRecoverableException e) {
-            return null;
         } catch (SQLException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            return null;
         }
 
         return connection;
