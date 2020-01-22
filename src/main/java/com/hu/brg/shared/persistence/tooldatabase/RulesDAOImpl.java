@@ -57,16 +57,33 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     public void updateRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
 
+            PreparedStatement valuesPreparedStatement = conn.prepareStatement("SELECT ID FROM RULES WHERE NAME = ?");
+            valuesPreparedStatement.setString(1, ruleDefinition.getName());
+            ResultSet Result = valuesPreparedStatement.executeQuery();
+
             String query = "UPDATE RULES SET PROJECTID = ?, NAME = ?, ATTRIBUTE = ?, TARGETTABLE = ?, " +
                     "TYPEID = ?, OPERATORID = ?, ERRORCODE = ?, ERRORMESSAGE = ?, STATUS = ?" +
                     " WHERE ID = ?";
 
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
-            setPreparedStatement(preparedStatement, ruleDefinition);
-            preparedStatement.setInt(10, ruleDefinition.getProjectId());
+            while (Result.next()) {
+                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                setPreparedStatement(preparedStatement, ruleDefinition);
+                preparedStatement.setInt(10, Result.getInt(1));
+                preparedStatement.executeUpdate();
+                preparedStatement.close();
 
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+
+                for (Value value : ruleDefinition.getValues()) {
+                    query = "UPDATE RULE_VALUES SET RULEID = ?, VALUE = ?";
+                    PreparedStatement preparedStatement2 = conn.prepareStatement(query);
+                    preparedStatement2.setInt(1, Result.getInt(1));
+                    preparedStatement2.setString(2, value.getLiteral());
+                    preparedStatement2.executeUpdate();
+
+                    preparedStatement2.close();
+                }
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
