@@ -39,7 +39,7 @@ public class RuleService {
 
     public RuleType getTypeByName(String name) {
         for (RuleType brt : types) {
-            if (brt.getName().equalsIgnoreCase(name)) {
+            if (brt.getType().equalsIgnoreCase(name)) {
                 return brt;
             }
         }

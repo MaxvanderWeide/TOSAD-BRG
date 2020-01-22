@@ -84,12 +84,12 @@
                 <name>ruleTypes</name>
                 <SoftwareUnitDefinitions>
                   <SoftwareUnitDefinition>
-                    <name>com.hu.brg.generate.ruleType</name>
+                    <name>com.hu.brg.generate.rule_type</name>
                     <type>PACKAGE</type>
                   </SoftwareUnitDefinition>
                 </SoftwareUnitDefinitions>
                 <PhysicalPaths>
-                  <path>com.hu.brg.generate.ruleType</path>
+                  <path>com.hu.brg.generate.rule_type</path>
                 </PhysicalPaths>
                 <SubModules>
                   <ModuleStrategy>

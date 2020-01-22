@@ -25,7 +25,6 @@ public class RuleDefinition {
                           List<Value> values,
                           String errorMessage, int errorCode,
                           String status, int id) {
-        // TODO - Limit constructor parameters
         this.projectId = projectId;
         this.type = type;
         this.name = name;
@@ -91,7 +90,7 @@ public class RuleDefinition {
     public String toString() {
         return "RuleDefinition{" +
                 "projectId= " + projectId +
-                ", ruleType=" + type +
+                ", rule_type=" + type +
                 ", name='" + name + '\'' +
                 ", table=" + table +
                 ", attribute=" + attribute +

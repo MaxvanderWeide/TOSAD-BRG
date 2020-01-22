@@ -9,8 +9,6 @@ import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.plugin.openapi.annotations.*;
 import io.jsonwebtoken.Claims;
 import org.json.JSONArray;
-import org.json.JSONObject;
-import sun.rmi.transport.Target;
 
 import java.util.*;
 
@@ -49,7 +47,7 @@ public class GenerateController {
                 for (Value value : definition.getValues()) {
                     jsonArray.put(value.getLiteral());
                 }
-                definitionMap.put("Type", definition.getType().getName());
+                definitionMap.put("Type", definition.getType().getType());
                 definitionMap.put("TypeCode", definition.getType().getCode());
                 definitionMap.put("Table", definition.getTable().getName());
                 definitionMap.put("ErrorMessage", definition.getErrorMessage());

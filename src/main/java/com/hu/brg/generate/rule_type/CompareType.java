@@ -1,4 +1,4 @@
-package com.hu.brg.generate.ruleType;
+package com.hu.brg.generate.rule_type;
 
 import com.hu.brg.shared.model.definition.RuleDefinition;
 

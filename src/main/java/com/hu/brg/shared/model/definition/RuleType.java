@@ -26,10 +26,6 @@ public class RuleType {
         return type;
     }
 
-    public String getName() {
-        return type;
-    }
-
     public String getCode() {
         return code;
     }
