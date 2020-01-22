@@ -4,7 +4,6 @@ import com.hu.brg.shared.model.definition.RuleDefinition;
 
 public class CompareType implements Type {
     private RuleDefinition ruleDefinition;
-    private String triggerCode;
     private String operatorSymbol;
     private String value;
 
@@ -63,11 +62,9 @@ public class CompareType implements Type {
         setOperatorSymbol();
         setValue();
 
-        triggerCode = String.format("v_passed := :new.%s %s %s",
+        return String.format("v_passed := :new.%s %s %s",
                 this.ruleDefinition.getAttribute().getName(),
                 this.operatorSymbol,
                 this.value);
-
-        return this.triggerCode;
     }
 }
