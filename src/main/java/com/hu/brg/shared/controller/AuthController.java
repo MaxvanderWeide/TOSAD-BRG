@@ -61,19 +61,19 @@ public class AuthController {
             project.setUsername(jsonObject.getString("username"));
             project.setPassword(jsonObject.getString("password"));
             int projectId = projects.getProjectId(project);
+            TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
+                    DBEngine.ORACLE,
+                    project.getHost(),
+                    project.getPort(),
+                    project.getServiceName(),
+                    project.getUsername(),
+                    project.getPassword()
+            );
+            if (!targetDatabaseDAO.testConnection()) {
+                context.status(403);
+                return;
+            }
             if (projectId == 0) {
-                TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
-                        DBEngine.ORACLE,
-                        project.getHost(),
-                        project.getPort(),
-                        project.getServiceName(),
-                        project.getUsername(),
-                        project.getPassword()
-                );
-                if (!targetDatabaseDAO.testConnection()) {
-                    context.status(403);
-                    return;
-                }
                 projects.saveProject(project);
                 projectId = project.getId();
             }
