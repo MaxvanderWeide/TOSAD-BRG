@@ -1,18 +1,25 @@
 package com.hu.brg.define.controller;
 
-import com.hu.brg.define.domain.RuleService;
-import com.hu.brg.shared.model.response.ErrorResponse;
 import com.hu.brg.define.builder.RuleDefinitionBuilder;
+import com.hu.brg.define.domain.RuleService;
 import com.hu.brg.shared.model.definition.Comparator;
 import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
-import com.hu.brg.shared.model.definition.RuleType;
-import io.javalin.plugin.openapi.annotations.*;
+import com.hu.brg.shared.model.web.ErrorResponse;
+import io.javalin.plugin.openapi.annotations.HttpMethod;
+import io.javalin.plugin.openapi.annotations.OpenApi;
+import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiParam;
+import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.hu.brg.shared.controller.AuthController.decodeJWT;
 

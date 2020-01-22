@@ -1,5 +1,7 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
+import com.hu.brg.shared.model.definition.Project;
+
 public interface ProjectsDAO {
-    String getProjectName(int id);
+    Project getProjectById(int id);
 }

@@ -1,23 +1,21 @@
 package com.hu.brg.shared.controller;
 
 import com.hu.brg.shared.ConfigSelector;
-import com.hu.brg.shared.model.response.ErrorResponse;
-import com.sun.xml.internal.org.jvnet.mimepull.DecodingException;
+import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.json.JSONObject;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
-
-import io.jsonwebtoken.*;
-
 import java.util.Date;
-
-import io.jsonwebtoken.Jwts;
 
 public class AuthController {
 

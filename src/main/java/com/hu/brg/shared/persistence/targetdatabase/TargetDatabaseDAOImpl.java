@@ -4,7 +4,7 @@ import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.persistence.BaseDAO;
-import com.hu.brg.shared.persistence.DBEngines;
+import com.hu.brg.shared.persistence.DBEngine;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,13 +19,15 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     private static TargetDatabaseDAO instance;
 
+    private DBEngine dbEngine;
     private String host;
     private int port;
     private String serviceName;
     private String username;
     private String password;
 
-    private TargetDatabaseDAOImpl(String host, int port, String serviceName, String username, String password) {
+    private TargetDatabaseDAOImpl(DBEngine dbEngine, String host, int port, String serviceName, String username, String password) {
+        this.dbEngine = dbEngine;
         this.host = host;
         this.port = port;
         this.serviceName = serviceName;
@@ -35,18 +37,19 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     public static TargetDatabaseDAO getDefaultInstance() {
         if (instance == null) {
-            instance = createTargetDatabaseDAOImpl(ConfigSelector.host, ConfigSelector.port, ConfigSelector.service,  ConfigSelector.username, ConfigSelector.password);
+            instance = createTargetDatabaseDAOImpl(DBEngine.ORACLE, ConfigSelector.host, ConfigSelector.port, ConfigSelector.service,  ConfigSelector.username,
+                    ConfigSelector.password);
         }
 
         return instance;
     }
 
-    public static TargetDatabaseDAOImpl createTargetDatabaseDAOImpl(String host, int port, String serviceName, String username, String password) {
-        return new TargetDatabaseDAOImpl(host, port, serviceName, username, password);
+    public static TargetDatabaseDAOImpl createTargetDatabaseDAOImpl(DBEngine dbEngine, String host, int port, String serviceName, String username, String password) {
+        return new TargetDatabaseDAOImpl(dbEngine, host, port, serviceName, username, password);
     }
 
     private Connection getConnection() {
-        return this.getConnection(DBEngines.ORACLE, host, port, serviceName, username, password);
+        return this.getConnection(dbEngine, host, port, serviceName, username, password);
     }
 
     @Override
