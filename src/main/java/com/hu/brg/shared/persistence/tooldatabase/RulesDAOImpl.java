@@ -1,6 +1,7 @@
 package com.hu.brg.shared.persistence.tooldatabase;
 
 import com.hu.brg.shared.model.definition.Operator;
+import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.definition.Value;
@@ -90,12 +91,14 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     }
 
     @Override
-    public RuleDefinition getRule(int id) {
+    public RuleDefinition getRule(int id, String targetDbUsername, String targetDbPassword) {
+        RuleDefinition rule = null;
+
         try (Connection conn = getConnection()) {
             List<Value> values = new ArrayList<>();
             TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.PROJECTID " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
@@ -111,39 +114,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 values.add(new Value(valuesResult.getString(1)));
             }
 
-            while (results.next()) {
-                List<Operator> operators = new ArrayList<>();
-                Table typeTable = null;
-                String subType = null;
-                String ruleName = results.getString(1);
-                String attributeName = results.getString(2);
-                String tableName = results.getString(3);
-                String typeCode = results.getString(4);
-                String typeName = results.getString(5);
-                int operatorId = results.getInt(6);
-                String operatorName = results.getString(7);
-                int errorCode = results.getInt(8);
-                String errorMessage = results.getString(9);
-                String status = results.getString(10);
-
-                operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
-
-                for (Table table : targetDatabaseDAO.getTables("TOSAD_TARGET")) {
-                    if (table.getName().equalsIgnoreCase(tableName)) {
-                        typeTable = table;
-                    }
-                }
-
-                if(!results.getString(4).equalsIgnoreCase("MODI")) {
-                    subType = results.getString(5).split("_")[0];
-                }
-
-                RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
-                return new RuleDefinition(1, ruleType, ruleName, typeTable, new Attribute(attributeName), // TODO - change static projectId
-                        new Operator(operatorId, operatorName),
-                        values, errorMessage, errorCode, status
-                );
-            }
+            rule = parseResultSet(results.getInt(11), values, results, targetDbUsername, targetDbPassword)
+                    .stream().findFirst().orElse(null);
 
             results.close();
             preparedStatement.close();
@@ -151,16 +123,15 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             e.printStackTrace();
         }
 
-        return null;
+        return rule;
     }
 
     @Override
-    public List<RuleDefinition> getRulesByProjectId(int id) {
+    public List<RuleDefinition> getRulesByProjectId(int id, String targetDbUsername, String targetDbPassword) {
         List<RuleDefinition> rules = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
             List<Value> values = new ArrayList<>();
-            TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
                     "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS " +
                             "FROM RULES r " +
@@ -178,39 +149,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 values.add(new Value(valuesResult.getString(1)));
             }
 
-            while (results.next()) {
-                List<Operator> operators = new ArrayList<>();
-                Table typeTable = null;
-                String subType = null;
-                String ruleName = results.getString(1);
-                String attributeName = results.getString(2);
-                String tableName = results.getString(3);
-                String typeCode = results.getString(4);
-                String typeName = results.getString(5);
-                int operatorId = results.getInt(6);
-                String operatorName = results.getString(7);
-                int errorCode = results.getInt(8);
-                String errorMessage = results.getString(9);
-                String status = results.getString(10);
-
-                operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
-
-                for (Table table : targetDatabaseDAO.getTables("TOSAD_TARGET")) {
-                    if (table.getName().equalsIgnoreCase(tableName)) {
-                        typeTable = table;
-                    }
-                }
-
-                if(!results.getString(4).equalsIgnoreCase("MODI")) {
-                    subType = results.getString(5).split("_")[0];
-                }
-
-                RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
-                rules.add(new RuleDefinition(id, ruleType, ruleName, typeTable, new Attribute(attributeName),
-                        new Operator(operatorId, operatorName),
-                        values, errorMessage, errorCode, status
-                ));
-            }
+            rules = parseResultSet(id, values, results, targetDbUsername, targetDbPassword);
 
             results.close();
             preparedStatement.close();
@@ -223,28 +162,30 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
     @Override
     public boolean ruleExists(String name) {
+        boolean returnValue = false;
         try(Connection conn = getConnection()) {
-            PreparedStatement PreparedStatement = conn.prepareStatement(
+            PreparedStatement preparedStatement = conn.prepareStatement(
                     "select case when exists (select 1 from RULES where NAME = ?) then 'Y' else 'N' end as rec_exists from dual"
             );
-            PreparedStatement.setString(1, name);
-            ResultSet ruleExists = PreparedStatement.executeQuery();
+            preparedStatement.setString(1, name);
+            ResultSet ruleExists = preparedStatement.executeQuery();
 
             while (ruleExists.next()) {
                 if(ruleExists.getString(1).equals("Y")) {
-                    return true;
+                    returnValue = true;
                 }
             }
 
+            ruleExists.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return returnValue;
     }
 
 
     private void setPreparedStatement(PreparedStatement preparedStatement, RuleDefinition ruleDefinition) throws SQLException {
-
         preparedStatement.setInt(1, ruleDefinition.getProjectId());
         preparedStatement.setString(2, ruleDefinition.getName());
         preparedStatement.setString(3, ruleDefinition.getAttribute().getName());
@@ -254,5 +195,49 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setInt(7, ruleDefinition.getErrorCode());
         preparedStatement.setString(8, ruleDefinition.getErrorMessage());
         preparedStatement.setString(9, ruleDefinition.getStatus());
+    }
+    
+    private List<RuleDefinition> parseResultSet(int projectId, List<Value> values, ResultSet resultSet, String targetDbUsername, String targetDbPassword) throws SQLException {
+        Project project = DAOServiceProvider.getProjectsDAO().getProjectById(projectId);
+        project.setUsername(targetDbUsername);
+        project.setPassword(targetDbPassword);
+        TargetDatabaseDAO targetDatabaseDAO = project.createDAO();
+
+        List<RuleDefinition> rules = new ArrayList<>();
+        while (resultSet.next()) {
+            List<Operator> operators = new ArrayList<>();
+            Table typeTable = null;
+            String subType = null;
+            String ruleName = resultSet.getString(1);
+            String attributeName = resultSet.getString(2);
+            String tableName = resultSet.getString(3);
+            String typeCode = resultSet.getString(4);
+            String typeName = resultSet.getString(5);
+            int operatorId = resultSet.getInt(6);
+            String operatorName = resultSet.getString(7);
+            int errorCode = resultSet.getInt(8);
+            String errorMessage = resultSet.getString(9);
+            String status = resultSet.getString(10);
+
+            operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
+
+            for (Table table : targetDatabaseDAO.getTables(project.getTargetSchema())) {
+                if (table.getName().equalsIgnoreCase(tableName)) {
+                    typeTable = table;
+                }
+            }
+
+            if(!resultSet.getString(4).equalsIgnoreCase("MODI")) {
+                subType = resultSet.getString(5).split("_")[0];
+            }
+
+            RuleType ruleType = new RuleType(typeName, subType, typeCode, operators);
+            rules.add(new RuleDefinition(projectId, ruleType, ruleName, typeTable, new Attribute(attributeName),
+                    new Operator(operatorId, operatorName),
+                    values, errorMessage, errorCode, status
+            ));
+        }
+
+        return rules;
     }
 }
