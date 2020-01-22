@@ -127,19 +127,20 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     }
 
     @Override
-    public List<RuleDefinition> getRulesByProjectId(int id, String targetDbUsername, String targetDbPassword) {
+    public List<RuleDefinition> getRulesByProjectId(int projectId, String targetDbUsername, String targetDbPassword) {
         List<RuleDefinition> rules = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
             List<Value> values = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
                             "WHERE r.PROJECTID = ?");
-            preparedStatement.setInt(1, id);
+            preparedStatement.setInt(1, projectId);
             ResultSet results = preparedStatement.executeQuery();
+            int id = results.getInt(11);
 
             PreparedStatement valuesPreparedStatement = conn.prepareStatement("SELECT VALUE FROM RULE_VALUES WHERE RULEID = ?");
             valuesPreparedStatement.setInt(1, id);
@@ -149,7 +150,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 values.add(new Value(valuesResult.getString(1)));
             }
 
-            rules = parseResultSet(id, values, results, targetDbUsername, targetDbPassword);
+            rules = parseResultSet(projectId, values, results, targetDbUsername, targetDbPassword);
 
             results.close();
             preparedStatement.close();
