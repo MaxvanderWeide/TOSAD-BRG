@@ -70,6 +70,6 @@ public class RuleDefinitionBuilder {
     }
 
     public RuleDefinition build() {
-        return new RuleDefinition(projectId, type, name, table, attribute, operator, values, errorMessage, errorCode, status);
+        return new RuleDefinition(projectId, type, name, table, attribute, operator, values, errorMessage, errorCode, status, 0);
     }
 }

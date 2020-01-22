@@ -24,7 +24,7 @@ public class RuleDefinition {
                           Attribute attribute, Operator operator,
                           List<Value> values,
                           String errorMessage, int errorCode,
-                          String status) {
+                          String status, int id) {
         // TODO - Limit constructor parameters
         this.projectId = projectId;
         this.type = type;
@@ -36,6 +36,7 @@ public class RuleDefinition {
         this.errorMessage = errorMessage;
         this.errorCode = errorCode;
         this.status = status;
+        this.id = id;
     }
 
     public int getProjectId() {
@@ -78,9 +79,13 @@ public class RuleDefinition {
         return status;
     }
 
-    public int getId() { return this.id; }
+    public int getId() {
+        return this.id;
+    }
 
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Override
     public String toString() {
@@ -94,6 +99,7 @@ public class RuleDefinition {
                 ", values=" + values +
                 ", errorMessage='" + errorMessage + '\'' +
                 ", errorCode=" + errorCode +
+                ", id=" + id +
                 ", status='" + status + '\'' +
                 '}';
     }
