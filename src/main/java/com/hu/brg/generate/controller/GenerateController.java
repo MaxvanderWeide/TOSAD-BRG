@@ -3,10 +3,12 @@ package com.hu.brg.generate.controller;
 import com.hu.brg.generate.RuleGenerator;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.plugin.openapi.annotations.*;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
+import sun.rmi.transport.Target;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -78,7 +80,7 @@ public class GenerateController {
     public static void generateCode(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         RuleGenerator ruleGenerator = new RuleGenerator(DAOServiceProvider.getRulesDAO().getRule(Integer.parseInt(context.body()), Objects.requireNonNull(claims).get("username").toString(), claims.get("password").toString()));
+        TargetDatabaseDAOImpl.getDefaultInstance().insertRule(ruleGenerator.generateCode());
         context.result(ruleGenerator.generateCode()).status(201);
-
     }
 }

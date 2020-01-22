@@ -142,8 +142,20 @@ function saveRule() {
 
     const ruleValues = [];
 
-    for(const li of document.querySelectorAll("ul.attributes-list li")) {
-        ruleValues.push(li.textContent);
+    if(selectedTypeName === "Attribute_List") {
+        for (const li of document.querySelectorAll("ul.attributes-list li")) {
+            ruleValues.push(li.textContent);
+            console.log(li.textContent);
+        }
+    } else {
+        for(const item of $("[id^=custInput]")) {
+            const itemsArray = item.value.split("-");
+            if (itemsArray.length > 1) {
+                ruleValues.push(itemsArray[1].trim());
+            } else {
+                ruleValues.push(itemsArray[0].trim());
+            }
+        }
     }
 
     let values = {};
