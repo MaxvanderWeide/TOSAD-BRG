@@ -24,9 +24,11 @@ public class RuleTypesDAOImpl extends ToolDatabaseBaseDAO implements RuleTypesDA
             ResultSet typesResult = typesStatement.executeQuery();
 
             while (typesResult.next()) {
+                int typeId = typesResult.getInt(1);
+                String typeCode = typesResult.getString(3);
                 String subType = null;
-                List<Operator> operators = DAOServiceProvider.getOperatorsDAO().getOperatorsByTypeId(typesResult.getInt(1));
-                if(!typesResult.getString(3).equalsIgnoreCase("MODI")) {
+                List<Operator> operators = DAOServiceProvider.getOperatorsDAO().getOperatorsByTypeId(typeId);
+                if(!typeCode.equalsIgnoreCase("MODI")) {
                     subType = typesResult.getString(2).split("_")[0];
                 }
                 ruleTypes.add(new RuleType(typesResult.getInt(1), typesResult.getString(2), subType, typesResult.getString(3), operators));
