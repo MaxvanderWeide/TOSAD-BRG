@@ -41,7 +41,6 @@ public class AuthController {
     )
     public static void createConnection(io.javalin.http.Context context) {
         try {
-
             ProjectsDAO projects = DAOServiceProvider.getProjectsDAO();
             JSONObject jsonObject = new JSONObject(context.body());
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
@@ -59,7 +58,7 @@ public class AuthController {
 
             project.setUsername(jsonObject.getString("username"));
             project.setPassword(jsonObject.getString("password"));
-            int projectId = projects.getProjectId(project); // TODO - Simplify this?
+            int projectId = projects.getProjectId(project);
             if (projectId == 0) {
                 projects.saveProject(project);
                 projectId = project.getId();
@@ -84,9 +83,12 @@ public class AuthController {
             builder.setExpiration(exp);
 
             context.result(builder.compact()).status(200);
+            if (jsonObject.length() != 7) {
+                context.result("Can't create connection due to unfulfilled data requirements").status(400);
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            context.status(400);
+            context.status(500);
         }
 
     }

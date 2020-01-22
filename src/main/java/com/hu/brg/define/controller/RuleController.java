@@ -56,7 +56,7 @@ public class RuleController {
         context.json(types).status(200);
 
         if (tempTypes.isEmpty()) {
-            context.status(400).result("No Types Found");
+            context.status(404).result("No Types Found");
         }
     }
 
@@ -87,7 +87,7 @@ public class RuleController {
         context.json(tables).status(200);
 
         if (tableList.isEmpty()) {
-            context.status(400).result("No Tables Found");
+            context.status(404).result("No Tables Found");
         }
     }
 
@@ -120,7 +120,7 @@ public class RuleController {
         context.json(attributes).status(200);
 
         if (tempAttribute.isEmpty()) {
-            context.status(400).result("No Attributes Found");
+            context.status(404).result("No Attributes Found");
         }
     }
 
@@ -147,7 +147,7 @@ public class RuleController {
         context.json(operators).status(200);
 
         if (operatorNameList.isEmpty()) {
-            context.status(400).result("No Operators Found");
+            context.status(404).result("No Operators Found");
         }
     }
 
@@ -177,7 +177,7 @@ public class RuleController {
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
         Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[1].trim());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
-        List values = new ArrayList();
+        List<Value> values = new ArrayList<>();
         values.add(new Value("1")); //TODO: daadwerkelijke values meegeven
         values.add(new Value("5")); //TODO: daadwerkelijke values meegeven
 
@@ -193,16 +193,11 @@ public class RuleController {
         builder.setStatus("Opgeslagen"); //TODO: kan weg??
 
         RuleDefinition ruleDefinition = builder.build();
-
-        if (ruleDefinition == null) {
-            context.status(400).result("Rule Not Saved");
+        TooldbFacade tooldbFacade = new TooldbFacade();
+        if(!tooldbFacade.saveBusinessrule(ruleDefinition)) {
+            context.status(400).result("Rule Already Exists!");
         } else {
-            TooldbFacade tooldbFacade = new TooldbFacade();
-            if(!tooldbFacade.saveBusinessrule(ruleDefinition)) {
-                context.status(400).result("Rule Already Exists!");
-            } else {
-                context.result("Rule Saved").status(201);
-            }
+            context.result(String.valueOf(ruleDefinition.getProjectId())).status(201);
         }
     }
 }

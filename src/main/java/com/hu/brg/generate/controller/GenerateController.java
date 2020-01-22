@@ -1,17 +1,12 @@
 package com.hu.brg.generate.controller;
 
-import com.hu.brg.shared.model.definition.Operator;
-import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.definition.RuleDefinition;
-import com.hu.brg.shared.model.definition.RuleType;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.plugin.openapi.annotations.*;
 import io.jsonwebtoken.Claims;
-import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.hu.brg.shared.controller.AuthController.decodeJWT;
@@ -53,9 +48,12 @@ public class GenerateController {
                 definitions.put(definition.getName(), definitionMap);
             }
             context.json(definitions).status(200);
+            if (definitions.isEmpty()) {
+                context.status(404).result("No definitions found");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            context.status(400);
+            context.status(500);
         }
     }
 }
