@@ -8,7 +8,6 @@ import com.hu.brg.shared.model.definition.Value;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
-import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import oracle.jdbc.OracleTypes;
 
 import java.sql.CallableStatement;
@@ -95,10 +94,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         RuleDefinition rule = null;
 
         try (Connection conn = getConnection()) {
-            List<Value> values = new ArrayList<>();
-            TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.PROJECTID " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID, r.PROJECTID " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
@@ -106,15 +103,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             preparedStatement.setInt(1, id);
             ResultSet results = preparedStatement.executeQuery();
 
-            PreparedStatement valuesPreparedStatement = conn.prepareStatement("SELECT VALUE FROM RULE_VALUES WHERE RULEID = ?");
-            valuesPreparedStatement.setInt(1, id);
-            ResultSet valuesResult = valuesPreparedStatement.executeQuery();
-
-            while (valuesResult.next()) {
-                values.add(new Value(valuesResult.getString(1)));
-            }
-
-            rule = parseResultSet(results.getInt(11), values, results, targetDbUsername, targetDbPassword)
+            rule = parseResultSet(results, targetDbUsername, targetDbPassword)
                     .stream().findFirst().orElse(null);
 
             results.close();
@@ -133,24 +122,15 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         try (Connection conn = getConnection()) {
             List<Value> values = new ArrayList<>();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID, r.PROJECTID " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
                             "WHERE r.PROJECTID = ?");
             preparedStatement.setInt(1, projectId);
             ResultSet results = preparedStatement.executeQuery();
-            int id = results.getInt(11);
 
-            PreparedStatement valuesPreparedStatement = conn.prepareStatement("SELECT VALUE FROM RULE_VALUES WHERE RULEID = ?");
-            valuesPreparedStatement.setInt(1, id);
-            ResultSet valuesResult = valuesPreparedStatement.executeQuery();
-
-            while (valuesResult.next()) {
-                values.add(new Value(valuesResult.getString(1)));
-            }
-
-            rules = parseResultSet(projectId, values, results, targetDbUsername, targetDbPassword);
+            rules = parseResultSet(results, targetDbUsername, targetDbPassword);
 
             results.close();
             preparedStatement.close();
@@ -198,12 +178,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setString(9, ruleDefinition.getStatus());
     }
     
-    private List<RuleDefinition> parseResultSet(int projectId, List<Value> values, ResultSet resultSet, String targetDbUsername, String targetDbPassword) throws SQLException {
-        Project project = DAOServiceProvider.getProjectsDAO().getProjectById(projectId);
-        project.setUsername(targetDbUsername);
-        project.setPassword(targetDbPassword);
-        TargetDatabaseDAO targetDatabaseDAO = project.createDAO();
-
+    private List<RuleDefinition> parseResultSet(ResultSet resultSet, String targetDbUsername, String targetDbPassword) throws SQLException {
         List<RuleDefinition> rules = new ArrayList<>();
         while (resultSet.next()) {
             List<Operator> operators = new ArrayList<>();
@@ -219,9 +194,24 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             int errorCode = resultSet.getInt(8);
             String errorMessage = resultSet.getString(9);
             String status = resultSet.getString(10);
+            int ruleId = resultSet.getInt(11);
+            int projectId = resultSet.getInt(12);
+
+            List<Value> values = new ArrayList<>();
+            PreparedStatement valuesPreparedStatement = getConnection().prepareStatement("SELECT VALUE FROM RULE_VALUES WHERE RULEID = ?");
+            valuesPreparedStatement.setInt(1, ruleId);
+            ResultSet valuesResult = valuesPreparedStatement.executeQuery();
+
+            while (valuesResult.next()) {
+                values.add(new Value(valuesResult.getString(1)));
+            }
 
             operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
 
+            Project project = DAOServiceProvider.getProjectsDAO().getProjectById(projectId);
+            project.setUsername(targetDbUsername);
+            project.setPassword(targetDbPassword);
+            TargetDatabaseDAO targetDatabaseDAO = project.createDAO();
             for (Table table : targetDatabaseDAO.getTables(project.getTargetSchema())) {
                 if (table.getName().equalsIgnoreCase(tableName)) {
                     typeTable = table;
