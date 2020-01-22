@@ -77,8 +77,7 @@ public class GenerateController {
     )
     public static void generateCode(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
-        JSONObject jsonObject = new JSONObject(context.body());
-        RuleGenerator ruleGenerator = new RuleGenerator(DAOServiceProvider.getRulesDAO().getRule(Integer.parseInt(jsonObject.get("ID").toString()), Objects.requireNonNull(claims).get("username").toString(), claims.get("password").toString()));
+        RuleGenerator ruleGenerator = new RuleGenerator(DAOServiceProvider.getRulesDAO().getRule(Integer.parseInt(context.body()), Objects.requireNonNull(claims).get("username").toString(), claims.get("password").toString()));
         context.result(ruleGenerator.generateCode()).status(201);
 
     }
