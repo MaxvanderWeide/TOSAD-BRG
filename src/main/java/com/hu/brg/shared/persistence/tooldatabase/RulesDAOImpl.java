@@ -91,7 +91,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     }
 
     @Override
-    public RuleDefinition getRule(int id) {
+    public RuleDefinition getRule(int id, String targetDbUsername, String targetDbPassword) {
         RuleDefinition rule = null;
 
         try (Connection conn = getConnection()) {
@@ -114,7 +114,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 values.add(new Value(valuesResult.getString(1)));
             }
 
-            rule = parseResultSet(results.getInt(11), values, results).stream().findFirst().orElse(null);
+            rule = parseResultSet(results.getInt(11), values, results, targetDbUsername, targetDbPassword)
+                    .stream().findFirst().orElse(null);
 
             results.close();
             preparedStatement.close();
@@ -126,7 +127,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     }
 
     @Override
-    public List<RuleDefinition> getRulesByProjectId(int id) {
+    public List<RuleDefinition> getRulesByProjectId(int id, String targetDbUsername, String targetDbPassword) {
         List<RuleDefinition> rules = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
@@ -148,7 +149,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 values.add(new Value(valuesResult.getString(1)));
             }
 
-            rules = parseResultSet(id, values, results);
+            rules = parseResultSet(id, values, results, targetDbUsername, targetDbPassword);
 
             results.close();
             preparedStatement.close();
@@ -161,23 +162,26 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
     @Override
     public boolean ruleExists(String name) {
+        boolean returnValue = false;
         try(Connection conn = getConnection()) {
-            PreparedStatement PreparedStatement = conn.prepareStatement(
+            PreparedStatement preparedStatement = conn.prepareStatement(
                     "select case when exists (select 1 from RULES where NAME = ?) then 'Y' else 'N' end as rec_exists from dual"
             );
-            PreparedStatement.setString(1, name);
-            ResultSet ruleExists = PreparedStatement.executeQuery();
+            preparedStatement.setString(1, name);
+            ResultSet ruleExists = preparedStatement.executeQuery();
 
             while (ruleExists.next()) {
                 if(ruleExists.getString(1).equals("Y")) {
-                    return true;
+                    returnValue = true;
                 }
             }
 
+            ruleExists.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+        return returnValue;
     }
 
 
@@ -193,8 +197,10 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         preparedStatement.setString(9, ruleDefinition.getStatus());
     }
     
-    private List<RuleDefinition> parseResultSet(int projectId, List<Value> values, ResultSet resultSet) throws SQLException {
+    private List<RuleDefinition> parseResultSet(int projectId, List<Value> values, ResultSet resultSet, String targetDbUsername, String targetDbPassword) throws SQLException {
         Project project = DAOServiceProvider.getProjectsDAO().getProjectById(projectId);
+        project.setUsername(targetDbUsername);
+        project.setPassword(targetDbPassword);
         TargetDatabaseDAO targetDatabaseDAO = project.createDAO();
 
         List<RuleDefinition> rules = new ArrayList<>();

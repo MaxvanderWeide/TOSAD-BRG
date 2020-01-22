@@ -10,8 +10,8 @@ public interface RulesDAO {
 
     void updateRule(RuleDefinition ruleDefinition);
 
-    RuleDefinition getRule(int id);
-    List<RuleDefinition> getRulesByProjectId(int id);
+    RuleDefinition getRule(int id, String targetDbUsername, String targetDbPassword);
+    List<RuleDefinition> getRulesByProjectId(int id, String targetDbUsername, String targetDbPassword);
 
     boolean ruleExists(String name);
 }
