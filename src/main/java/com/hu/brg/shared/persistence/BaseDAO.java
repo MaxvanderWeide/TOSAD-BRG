@@ -9,7 +9,7 @@ import java.sql.SQLException;
 public abstract class BaseDAO {
     private Connection connection;
 
-    protected Connection getConnection(DBEngines dbEngine, String host, int port, String serviceName, String user, String password) {
+    protected Connection getConnection(DBEngine dbEngine, String host, int port, String serviceName, String user, String password) {
         try {
             if (connection == null || connection.isClosed()) {
                 switch (dbEngine) {

@@ -3,7 +3,7 @@ package com.hu.brg;
 import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.controller.AuthController;
-import com.hu.brg.shared.model.response.ErrorResponse;
+import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
