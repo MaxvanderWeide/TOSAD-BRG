@@ -23,7 +23,10 @@ public class Main {
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {
-            path("generate", () -> path("rules", () -> get(GenerateController::getRuleDefinitions)));
+            path("generate", () -> path("rules", () -> {
+                get(GenerateController::getRuleDefinitions);
+                post(GenerateController::generateCode);
+            }));
             path("auth", () -> path("connection", () -> post(AuthController::createConnection)));
             path("define", () -> {
 

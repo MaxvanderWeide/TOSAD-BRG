@@ -1,19 +1,23 @@
 package com.hu.brg.generate.controller;
 
+import com.hu.brg.generate.RuleGenerator;
 import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.plugin.openapi.annotations.*;
 import io.jsonwebtoken.Claims;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.hu.brg.shared.controller.AuthController.decodeJWT;
 
 public class GenerateController {
 
-    private GenerateController() {}
+    private GenerateController() {
+    }
 
     @OpenApi(
             summary = "get Rule Definitions using the ProjectId",
@@ -57,5 +61,25 @@ public class GenerateController {
             e.printStackTrace();
             context.status(500);
         }
+    }
+
+    @OpenApi(
+            summary = "Generate Code using ID",
+            operationId = "generateCode",
+            path = "/generate/rules",
+            method = HttpMethod.POST,
+            tags = {"Generate", "Rules"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void generateCode(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        JSONObject jsonObject = new JSONObject(context.body());
+        RuleGenerator ruleGenerator = new RuleGenerator(DAOServiceProvider.getRulesDAO().getRule(Integer.parseInt(jsonObject.get("ID").toString()), Objects.requireNonNull(claims).get("username").toString(), claims.get("password").toString()));
+        context.result(ruleGenerator.generateCode()).status(201);
+
     }
 }
