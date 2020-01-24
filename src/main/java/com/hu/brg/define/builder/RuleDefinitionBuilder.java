@@ -10,6 +10,7 @@ public class RuleDefinitionBuilder {
 
     private int projectId;
     private String name;
+    private String description;
     private Attribute attribute;
     private Table table;
     private Operator operator;
@@ -31,6 +32,11 @@ public class RuleDefinitionBuilder {
 
     public RuleDefinitionBuilder setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public RuleDefinitionBuilder setDescription(String description) {
+        this.description = description;
         return this;
     }
 
@@ -70,6 +76,6 @@ public class RuleDefinitionBuilder {
     }
 
     public RuleDefinition build() {
-        return new RuleDefinition(projectId, type, name, table, attribute, operator, values, errorMessage, errorCode, status, 0);
+        return new RuleDefinition(projectId, type, name, description, table, attribute, operator, values, errorMessage, errorCode, status, 0);
     }
 }

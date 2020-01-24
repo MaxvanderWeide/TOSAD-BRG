@@ -10,6 +10,7 @@ public class RuleDefinition {
     private int projectId;
     private RuleType type;
     private String name;
+    private String description;
     private Table table;
     private Attribute attribute;
     private Operator operator;
@@ -20,14 +21,15 @@ public class RuleDefinition {
     private int id;
 
     public RuleDefinition(int projectId, RuleType type,
-                          String name, Table table,
-                          Attribute attribute, Operator operator,
-                          List<Value> values,
+                          String name, String description,
+                          Table table, Attribute attribute,
+                          Operator operator, List<Value> values,
                           String errorMessage, int errorCode,
                           String status, int id) {
         this.projectId = projectId;
         this.type = type;
         this.name = name;
+        this.description = description;
         this.table = table;
         this.attribute = attribute;
         this.operator = operator;
@@ -48,6 +50,10 @@ public class RuleDefinition {
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public Table getTable() {
@@ -91,15 +97,16 @@ public class RuleDefinition {
         return "RuleDefinition{" +
                 "projectId= " + projectId +
                 ", rule_type=" + type +
-                ", name='" + name + '\'' +
+                ", name='" + name + "'" +
+                ", description= '" + description + "'" +
                 ", table=" + table +
                 ", attribute=" + attribute +
                 ", operator=" + operator +
                 ", values=" + values +
-                ", errorMessage='" + errorMessage + '\'' +
+                ", errorMessage='" + errorMessage + "'" +
                 ", errorCode=" + errorCode +
                 ", id=" + id +
-                ", status='" + status + '\'' +
+                ", status='" + status + "'" +
                 '}';
     }
 }

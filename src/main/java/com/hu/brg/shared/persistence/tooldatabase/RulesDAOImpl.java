@@ -95,7 +95,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         try (Connection conn = getConnection()) {
             TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.ID, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID, r.PROJECTID " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.ID, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID, r.PROJECTID, r.DESCRIPTION " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
@@ -120,6 +120,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 String status = results.getString(11);
                 int ID = results.getInt(12);
                 int projectId = results.getInt(13);
+                String description = results.getString(14);
 
                 operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
 
@@ -143,7 +144,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 }
 
                 RuleType ruleType = new RuleType(typeId, typeName, subType, typeCode, operators);
-                return new RuleDefinition(projectId, ruleType, ruleName, typeTable, new Attribute(attributeName), // TODO - change static projectId
+                return new RuleDefinition(projectId, ruleType, ruleName, description, typeTable, new Attribute(attributeName),
                         new Operator(operatorId, operatorName),
                         values, errorMessage, errorCode, status, ID
                 );
@@ -165,7 +166,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
         try (Connection conn = getConnection()) {
             TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.getDefaultInstance();
             PreparedStatement preparedStatement = conn.prepareStatement(
-                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.ID, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID " +
+                    "SELECT r.NAME, r.ATTRIBUTE, r.TARGETTABLE, t.ID, t.TYPECODE, t.TYPE, o.ID, o.NAME, r.ERRORCODE, r.ERRORMESSAGE, r.STATUS, r.ID, r.DESCRIPTION " +
                             "FROM RULES r " +
                             "LEFT JOIN TYPES t ON (r.TYPEID = t.ID)" +
                             "LEFT JOIN OPERATORS o ON (r.OPERATORID = o.ID)" +
@@ -189,7 +190,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 int errorCode = results.getInt(9);
                 String errorMessage = results.getString(10);
                 String status = results.getString(11);
-                int ID = results.getInt(12);
+                int ruleId = results.getInt(12);
+                String description = results.getString(13);
 
                 operators.add(DAOServiceProvider.getOperatorsDAO().getOperatorByName(operatorName));
 
@@ -205,7 +207,7 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
                 List<Value> values = new ArrayList<>();
                 PreparedStatement valuesPreparedStatement = conn.prepareStatement("SELECT VALUE FROM RULE_VALUES WHERE RULEID = ?");
-                valuesPreparedStatement.setInt(1, ID);
+                valuesPreparedStatement.setInt(1, ruleId);
                 ResultSet valuesResult = valuesPreparedStatement.executeQuery();
 
                 while (valuesResult.next()) {
@@ -213,9 +215,9 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                 }
 
                 RuleType ruleType = new RuleType(typeId, typeName, subType, typeCode, operators);
-                rules.add(new RuleDefinition(id, ruleType, ruleName, typeTable, new Attribute(attributeName),
+                rules.add(new RuleDefinition(id, ruleType, ruleName, description, typeTable, new Attribute(attributeName),
                         new Operator(operatorId, operatorName),
-                        values, errorMessage, errorCode, status, ID
+                        values, errorMessage, errorCode, status, ruleId
                 ));
             }
 
