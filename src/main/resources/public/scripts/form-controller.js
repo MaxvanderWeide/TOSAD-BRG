@@ -8,6 +8,8 @@ function loadFromStorage() {
         document.getElementById("dbInputService").value = values['service'];
         document.getElementById("dbInputUser").value = values['username'];
         document.getElementById("dbInputPassword").value = values['password'];
+
+        createConnection();
     }
 }
 
