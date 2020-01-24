@@ -43,7 +43,6 @@ public class ListType implements Type {
         listValue = stringBuilder.toString();
     }
 
-    @Override
     public String generate() {
         setOperatorSymbol();
         setValue();
