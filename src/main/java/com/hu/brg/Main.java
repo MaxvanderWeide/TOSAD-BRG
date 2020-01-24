@@ -4,7 +4,6 @@ import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.generate.controller.GenerateController;
 import com.hu.brg.shared.controller.AuthController;
 import com.hu.brg.shared.model.web.ErrorResponse;
-import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -44,8 +43,6 @@ public class Main {
                 path("rules", () -> post(RuleController::saveRuleDefinition));
             });
         }).start(4201);
-
-        DAOServiceProvider.getRulesDAO().getRulesByProjectId(1, "TOSAD_TARGET", "tosad1234").forEach(System.out::println);
     }
 
     private static OpenApiPlugin getConfiguredOpenApiPlugin() {
