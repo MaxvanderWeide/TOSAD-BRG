@@ -31,7 +31,7 @@ public class RuleGenerator {
                 ConfigSelector.APPLICATION_NAME,
                 this.project.getName(),
                 this.ruleDefinition.getTable().getName().substring(0, 3),
-                this.ruleDefinition.getType().getType())
+                this.ruleDefinition.getType().getCode())
         ).toUpperCase();
     }
 
