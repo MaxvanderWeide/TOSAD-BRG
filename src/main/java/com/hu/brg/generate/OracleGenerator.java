@@ -77,15 +77,15 @@ public class OracleGenerator implements Generator {
             stringBuilder.append(
             String.format("-- evaluate business rule %s %n" +
                             "declare %n" +
-                            "   v_passed boolean := true %n" +
+                            "   v_passed boolean := true; %n" +
                             "begin %n" +
                             "   if v_oper in (%s) %n" +
                             "   then %n" +
                             "       -- %s %n" +
-                            "       %s %n" +
+                            "       %s; %n" +
                             "       if not v_passed %n" +
                             "           then %n" +
-                            "           v_error_stack := v_error_stack || %s; %n" +
+                            "           v_error_stack := v_error_stack || '%s'; %n" +
                             "       end if; %n" +
                             "  end if; %n" +
                             "end; %n",
@@ -100,11 +100,10 @@ public class OracleGenerator implements Generator {
     }
 
     private void generateTriggerName() {
-        this.triggerName = (String.format("%s_%s_%s_trigger_%s",
+        this.triggerName = (String.format("%s_%s_%s_trigger",
                 ConfigSelector.APPLICATION_NAME,
                 this.project.getName(),
-                ruleDefinition.getTable().getName().substring(0, 3),
-                ruleDefinition.getType().getType())
+                ruleDefinition.getTable().getName().substring(0, 3))
         ).toUpperCase();
     }
 
