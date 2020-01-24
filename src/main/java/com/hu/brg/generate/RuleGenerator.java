@@ -30,7 +30,7 @@ public class RuleGenerator {
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
                 ConfigSelector.APPLICATION_NAME,
                 this.project.getName(),
-                this.ruleDefinition.getTable().getName().substring(0, 4),
+                this.ruleDefinition.getTable().getName().substring(0, 3),
                 this.ruleDefinition.getType().getType())
         ).toUpperCase();
     }
