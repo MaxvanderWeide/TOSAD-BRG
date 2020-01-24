@@ -1,6 +1,6 @@
 :root {
     /*Theme: racing green:*/
-    /*--background-color: #004225!important ;*/
+    /*--background-color: #004225!important;*/
     /*--text-color: white;*/
     /*--input-color: #1a3640;*/
     /*--input-border-color: black;*/
@@ -63,13 +63,13 @@ textarea.other-rule {
 }
 
 .rule-details-wrapper {
-    display: none;
+    /*display: none;*/
 }
 button.btn.btn-primary[type=submit] {
     margin-bottom: 40px;
 }
 
-.bg-light {
+.bg {
     background-color: var(--background-color);
     color: var(--text-color);
 }
@@ -106,3 +106,6 @@ label {
     background-color: var(--button-color);
 }
 
+.btn-save {
+    background-color: var(--button-color);
+}

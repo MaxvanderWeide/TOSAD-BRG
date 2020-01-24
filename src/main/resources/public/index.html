@@ -21,7 +21,7 @@
     <script src="scripts/form-controller.js"></script>
     <script src="scripts/comparator-controller.js"></script>
 </head>
-<body onload="loadFromStorage(); fillTypes();" class="bg-light">
+<body onload="loadFromStorage(); fillTypes();" class="bg">
 <div class="container">
     <div class="py-5 text-center">
         <h1>Business Rule Generator</h1>
@@ -128,9 +128,10 @@
             </div>
         </div>
 
-        <button class="save-rule btn btn-primary btn-lg btn-block btn-connect" onclick="saveRule()">Save Rule</button>
+        <div class="text-center">
+            <button class="save-rule btn btn-primary btn-lg btn-block btn-save" onclick="saveRule()">Save Rule</button>
+        </div>
     </div>
-
 </div>
 </body>
 </html>
