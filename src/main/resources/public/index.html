@@ -21,67 +21,116 @@
     <script src="scripts/form-controller.js"></script>
     <script src="scripts/comparator-controller.js"></script>
 </head>
-<body onload="loadFromStorage(); fillTypes();">
-<div class="container-fluid">
-    <div class="god-step">
-        <div class="top-step">
-            <h1>Business Rule Generator</h1>
-            <p>Open Source Business Rule Generator</p>
+<body onload="loadFromStorage(); fillTypes();" class="bg-light">
+<div class="container">
+    <div class="py-5 text-center">
+        <h1>Business Rule Generator</h1>
+        <p class="lead">Connect to a target database by filling in the desired fields below to start defining a Businessrule.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <form action="javascript:void(0);">
+                <div id="db-info-wrapper">
+                    <div class="mb-3">
+                        <label for="dbEngine">Database Engine:</label>
+                        <select class="custom-select d-block w-100 form-input" id="dbEngine">
+                            <option value="ORACLE">Oracle</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dbName">Database Name:</label>
+                            <input type="text" class="form-input" id="dbName" placeholder="TOSAD_TARGET">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputHost">Host:</label>
+                            <input type="text" class="form-input" id="dbInputHost" placeholder="Ondora04.hu.nl">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputPort">Port:</label>
+                            <input type="number" class="form-input" id="dbInputPort" placeholder="8521">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputService">Service Name:</label>
+                            <input type="text" class="form-input" id="dbInputService" placeholder="EDUC17">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputUser">Username:</label>
+                            <input type="text" class="form-input" id="dbInputUser">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputPassword">Password:</label>
+                            <input type="password" class="form-input" id="dbInputPassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block btn-connect" onclick="createConnection(this);">Connect</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="form-step" id="db-info-wrapper">
-            <select id="dbEngine">
-                <option value="ORACLE">Oracle</option>
-            </select>
-            <label for="dbName">Database:</label>
-            <input type="text" id="dbName">
-            <label for="dbInputHost">Host:</label>
-            <input type="text" id="dbInputHost">
-            <label for="dbInputPort">Port:</label>
-            <input type="text" id="dbInputPort">
-            <label for="dbInputService">service name:</label>
-            <input type="text" id="dbInputService">
-            <label for="dbInputUser">User:</label>
-            <input type="text" id="dbInputUser">
-            <label for="dbInputPassword">Password:</label>
-            <input type="password" id="dbInputPassword">
-            <button type="submit" class="btn btn-primary" onclick="createConnection(this);">Connect</button>
+    </div>
+
+    <div class="rule-details-wrapper">
+        <div class="py-5 text-center">
+            <h2>Define your Business Rule</h2>
+            <p class="lead">Define your new Businessrule by selecting the correct values below.</p>
         </div>
-        <div class="rule-details-wrapper">
-            <div class="form-step-top">
-                <label for="ruleName">Rule name:</label>
-                <input type="text" id="ruleName">
-                <label for="tableSelection">Tables:</label>
+        <div class="mb-3">
+            <label for="ruleName">Rule Name:</label>
+            <input type="text" id="ruleName" class="form-input" placeholder="My new Rule">
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="tableSelection">Select Table:</label>
                 <select id="tableSelection" class="form-input" onchange="fillTargetAttributes(this)">
                     <option disabled selected>Select a table</option>
                 </select>
-                <label for="typeSelection">Rule Type:</label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="typeSelection">Select Rule-Type:</label>
                 <select id="typeSelection" class="form-input" onchange="fillOperators(this); displayBlock(this); bindFillTargetAttributes(this)">
                     <option disabled selected>Select a type</option>
                 </select>
             </div>
-            <div class="form-step-middle">
-                <label for="attributeSelection">Target Attribute:</label>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="attributeSelection">Select the target-attribute:</label>
                 <select id="attributeSelection" class="form-input">
                     <option disabled selected>Select an attribute</option>
                 </select>
-
-                <label for="operatorSelection">Operator:</label>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="operatorSelection">Select an operator:</label>
                 <select id="operatorSelection" class="form-input">
                     <option disabled selected>Select an operator</option>
                 </select>
-
-                <label for="errorMessage">ErrorMessage:</label>
-                <textarea id="errorMessage"></textarea>
-
-                <label for="errorCode">ErrorCode:</label>
-                <input type="number" id="errorCode">
             </div>
-            <div id="comparatorStep" class="form-step-comparator"></div>
-            <footer>
-                <button class="save-rule" onclick="saveRule()">OK</button>
-            </footer>
         </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="errorMessage">Define the errorMessage:</label>
+                <textarea id="errorMessage" class="form-input"></textarea>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="errorCode">ErrorCode:</label>
+                <input type="number" id="errorCode" class="form-input" placeholder="-20000">
+            </div>
+        </div>
+        <div class="mb-3">
+            <h3>Rule values:</h3>
+            <div class="form-step-comparator">
+                <div class="row" id="comparatorStep"></div>
+            </div>
+        </div>
+
+        <button class="save-rule btn btn-primary btn-lg btn-block btn-connect" onclick="saveRule()">Save Rule</button>
     </div>
+
 </div>
 </body>
 </html>
