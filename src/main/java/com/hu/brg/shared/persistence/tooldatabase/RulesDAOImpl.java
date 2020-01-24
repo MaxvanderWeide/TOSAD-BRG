@@ -130,8 +130,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                     }
                 }
 
-                if(!results.getString(4).equalsIgnoreCase("MODI")) {
-                    subType = results.getString(6).split("_")[0];
+                if(typeCode.equalsIgnoreCase("MODI")) {
+                    subType = typeName.split("_")[0];
                 }
 
                 List<Value> values = new ArrayList<>();
@@ -201,8 +201,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
                     }
                 }
 
-                if(!results.getString(4).equalsIgnoreCase("MODI")) {
-                    subType = results.getString(6).split("_")[0];
+                if(!typeCode.equalsIgnoreCase("MODI")) {
+                    subType = typeName.split("_")[0];
                 }
 
                 List<Value> values = new ArrayList<>();
