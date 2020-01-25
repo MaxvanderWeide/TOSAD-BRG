@@ -9,7 +9,7 @@ function loadRules() {
             if (response.status === 200) {
                 $(".rule-items-wrapper").show();
                 $(".spinner-holder").hide();
-                return response.text();
+                return response.json();
             }
         })
         .then(response => {
@@ -45,7 +45,9 @@ function loadRules() {
                     $(ruleRightBlock).append("<label>Table</label><input type='text' value='" + item["Table"] + "'>");
                     $(ruleRightBlock).append("<label>Attribute</label><input type='text' value='" + item["Attribute"] + "'>");
                     $(ruleRightBlock).append("<label>Operator</label><input type='text' value='" + item["Operator"] + "'>");
-                    $(ruleBottomBlock).append("<label>Values</label>");
+                    $(ruleBottomBlock).append("<br/><label>Description</label>");
+                    $(ruleBottomBlock).append("<textarea>" + item["Description"] + "</textarea>");
+                    $(ruleBottomBlock).append("<br/><label>Values</label>");
                     $(ruleBottomBlock).append(ul);
                     $(ruleInfoWrapper).append(ruleLeftBlock, ruleRightBlock, ruleBottomBlock);
                     $(generatedRuleWrapper).append("<span class='generated-rule-title'>Generated rule</span>");

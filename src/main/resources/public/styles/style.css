@@ -109,3 +109,7 @@ label {
 .btn-save {
     background-color: var(--button-color);
 }
+
+#ruleDescription {
+    height: 100px;
+}

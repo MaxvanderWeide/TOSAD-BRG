@@ -100,3 +100,7 @@ div.spinner-border {
 div.rule-items-wrapper {
     display: none;
 }
+
+textarea {
+    width: 100%;
+}

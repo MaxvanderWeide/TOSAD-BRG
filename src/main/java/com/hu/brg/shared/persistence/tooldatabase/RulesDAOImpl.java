@@ -26,15 +26,15 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
     public boolean saveRule(RuleDefinition ruleDefinition) {
         try (Connection conn = getConnection()) {
 
-            String query = "{call INSERT INTO RULES (PROJECTID, NAME, ATTRIBUTE, TARGETTABLE, " +
-                    "TYPEID, OPERATORID, ERRORCODE, ERRORMESSAGE, STATUS) VALUES (?, ?, ?, ? , ?, ?, ?, ?, ?)" +
+            String query = "{call INSERT INTO RULES (PROJECTID, NAME, DESCRIPTION, ATTRIBUTE, TARGETTABLE, " +
+                    "TYPEID, OPERATORID, ERRORCODE, ERRORMESSAGE, STATUS) VALUES (?, ?, ?, ?, ? , ?, ?, ?, ?, ?)" +
                     "RETURNING ID INTO ? }";
             CallableStatement cs = conn.prepareCall(query);
             setPreparedStatement(cs, ruleDefinition);
-            cs.registerOutParameter(10, OracleTypes.NUMBER);
+            cs.registerOutParameter(11, OracleTypes.NUMBER);
             cs.executeUpdate();
 
-            int ruleId = cs.getInt(10);
+            int ruleId = cs.getInt(11);
             ruleDefinition.setId(ruleId);
 
             for (Value value : ruleDefinition.getValues()) {
@@ -62,14 +62,14 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
             valuesPreparedStatement.setString(1, ruleDefinition.getName());
             ResultSet Result = valuesPreparedStatement.executeQuery();
 
-            String query = "UPDATE RULES SET PROJECTID = ?, NAME = ?, ATTRIBUTE = ?, TARGETTABLE = ?, " +
+            String query = "UPDATE RULES SET PROJECTID = ?, NAME = ?, DESCRIPTION = ?, ATTRIBUTE = ?, TARGETTABLE = ?, " +
                     "TYPEID = ?, OPERATORID = ?, ERRORCODE = ?, ERRORMESSAGE = ?, STATUS = ?" +
                     " WHERE ID = ?";
 
             while (Result.next()) {
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 setPreparedStatement(preparedStatement, ruleDefinition);
-                preparedStatement.setInt(10, Result.getInt(1));
+                preparedStatement.setInt(11, Result.getInt(1));
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
 
@@ -260,12 +260,13 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
         preparedStatement.setInt(1, ruleDefinition.getProjectId());
         preparedStatement.setString(2, ruleDefinition.getName());
-        preparedStatement.setString(3, ruleDefinition.getAttribute().getName());
-        preparedStatement.setString(4, ruleDefinition.getTable().getName());
-        preparedStatement.setInt(5, ruleDefinition.getType().getId()); //TODO: (RULE)TYPEID needs to be dynamic
-        preparedStatement.setInt(6, ruleDefinition.getOperator().getId());
-        preparedStatement.setInt(7, ruleDefinition.getErrorCode());
-        preparedStatement.setString(8, ruleDefinition.getErrorMessage());
-        preparedStatement.setString(9, ruleDefinition.getStatus());
+        preparedStatement.setString(3, ruleDefinition.getDescription());
+        preparedStatement.setString(4, ruleDefinition.getAttribute().getName());
+        preparedStatement.setString(5, ruleDefinition.getTable().getName());
+        preparedStatement.setInt(6, ruleDefinition.getType().getId());
+        preparedStatement.setInt(7, ruleDefinition.getOperator().getId());
+        preparedStatement.setInt(8, ruleDefinition.getErrorCode());
+        preparedStatement.setString(9, ruleDefinition.getErrorMessage());
+        preparedStatement.setString(10, ruleDefinition.getStatus());
     }
 }

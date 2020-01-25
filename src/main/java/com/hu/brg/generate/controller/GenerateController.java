@@ -48,6 +48,7 @@ public class GenerateController {
                     jsonArray.put(value.getLiteral());
                 }
                 definitionMap.put("Type", definition.getType().getType());
+                definitionMap.put("Description", definition.getDescription());
                 definitionMap.put("TypeCode", definition.getType().getCode());
                 definitionMap.put("Table", definition.getTable().getName());
                 definitionMap.put("ErrorMessage", definition.getErrorMessage());

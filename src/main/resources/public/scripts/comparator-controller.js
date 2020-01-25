@@ -83,12 +83,11 @@ var Types = {
             "var xhttp = new XMLHttpRequest();" +
             "    xhttp.onreadystatechange = function () {" +
             "        if (this.readyState == 4 && this.status == 200) {" +
-            "            console.log('GET SUCCESS: ' + this.responseText);" +
             "            var responseJSON = JSON.parse(this.responseText);" +
             "            for (var k in responseJSON.Attributes) {" +
             "                var option = document.createElement(\"option\");" +
             "                option.value = k + ' - ' + responseJSON.Attributes[k];" +
-            "                option.text = responseJSON.Attributes[k];" +
+            "                option.text = k + ' - ' + responseJSON.Attributes[k];" +
             "                custInput2.add(option)" +
             "            }" +
             "        }" +

@@ -184,6 +184,7 @@ public class RuleController {
         }
 
         builder.setName(jsonObject.get("ruleName").toString());
+        builder.setDescription(jsonObject.get("description").toString());
         builder.setTable(table);
         builder.setType(type);
         builder.setAttribute(attribute);

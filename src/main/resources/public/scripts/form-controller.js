@@ -9,6 +9,7 @@ function eventListeners() {
         createConnection();
     });
 
+    $("#tableSelection").unbind("change");
     $("#tableSelection").change((item) => {
         fillTargetAttributes(item.target);
     });
@@ -16,7 +17,7 @@ function eventListeners() {
     $("#typeSelection").change((item) => {
         fillOperators(item.target);
         displayBlock(item.target);
-        bindFillTargetAttributes(item.target)
+        FillValuesTargetAttributes(item.target)
     });
 
     $(".btn-save").click(() => {
@@ -174,6 +175,7 @@ function saveRule() {
 
     let values = {};
     values["ruleName"] = $("#ruleName").val();
+    values["description"] = $("#ruleDescription").val();
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
     values["targetAttribute"] = $("#attributeSelection").val();
@@ -201,15 +203,16 @@ function saveRule() {
 function displayBlock(type) {
     $('#comparatorStep').html("");
     eval(Types[type.options[type.selectedIndex].text].block);
+    $("#tableSelection").unbind("change");
+    fillTargetAttributes($("#tableSelection"));
 }
 
-function bindFillTargetAttributes(element) {
+function FillValuesTargetAttributes(element) {
     const typeName = $(element).val();
     const typeNameSplit = typeName.split("_");
     if (typeNameSplit[0].trim() === "Entity" ||
         typeNameSplit[0].trim() === "Tuple") {
         $("#tableSelection").change((item) => {
-            console.log("heeeeeeey");
             fillTargetAttributes(item.target, item.target);
         });
     }
