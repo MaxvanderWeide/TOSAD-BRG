@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    eventListeners();
     loadFromStorage();
     fillTypes();
+    eventListeners();
 });
 
 function eventListeners() {
@@ -28,7 +28,7 @@ function eventListeners() {
 function loadFromStorage() {
     if (sessionStorage.getItem("values") != null) {
         const values = JSON.parse(sessionStorage.getItem("values"));
-        $("#dbEngine").append("<option value=" + values['engine'] + ">" + values['engine'] + "</option>");
+        $("#dbEngine").empty().append("<option value=" + values['engine'] + ">" + values['engine'] + "</option>");
         $("#dbInputHost").val(values['host']);
         $("#dbName").val(values['dbName']);
         $("#dbInputPort").val(values['port']);
