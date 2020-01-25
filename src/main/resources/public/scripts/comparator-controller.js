@@ -87,7 +87,8 @@ var Types = {
             "            var responseJSON = JSON.parse(this.responseText);" +
             "            for (var k in responseJSON.Attributes) {" +
             "                var option = document.createElement(\"option\");" +
-            "                option.text = k + ' - ' + responseJSON.Attributes[k];" +
+            "                option.value = k + ' - ' + responseJSON.Attributes[k];" +
+            "                option.text = responseJSON.Attributes[k];" +
             "                custInput2.add(option)" +
             "            }" +
             "        }" +

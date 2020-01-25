@@ -1,217 +1,215 @@
+$(document).ready(function () {
+    eventListeners();
+    loadFromStorage();
+    fillTypes();
+});
+
+function eventListeners() {
+    $(".btn-connect").click(() => {
+        createConnection();
+    });
+
+    $("#tableSelection").change((item) => {
+        fillTargetAttributes(item.target);
+    });
+
+    $("#typeSelection").change((item) => {
+        fillOperators(item.target);
+        displayBlock(item.target);
+        bindFillTargetAttributes(item.target)
+    });
+
+    $(".btn-save").click(() => {
+        saveRule();
+    })
+}
+
 function loadFromStorage() {
     if (sessionStorage.getItem("values") != null) {
         const values = JSON.parse(sessionStorage.getItem("values"));
-        document.getElementById("dbEngine").options[dbEngine.selectedIndex].value = values['engine'];
-        document.getElementById("dbInputHost").value = values['host'];
-        document.getElementById("dbName").value = values['dbName'];
-        document.getElementById("dbInputPort").value = values['port'];
-        document.getElementById("dbInputService").value = values['service'];
-        document.getElementById("dbInputUser").value = values['username'];
-        document.getElementById("dbInputPassword").value = values['password'];
+        $("#dbEngine").append("<option value=" + values['engine'] + "> + values['engine'] + </option>");
+        $("#dbInputHost").val(values['host']);
+        $("#dbName").val(values['dbName']);
+        $("#dbInputPort").val(values['port']);
+        $("#dbInputService").val(values['service']);
+        $("#dbInputUser").val(values['username']);
+        $("#dbInputPassword").val(values['password']);
 
         createConnection();
     }
 }
 
 function createConnection() {
-    const dbEngine = document.getElementById("dbEngine");
-    const dbEngineName = dbEngine.options[dbEngine.selectedIndex].value;
-    const dbHost = document.getElementById("dbInputHost").value;
-    const dbName = document.getElementById("dbName").value;
-    const dbPort = document.getElementById("dbInputPort").value;
-    const dbService = document.getElementById("dbInputService").value;
-    const dbUser = document.getElementById("dbInputUser").value;
-    const dbPassword = document.getElementById("dbInputPassword").value;
-
     let values = {};
-    values["engine"] = dbEngineName;
-    values["dbName"] = dbName;
-    values["host"] = dbHost;
-    values["port"] = dbPort;
-    values["service"] = dbService;
-    values["username"] = dbUser;
-    values["password"] = dbPassword;
+    values["engine"] = $("#dbEngine").val();
+    values["dbName"] = $("#dbName").val();
+    values["host"] = $("#dbInputHost").val();
+    values["port"] = $("#dbInputPort").val();
+    values["service"] = $("#dbInputService").val();
+    values["username"] = $("#dbInputUser").val();
+    values["password"] = $("#dbInputPassword").val();
     values = JSON.stringify(values);
 
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            if (this.status == 200) {
-                sessionStorage.setItem("access_token", this.responseText);
+    fetch("auth/connection", {
+        method: "POST",
+        body: values
+    })
+        .then(response => {
+            if (response.status !== 200) {
+                alert('Could not authenticate and make a connection')
+            } else {
+                return response.text();
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                sessionStorage.setItem("access_token", response);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
-                document.getElementsByClassName("rule-details-wrapper")[0].style.display = "block";
-                return;
+                $(".rule-details-wrapper").css("display", "block");
             }
-            alert('Could not authenticate and make a connection')
-        }
-
-    };
-    xhttp.open("POST", 'auth/connection', true);
-    xhttp.send(values);
+        });
 }
 
 function fillTargetTables() {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log("Connected!");
-            console.log('GET SUCCESS: ' + this.responseText);
-            const responseJSON = JSON.parse(this.responseText);
-            const selection = document.getElementById("tableSelection");
-            for (const k in responseJSON.Tables) {
-                const option = document.createElement("option");
-                option.text = responseJSON.Tables[k];
-                selection.add(option)
+    fetch("define/tables", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
             }
-        }
-    };
-    xhttp.open("GET", 'define/tables', true);
-    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
-    xhttp.send();
+        })
+        .then(response => {
+            if (response !== undefined) {
+                for (const index in response.Tables) {
+                    const value = response.Tables[index];
+                    $("#tableSelection").append("<option value='" + value + "'>" + value + "</option>");
+                }
+            }
+        });
 }
 
 
 function fillTypes() {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('GET SUCCESS: ' + this.responseText);
-            const responseJSON = JSON.parse(this.responseText);
-            const selection = document.getElementById("typeSelection");
-            for (const k in responseJSON.Types) {
-                const option = document.createElement("option");
-                option.text = k;
-                selection.add(option)
+    fetch("define/types", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
             }
-
-        }
-    };
-    xhttp.open("GET", 'define/types', true);
-    xhttp.send();
+        })
+        .then(response => {
+            if (response !== undefined) {
+                for (const index in response.Types) {
+                    $("#typeSelection").append("<option value='" + index + "'>" + index + "</option>");
+                }
+            }
+        });
 }
 
 function fillTargetAttributes(tableSelection, entityRuleType = false) {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('GET SUCCESS: ' + this.responseText);
-            const responseJSON = JSON.parse(this.responseText);
-            const selection = entityRuleType ? document.getElementById("custInput1") : document.getElementById("attributeSelection");
-            selection.options.length = 1;
-            for (const k in responseJSON.Attributes) {
-                const option = document.createElement("option");
-                option.text = k + ' - ' + responseJSON.Attributes[k];
-                selection.add(option)
+    fetch("define/tables/" + $(tableSelection).val() + "/attributes ", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
             }
-            console.log(selection);
-        }
-    };
-    xhttp.open("GET", 'define/tables/' + tableSelection.options[tableSelection.selectedIndex].text + '/attributes', true);
-    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
-    xhttp.send();
+        })
+        .then(response => {
+            if (response !== undefined) {
+                const selection = entityRuleType ? $("#custInput1") : $("#attributeSelection");
+                $(selection).empty();
+                for (const index in response.Attributes) {
+                    $(selection).append("<option value='" + response.Attributes[index] + "'>" + index + ' - ' + response.Attributes[index] + "</option>");
+                }
+            }
+        });
 }
 
 function fillOperators(type) {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log('GET SUCCESS: ' + this.responseText);
-            const responseJSON = JSON.parse(this.responseText);
-            const selection = document.getElementById("operatorSelection");
-            selection.options.length = 1;
-            for (const k in responseJSON.Operators) {
-                const option = document.createElement("option");
-                option.text = responseJSON.Operators[k];
-                selection.add(option)
+    fetch("define/types/" + $(type).val() + "/operators", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
             }
-        }
-    };
-    xhttp.open("GET", 'define/types/' + type.options[type.selectedIndex].text + '/operators', true);
-    xhttp.send();
+        })
+        .then(response => {
+            if (response !== undefined) {
+                $("#operatorSelection").empty();
+                for (const index in response.Operators) {
+                    $("#operatorSelection").append("<option value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
+                }
+            }
+        });
 }
 
 function saveRule() {
-    const selectedTable = document.getElementById("tableSelection");
-    const selectedTableName = selectedTable.options[selectedTable.selectedIndex].value;
-
-    const selectedType = document.getElementById("typeSelection");
-    const selectedTypeName = selectedType.options[selectedType.selectedIndex].value;
-
-    const selectedTargetAttribute = document.getElementById("attributeSelection");
-    const selectedTargetAttributeName = selectedTargetAttribute.options[selectedTargetAttribute.selectedIndex].value;
-
-    const selectedOperator = document.getElementById("operatorSelection");
-    const selectedOperatorName = selectedOperator.options[selectedOperator.selectedIndex].value;
+    const selectedTable = $("#tableSelection").val();
+    const selectedType = $("#typeSelection").val();
 
     const ruleValues = [];
 
-    if (selectedTypeName === "Attribute_List") {
-        for (const li of document.querySelectorAll("ul.attributes-list li")) {
-            ruleValues.push(li.textContent);
-            console.log(li.textContent);
-        }
+    if (selectedType === "Attribute_List") {
+        $("ul.attributes-list li").each((index, item) => {
+            ruleValues.push($(item).html());
+        });
     } else {
-        if (["Tuple", "Entity"].indexOf(selectedTypeName.split("_")[0].trim()) > -1) {
-            ruleValues.push(selectedTableName);
+        if (["Tuple", "Entity"].indexOf(selectedType.split("_")[0].trim()) > -1) {
+            ruleValues.push(selectedTable);
         }
-        for (const item of $("[id^=custInput]")) {
-            const itemsArray = item.value.split("-");
-            if (itemsArray.length > 1) {
-                ruleValues.push(itemsArray[1].trim());
-            } else {
-                ruleValues.push(itemsArray[0].trim());
-            }
-        }
+        $("[id^=custInput]").each((index, item) => {
+            ruleValues.push($(item).val());
+        });
     }
 
     let values = {};
-    values["ruleName"] = document.getElementById("ruleName").value;
-    values["tableName"] = selectedTableName;
-    values["typeName"] = selectedTypeName;
-    values["targetAttribute"] = selectedTargetAttributeName;
-    values["operatorName"] = selectedOperatorName;
-    values["comparatorValues"] = getReval(selectedTypeName);
-    values["errorMessage"] = document.getElementById("errorMessage").value;
-    values["errorCode"] = document.getElementById("errorCode").value;
+    values["ruleName"] = $("#ruleName").val();
+    values["tableName"] = selectedTable;
+    values["typeName"] = selectedType;
+    values["targetAttribute"] = $("#attributeSelection").val();
+    values["operatorName"] = $("#operatorSelection").val();
+    values["errorMessage"] = $("#errorMessage").val();
+    values["errorCode"] = $("#errorCode").val();
     values["values"] = ruleValues;
     values = JSON.stringify(values);
 
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            if (this.status == 201) {
-                console.log('POST SUCCESS: ' + this.responseText);
+    fetch("define/rules", {
+        method: "POST",
+        headers: {"Authorization": sessionStorage.getItem("access_token")},
+        body: values
+    })
+        .then(response => {
+            if (response.status === 201) {
                 alert('Rule was created');
-            } else if (this.status == 400) {
-                console.log('POST SUCCESS: ' + this.responseText);
+            } else if (response.status === 400) {
                 alert('Rule was not created');
             }
-        }
+        });
 
-    };
-    xhttp.open("POST", 'define/rules', true);
-    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
-    xhttp.send(values);
 }
 
 function displayBlock(type) {
-    document.getElementById('comparatorStep').innerHTML = "";
+    $('#comparatorStep').html("");
     eval(Types[type.options[type.selectedIndex].text].block);
 }
 
-function getReval(type) {
-    return eval(Types[type].reval);
-}
-
 function bindFillTargetAttributes(element) {
-    const typeName = element.options[element.selectedIndex].text;
+    const typeName = $(element).val();
     const typeNameSplit = typeName.split("_");
     if (typeNameSplit[0].trim() === "Entity" ||
         typeNameSplit[0].trim() === "Tuple") {
-        document.getElementById("tableSelection").addEventListener("change", function() {
+        $("#tableSelection").change((item) => {
             console.log("heeeeeeey");
-            fillTargetAttributes(this, true);
+            fillTargetAttributes(item.target, item.target);
         });
     }
 }

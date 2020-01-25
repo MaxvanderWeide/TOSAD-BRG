@@ -175,7 +175,7 @@ public class RuleController {
 
         Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString(), claims);
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
-        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[1].trim());
+        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
         List<Value> values = new ArrayList<>();
 
