@@ -9,7 +9,9 @@ import com.hu.brg.shared.model.definition.RuleDefinition;
 import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class OracleGenerator implements Generator {
 
@@ -32,13 +34,11 @@ public class OracleGenerator implements Generator {
 
     private String generateRuleName(RuleDefinition ruleDefinition) {
 
-       return (String.format("%s_%s_%s_%s_%s",
+       return (String.format("%s_%s_%s_%s",
                ConfigSelector.APPLICATION_NAME,
                this.project.getName(),
                ruleDefinition.getTable().getName().substring(0, 3),
-               ruleDefinition.getType().getCode(),
-               "01" //TODO number has to be incremented when there is already a rule of the same type
-               )
+               ruleDefinition.getType().getCode())
 
         ).toUpperCase();
     }
@@ -71,8 +71,23 @@ public class OracleGenerator implements Generator {
 
     private void generateCode() {
         StringBuilder stringBuilder = new StringBuilder();
+
+        Map<String, Integer> nameTracker = new HashMap<>();
         for (RuleDefinition rule : this.ruleDefinitions) {
-            generateRuleName(ruleDefinition);
+            String ruleName = generateRuleName(ruleDefinition);
+
+            // The nameTracker map keeps track of the rule number seen at the end
+            if (nameTracker.containsKey(ruleName)) {
+                int index = nameTracker.get(ruleName);
+                index++;
+                nameTracker.put(ruleName, index);
+
+                // Pads 0 on the left so it always have at least 2 chars; makes 5 -> 05 & leaves 10 -> 10
+                ruleName = ruleName + "_" + String.format("%1$2s", index).replace(' ', '0');
+            } else {
+                nameTracker.put(ruleName, 1);
+                ruleName = ruleName + "_01";
+            }
 
             stringBuilder.append(
             String.format("-- evaluate business rule %s %n" +
@@ -89,7 +104,7 @@ public class OracleGenerator implements Generator {
                             "       end if; %n" +
                             "  end if; %n" +
                             "end; %n",
-                    generateRuleName(rule),
+                    ruleName,
                     generateTriggerEvents(rule.getType().getCode()),
                     rule.getDescription(),
                     generateRuleCode(rule),
