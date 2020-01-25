@@ -132,6 +132,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
                 if(typeCode.equalsIgnoreCase("MODI")) {
                     subType = typeName.split("_")[0];
+                } else {
+                    subType = typeName.split("_")[1];
                 }
 
                 List<Value> values = new ArrayList<>();
@@ -203,6 +205,8 @@ public class RulesDAOImpl extends ToolDatabaseBaseDAO implements RulesDAO {
 
                 if(!typeCode.equalsIgnoreCase("MODI")) {
                     subType = typeName.split("_")[0];
+                } else {
+                    subType = typeName.split("_")[1];
                 }
 
                 List<Value> values = new ArrayList<>();
