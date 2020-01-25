@@ -83,6 +83,7 @@ function fillTargetTables() {
         })
         .then(response => {
             if (response !== undefined) {
+                $("#tableSelection").empty();
                 for (const index in response.Tables) {
                     const value = response.Tables[index];
                     $("#tableSelection").append("<option value='" + value + "'>" + value + "</option>");
