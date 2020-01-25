@@ -30,7 +30,7 @@ public class RuleTypesDAOImpl extends ToolDatabaseBaseDAO implements RuleTypesDA
                 String subType = null;
                 List<Operator> operators = DAOServiceProvider.getOperatorsDAO().getOperatorsByTypeId(typeId);
 
-                if(!typeCode.equalsIgnoreCase("MODI")) {
+                if(typeCode.equalsIgnoreCase("MODI")) {
                     subType = type.split("_")[0];
                 } else {
                     subType = type.split("_")[1];

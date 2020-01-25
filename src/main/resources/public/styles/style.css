@@ -63,7 +63,7 @@ textarea.other-rule {
 }
 
 .rule-details-wrapper {
-    /*display: none;*/
+    display: none;
 }
 button.btn.btn-primary[type=submit] {
     margin-bottom: 40px;
