@@ -222,6 +222,7 @@ public class RuleController {
             tempRule.put("table", rule.getTargetTable().getName());
             tempRule.put("type", rule.getRuleType().getType());
             tempRule.put("typeCode", rule.getRuleType().getTypeCode());
+            tempRule.put("id", String.valueOf(rule.getId()));
             tempRules.put(rule.getName(), tempRule);
         }
         rules.add(tempRules);

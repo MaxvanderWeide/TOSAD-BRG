@@ -84,7 +84,7 @@ var Types = {
     },
     Attribute_Other: {
         block:
-            "const custInput1 = $(\"textarea\", {id: \"custInput1\", class: \"other-rule form-input col-md-5 mb-3\"});" +
+            "const custInput1 = $(\"<textarea>\", {id: \"custInput1\", class: \"other-rule form-input col-md-5 mb-3\"});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);"
     }
 };
