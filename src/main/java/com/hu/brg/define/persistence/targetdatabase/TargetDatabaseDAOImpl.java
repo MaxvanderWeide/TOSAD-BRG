@@ -4,6 +4,7 @@ import com.hu.brg.define.domain.Column;
 import com.hu.brg.define.domain.Project;
 import com.hu.brg.define.domain.Table;
 import com.hu.brg.define.persistence.BaseDAO;
+import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,7 +43,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
     @Override
     public List<Table> getTablesByProjectId(String username, String password, int id) {
-        throw new UnsupportedOperationException("Not implemented yet");
+        Project project = DAOServiceProvider.getProjectDAO().getProjectById(id, false);
+        return getTablesByProject(username, password, project);
     }
 
     private Table processTableResult(Connection conn, ResultSet resultSet) throws SQLException {
