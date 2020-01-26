@@ -89,7 +89,6 @@ public class Rule {
                 ", targetTable=" + targetTable +
                 ", ruleType=" + ruleType +
                 ", errorMessage='" + errorMessage + '\'' +
-                ", attributesList=" + attributesList +
                 '}';
     }
 }
