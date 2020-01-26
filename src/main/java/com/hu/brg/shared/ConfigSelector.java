@@ -18,6 +18,7 @@ public class ConfigSelector {
     public static final int PORT;
     public static final String SERVICE;
     public static final String USERNAME;
+    public static final String USERNAME_TOOL;
     public static final String PASSWORD;
 
     private ConfigSelector() {}
@@ -35,6 +36,7 @@ public class ConfigSelector {
         PORT = Integer.parseInt(appProps.getProperty("port"));
         SERVICE = appProps.getProperty("service");
         USERNAME = appProps.getProperty("username");
+        USERNAME_TOOL = appProps.getProperty("username_tool");
         PASSWORD = appProps.getProperty("password");
     }
 

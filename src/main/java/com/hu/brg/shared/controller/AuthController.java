@@ -1,13 +1,13 @@
 package com.hu.brg.shared.controller;
 
+import com.hu.brg.define.domain.model.Project;
+import com.hu.brg.define.persistence.DBEngine;
+import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAO;
+import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
+import com.hu.brg.define.persistence.tooldatabase.project.ProjectsDAO;
 import com.hu.brg.shared.ConfigSelector;
-import com.hu.brg.shared.model.definition.Project;
 import com.hu.brg.shared.model.web.ErrorResponse;
-import com.hu.brg.shared.persistence.DBEngine;
-import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAO;
-import com.hu.brg.shared.persistence.targetdatabase.TargetDatabaseDAOImpl;
-import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
-import com.hu.brg.shared.persistence.tooldatabase.ProjectsDAO;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;

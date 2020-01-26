@@ -44,12 +44,12 @@
                 <name>ruleDefinitionBuilder</name>
                 <SoftwareUnitDefinitions>
                   <SoftwareUnitDefinition>
-                    <name>com.hu.brg.define.builder.RuleDefinitionBuilder</name>
+                    <name>com.hu.brg.define.application.save.RuleSaveBuilder</name>
                     <type>CLASS</type>
                   </SoftwareUnitDefinition>
                 </SoftwareUnitDefinitions>
                 <PhysicalPaths>
-                  <path>com.hu.brg.define.builder.RuleDefinitionBuilder</path>
+                  <path>com.hu.brg.define.application.save.RuleSaveBuilder</path>
                 </PhysicalPaths>
                 <SubModules>
                   <ModuleStrategy>
