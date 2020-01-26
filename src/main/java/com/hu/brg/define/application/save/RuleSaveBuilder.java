@@ -64,6 +64,6 @@ public class RuleSaveBuilder {
     }
 
     public Rule build() {
-        return new Rule(project, name, description, targetTable, ruleType, errorMessage, attributesList);
+        return new Rule(id, project, name, description, targetTable, ruleType, errorMessage, attributesList);
     }
 }
