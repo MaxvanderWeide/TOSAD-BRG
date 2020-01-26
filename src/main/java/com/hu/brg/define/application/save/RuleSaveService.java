@@ -23,13 +23,28 @@ public class RuleSaveService implements SaveService {
 
     public AttributeValue buildAttributeValue(JSONObject object, Claims claims) {
         AttributeValueSaveBuilder builder = new AttributeValueSaveBuilder();
-        AttributeValue attributeValue = builder.build();
-        return attributeValue;
+        return builder
+                .setAttribute(null) // This can be null as long buildAttribute is called
+                .setValue(null)
+                .setValueType(null)
+                .setOrder(0)
+                .setLiteral(true)
+                .build();
     }
 
     public Attribute buildAttribute(JSONObject object, Claims claims, List<AttributeValue> attributeValueList) {
         AttributeSaveBuilder builder = new AttributeSaveBuilder();
-        Attribute attribute = builder.build();
+        Attribute attribute = builder
+                .setRule(null) // This can be null as long buildRule is called
+                .setColumn(null)
+                .setOperator(null)
+                .setOrder(0)
+                .setTargetTableFK(null)
+                .setOtherTablePk(null)
+                .setOtherTable(null)
+                .setOtherColumn(null)
+                .setAttributeValueList(attributeValueList)
+                .build();
 
         attributeValueList.forEach(attributeValue -> attributeValue.setAttribute(attribute));
         return attribute;
@@ -37,7 +52,8 @@ public class RuleSaveService implements SaveService {
 
     public Rule buildRule(JSONObject object, Claims claims, Table table, RuleType type, List<Attribute> attributeList) {
         RuleSaveBuilder builder = new RuleSaveBuilder();
-        Rule rule = builder.setName(object.get("ruleName").toString())
+        Rule rule = builder
+                .setName(object.get("ruleName").toString())
                 .setDescription(object.get("description").toString())
                 .setTargetTable(table)
                 .setRuleType(type)
