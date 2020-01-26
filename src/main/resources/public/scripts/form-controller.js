@@ -22,6 +22,15 @@ $(document).ready(function () {
         showMenu();
     });
 
+    $(document).ready(function () {
+        $("#search-rule").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#table-body tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
     $(".search-button").click(() => {
         //filter table
 
@@ -391,24 +400,24 @@ function getAllRuleNames() {
         })
         .then(response => {
             if (response !== undefined) {
-                let tableBody = document.getElementById('table-body');
-                tableBody.innerHTML = null;
+                response = response[0];
+                const tableBody = $("#table-body").html("");
 
-                let i = 0;
-                response.forEach(addRow, i);
-
-                function addRow(row, i) {
-                    tableBody.innerHTML +=
+                for (const index in response) {
+                    $(tableBody).append("" +
                         "<tr>" +
-                        "<th scope='row'>" + i + "</th>" +
-                        "<td>" + row["type"] + "</td>" +
-                        "<td>" + row["table"] + "</td>" +
-                        "<td>" + row["typeCode"] + "</td>" +
-                        "</tr>";
+                            "<td>" + response[index]['id'] + "</td>" +
+                            "<td>" + index + "</td>" +
+                            "<td>" + response[index]['table'] + "</td>" +
+                            "<td>" + response[index]['type'] + "</td>" +
+                        "</tr>"
+                    );
                 }
-                console.log(response);
+
+                $("table.table").append(tableBody);
             }
         });
 }
 
-function getRuleByName(target) {}
+function getRuleByName(target) {
+}
