@@ -1,13 +1,26 @@
 $(document).ready(function () {
     loadFromStorage();
     fillTypes();
+    $(".btn-connect").click(() => {
+        createConnection();
+        $(".db-info-wrapper").hide();
+        $(".action-button-box").show();
+    });
+
+    $(".maintain-rule").click(() => {
+        createConnection();
+        $(".new-rule-wrapper").show();
+        $(".action-button-box").hide();
+    });
+
+    $(".new-rule").click(() => {
+        createConnection();
+        $(".rules-list-wrapper").show();
+        $(".action-button-box").hide();
+    });
 });
 
 function eventListeners() {
-    $(".btn-connect").click(() => {
-        createConnection();
-    });
-
     $(".table-selection").unbind("change");
     $(".table-selection").change((item) => {
         fillTargetAttributes(item.target);
@@ -68,7 +81,7 @@ function createConnection() {
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
                 getAllRules();
-                $(".new-rule-wrapper").show();
+                // $(".new-rule-wrapper").show();
             }
         });
 }
