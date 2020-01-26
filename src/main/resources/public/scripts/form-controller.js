@@ -173,7 +173,7 @@ function fillTargetAttributes(tableSelection, entityRuleType = false) {
                 const selection = entityRuleType ? $("#custInput1") : $(".attribute-selection");
                 $(selection).empty();
                 for (const index in response.Attributes) {
-                    $(selection).append("<option value='" + response.Attributes[index] + "'>" + index + ' - ' + response.Attributes[index] + "</option>");
+                    $(selection).append("<option value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
                 }
             }
         });
@@ -220,17 +220,31 @@ function saveRule(element) {
         });
     }
 
+    let attributes = {};
+    let attributesValues = {};
+    const attributeValuesArray = [];
+    let attributeItem = {};
+
+    attributeItem["column"] = $(target).find(".attribute-selection").val();
+    attributeItem["operatorName"] = $(target).find(".operator-selection").val();
+
+    $(target).find("ul.attributes-list li").each((index, item) => {
+        attributesValues["value"] = $(item).html().split("|")[3];
+        attributesValues["valueType"] = $(item).html().split("|")[1].split("-")[1].trim();
+        attributesValues["isLiteral"] = true;
+        attributeValuesArray.push(attributesValues);
+    });
+    attributeItem["attributeValues"] = attributeValuesArray;
+
+    attributes = attributeItem;
+
     let values = {};
     values["ruleName"] = $(target).find(".rule-name").val();
     values["description"] = $(target).find(".rule-description").val();
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
-    values["targetAttribute"] = $(target).find(".attribute-selection").val();
-    values["operatorName"] = $(target).find(".operator-selection").val();
     values["errorMessage"] = $(target).find(".error-message").val();
-    values["errorCode"] = $(target).find(".error-code").val();
-    values["values"] = ruleValues;
-    values["operation"] = ruleOperation;
+    values["attributes"] = attributes;
     values = JSON.stringify(values);
 
     /*
@@ -309,11 +323,11 @@ function getAllRuleNames() {
                 for (const index in response) {
                     let id = response[index]['id'];
                     $(tableBody).append("" +
-                        "<tr onclick='clickTable("+ id +")'>" +
-                            "<td>" + id + "</td>" +
-                            "<td>" + index + "</td>" +
-                            "<td>" + response[index]['table'] + "</td>" +
-                            "<td>" + response[index]['type'] + "</td>" +
+                        "<tr onclick='clickTable(" + id + ")'>" +
+                        "<td>" + id + "</td>" +
+                        "<td>" + index + "</td>" +
+                        "<td>" + response[index]['table'] + "</td>" +
+                        "<td>" + response[index]['type'] + "</td>" +
                         "</tr>"
                     );
                 }
@@ -330,7 +344,7 @@ function clickTable(id) {
 }
 
 function getRuleById(target) {
-    fetch("define/rules/"+target, {
+    fetch("define/rules/" + target, {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
     })

@@ -39,7 +39,7 @@ var Types = {
         block:
             "const custInput1 = $(\"<div>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
             "custInput1.html($(\"#tableSelection\").html());" +
-            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1)" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);" +
             "const custInput2 = $(\"<select>\", {id: \"custInput2\", class: \"form-input col-md-5 mb-3\"});" +
             "$(custInput1).change(() => {" +
             "    custInput2.html(\"\");" +
@@ -54,15 +54,14 @@ var Types = {
             "        })" +
             "        .then(response => {" +
             "            if (response !== undefined) {" +
-            "                console.log(response);" +
             "                for (var index in response.Attributes) {" +
             "                    const option = $(\"<option>\", {value: response.Attributes[index], text: response.Attributes[index]});" +
             "                    custInput2.add(option);" +
             "                }" +
             "            }" +
             "        });" +
-            "    $(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput2)" +
-            "});"
+            "});" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput2)",
     },
     Entity_Other: {
         block:
@@ -70,9 +69,12 @@ var Types = {
             "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3\", text: \"add\"});" +
             "const br = $(\"<br>\");" +
             "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
+            "let count = 1;" +
             "$(addAttribute).click(() => {" +
-            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \".\" + $(\".attribute-selection\").val() + \" \" + $(\".operator-selection\").val() + \" \" +  $(attributeInput).val()});" +
-            "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \"|\" + $(\".attribute-selection\").val() + \"|\" + $(\".operator-selection\").val() + \"|\" +  $(attributeInput).val()});" +
+            "    $(li).attr(\"data-number\", count);" +
+            "$(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "count++;" +
             "});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"
     },
