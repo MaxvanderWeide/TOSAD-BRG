@@ -8,7 +8,7 @@ var Types = {
     Attribute_Compare: {
         block:
             "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3\"});" +
-            "$(\".new-rule-wrapper\"].target).find(\".comparator-step\").append(custInput1);",
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);",
     },
     Attribute_List: {
         block:
@@ -21,104 +21,70 @@ var Types = {
             "    $(Types[\"Attribute_List\"].target).find(\".attributes-list\").append(li);" +
             "});" +
             "" +
-            "$(\".new-rule-wrapper\"].target).find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);",
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);",
     },
     Tuple_Compare: {
         block:
-            "var custInput1 = document.createElement(\"SELECT\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "var attributesSelection = document.getElementById(\"attributeSelection\");" +
-            "custInput1.innerHTML = attributesSelection.innerHTML;" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value)"
+            "const custInput1 = $(\"<div>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
+            "custInput1.html($(\"#attributeSelection\").html());" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);"
     },
     InterEntity_Compare: {
         block:
-            "var custInput1 = document.createElement(\"SELECT\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "var tablesSelection = document.getElementById(\"tableSelection\");" +
-            "custInput1.innerHTML = tablesSelection.innerHTML;" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
-            "var custInput2 = document.createElement(\"SELECT\");" +
-            "custInput2.setAttribute(\"id\", \"custInput2\");" +
-            "custInput2.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "custInput1.addEventListener(\"change\", function() {" +
-            "custInput2.innerHTML = \"\";" +
-            "var xhttp = new XMLHttpRequest();" +
-            "    xhttp.onreadystatechange = function () {" +
-            "        if (this.readyState == 4 && this.status == 200) {" +
-            "            var responseJSON = JSON.parse(this.responseText);" +
-            "            for (var k in responseJSON.Attributes) {" +
-            "                var option = document.createElement(\"option\");" +
-            "                option.value = k + ' - ' + responseJSON.Attributes[k];" +
-            "                option.text = k + ' - ' + responseJSON.Attributes[k];" +
-            "                custInput2.add(option)" +
+            "const custInput1 = $(\"<div>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
+            "custInput1.html($(\"#tableSelection\").html());" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1)" +
+            "const custInput2 = $(\"<select>\", {id: \"custInput2\", class: \"form-input col-md-5 mb-3\"});" +
+            "$(custInput1).change(() => {" +
+            "    custInput2.html(\"\");" +
+            "    fetch(\"define/tables/\" + $(custInput1).val() + \"/attributes\", {" +
+            "        method: \"GET\"," +
+            "        headers: {\"Authorization\": sessionStorage.getItem(\"access_token\")}" +
+            "    })" +
+            "        .then(response => {" +
+            "            if (response.status === 200) {" +
+            "                return response.json();" +
             "            }" +
-            "        }" +
-            "    };" +
-            "xhttp.open(\"GET\", 'define/tables/' + custInput1.options[custInput1.selectedIndex].text + '/attributes', true);" +
-            "xhttp.setRequestHeader('Authorization', sessionStorage.getItem(\"access_token\"));" +
-            "xhttp.send();" +
-            "});" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput2);",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value," +
-            "document.getElementById(\"custInput2\").value)"
+            "        })" +
+            "        .then(response => {" +
+            "            if (response !== undefined) {" +
+            "                console.log(response);" +
+            "                for (var index in response.Attributes) {" +
+            "                    const option = $(\"<option>\", {value: response.Attributes[index], text: response.Attributes[index]});" +
+            "                    custInput2.add(option);" +
+            "                }" +
+            "            }" +
+            "        });" +
+            "    $(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput2)" +
+            "});"
     },
     Entity_Other: {
         block:
-            "var custInput1 = document.createElement(\"SELECT\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "var br = document.createElement(\"br\");" +
-            "var custInput2 = document.createElement(\"TEXTAREA\");" +
-            "custInput2.setAttribute(\"id\", \"custInput2\");" +
-            "custInput2.setAttribute(\"class\", \"other-rule form-input col-md-5 mb-3\");" +
-            "var attributesSelection = document.getElementById(\"attributeSelection\");" +
-            "custInput1.innerHTML = attributesSelection.innerHTML;" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
-            "document.getElementById(\"comparatorStep\").appendChild(br);" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput2);" +
-            "document.getElementById(\"tableSelection\").addEventListener(\"change\", function() {" +
-            "   custInput1.innerHTML = attributesSelection.innerHTML;" +
-            "});",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value," +
-            "document.getElementById(\"custInput2\").value)"
+            "const custInput1 = $(\"<select>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
+            "const br = $(\"<br>\");" +
+            "const custInput2 = $(\"<textarea>\", {id: \"custInput2\", class: \"other-rule form-input col-md-5 mb-3\"});" +
+            "const attributesSelection = $(\"#attributeSelection\").html();" +
+            "custInput1.html(attributesSelection);" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1, br, custInput2);" +
+            "$(\".new-rule-wrapper\").find(\".table-selection\").change(() => {" +
+            "    custInput1.html(attributesSelection);" +
+            "});"
     },
     Tuple_Other: {
         block:
-            "var custInput1 = document.createElement(\"SELECT\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "var br = document.createElement(\"br\");" +
-            "var custInput2 = document.createElement(\"TEXTAREA\");" +
-            "custInput2.setAttribute(\"id\", \"custInput2\");" +
-            "custInput2.setAttribute(\"class\", \"other-rule form-input col-md-5 mb-3\");" +
-            "var attributesSelection = document.getElementById(\"attributeSelection\");" +
-            "custInput1.innerHTML = attributesSelection.innerHTML;" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
-            "document.getElementById(\"comparatorStep\").appendChild(br);" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput2);",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value," +
-            "document.getElementById(\"custInput2\").value)"
+            "const custInput1 = $(\"<select>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
+            "const br = $(\"<br>\");" +
+            "const custInput2 = $(\"<textarea>\", {id: \"custInput2\", class: \"other-rule form-input col-md-5 mb-3\"});" +
+            "const attributesSelection = $(\"#attributeSelection\").html();" +
+            "custInput1.html(attributesSelection);" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1, br, custInput2);" +
+            "$(\".new-rule-wrapper\").find(\".table-selection\").change(() => {" +
+            "    custInput1.html(attributesSelection);" +
+            "});"
     },
     Attribute_Other: {
         block:
-            "var custInput1 = document.createElement(\"TEXTAREA\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"other-rule form-input col-md-5 mb-3\");" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value)"
+            "const custInput1 = $(\"textarea\", {id: \"custInput1\", class: \"other-rule form-input col-md-5 mb-3\"});" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);"
     }
 };
