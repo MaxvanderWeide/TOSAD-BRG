@@ -1,0 +1,29 @@
+template(trigger_name, trigger_table, trigger_triggers, trigger_error_code) ::= <<
+create or replace trigger <trigger_name>
+    before delete or insert or update
+    on <trigger_table>
+    for each row
+declare
+    v_oper varchar2 ( 3 );
+    v_error_stack varchar2 ( 4000 );
+begin
+    if inserting
+    then
+        v_oper := 'INS';
+    elsif updating
+    then
+        v_oper := 'UPD';
+    elsif deleting
+    then
+        v_oper := 'DEL';
+    end if;
+
+    <trigger_triggers>
+
+    if v_error_stack is not null
+    then
+        raise_application_error (<trigger_error_code>, v_error_stack);
+    end if;
+end <trigger_name>;
+
+>>

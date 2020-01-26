@@ -1,0 +1,22 @@
+template(name, description, error_message, attribute, operator, table_other, column_other, table_other_pk, table_fk) ::= <<
+-- evaluate business rule '<name>'
+declare
+   v_passed boolean := true;
+
+   cursor c_statement is select <table_other>.<column_other> from <table_other> where <table_other>.<table_other_pk> = :new.<table_fk>;
+   v_value <table_other>.<column_other>%type;
+begin
+   if v_oper in ('INS','UPD')
+   then
+       -- <description>
+       open c_statement;
+       fetch c_statement into v_value;
+       close c_statement;
+       v_passed := :new.<attribute> <operator> v_value;
+       if not v_passed
+           then
+           v_error_stack := v_error_stack || '<error_message>';
+       end if;
+  end if;
+end;
+>>
