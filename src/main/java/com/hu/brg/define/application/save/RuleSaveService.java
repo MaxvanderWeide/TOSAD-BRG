@@ -1,5 +1,6 @@
 package com.hu.brg.define.application.save;
 
+import com.hu.brg.define.application.select.SelectService;
 import com.hu.brg.define.domain.Attribute;
 import com.hu.brg.define.domain.AttributeValue;
 import com.hu.brg.define.domain.Column;
@@ -13,6 +14,7 @@ import com.hu.brg.define.persistence.tooldatabase.RuleDAO;
 import io.jsonwebtoken.Claims;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -70,6 +72,29 @@ public class RuleSaveService implements SaveService {
 
         attributeList.forEach(attribute -> attribute.setRule(rule));
         return rule;
+    }
+
+    @Override
+    public Rule buildRuleComplete(JSONObject object, Claims claims, SelectService selectService) {
+        RuleType ruleType = selectService.getRuleTypeByName(object.getString("typeName"));
+
+        List<Attribute> attributes = new ArrayList<>();
+        for (int attributeIterator = 0; attributeIterator < object.getJSONArray("attributes").length(); attributeIterator++) {
+            JSONObject attributeObject = object.getJSONArray("attributes").getJSONObject(attributeIterator);
+
+            Operator operator = selectService.getOperatorByName(attributeObject.getString("operatorName"));
+
+            List<AttributeValue> attributeValues = new ArrayList<>();
+            for (int attributeValueIterator = 0; attributeValueIterator < object.getJSONArray("attributeValues").length(); attributeValueIterator++) {
+                JSONObject attributeValueObject = attributeObject.getJSONArray("attributeValues").getJSONObject(attributeValueIterator);
+
+                attributeValues.add(buildAttributeValue(attributeValueObject, claims));
+            }
+
+            attributes.add(buildAttribute(object, claims, operator, attributeValues));
+        }
+
+        return buildRule(object, claims, ruleType, attributes);
     }
 
     @Override
