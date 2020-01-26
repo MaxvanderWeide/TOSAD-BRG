@@ -1,6 +1,5 @@
 package com.hu.brg.define.persistence.tooldatabase;
 
-import com.hu.brg.define.application.save.RuleSaveBuilder;
 import com.hu.brg.define.domain.Attribute;
 import com.hu.brg.define.domain.AttributeValue;
 import com.hu.brg.define.domain.Column;
@@ -359,7 +358,16 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
         RuleType ruleType = DAOServiceProvider.getRuleTypeDAO().getRuleTypeById(typeId);
 
-        return new RuleSaveBuilder().setId(id).setProject(project).setName(name).setDescription(description).setTargetTable(new Table(targetTable, Collections.emptyList())).setRuleType(ruleType).setErrorMessage(errorMessage).setAttributesList(Collections.emptyList()).build();
+        return new Rule(
+                id,
+                project,
+                name,
+                description,
+                new Table(targetTable, Collections.emptyList()),
+                ruleType,
+                errorMessage,
+                Collections.emptyList()
+        );
     }
 
     private Attribute getAttributeStatement(Rule rule, ResultSet resultSet) throws SQLException {
