@@ -2,6 +2,7 @@ package com.hu.brg.shared.controller;
 
 import com.hu.brg.define.domain.DBEngine;
 import com.hu.brg.define.domain.Project;
+import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.define.persistence.tooldatabase.ProjectDAO;
 import com.hu.brg.shared.ConfigSelector;
@@ -24,7 +25,8 @@ import java.util.Date;
 
 public class AuthController {
 
-    private AuthController() {}
+    private AuthController() {
+    }
 
     private static String secretKey = ConfigSelector.SECRET_KEY;
 
@@ -67,6 +69,10 @@ public class AuthController {
                 project = DAOServiceProvider.getProjectDAO().saveProject(project);
             }
 
+            if (!new TargetDatabaseDAOImpl().testConnection(jsonObject.getString("username"), jsonObject.getString("password"), project)) {
+                context.status(403);
+                return;
+            }
 
             //TODO: Bart: this can be removed I think
 //            project.setUsername(jsonObject.getString("username"));
