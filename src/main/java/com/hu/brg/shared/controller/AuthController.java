@@ -97,8 +97,8 @@ public class AuthController {
                     .claim("dbName", project.getName())
                     .claim("host", project.getHost())
                     .claim("service", project.getService())
-                    .claim("password", jsonObject.getString("username"))
-                    .claim("username", jsonObject.getString("password"))
+                    .claim("username", jsonObject.getString("username"))
+                    .claim("password", jsonObject.getString("password"))
                     .claim("projectId", project.getId())
                     .claim("port", project.getPort())
                     .signWith(signatureAlgorithm, signingKey);
