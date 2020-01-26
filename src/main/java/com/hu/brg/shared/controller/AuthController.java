@@ -47,6 +47,11 @@ public class AuthController {
         try {
             ProjectDAO projects = DAOServiceProvider.getProjectDAO();
             JSONObject jsonObject = new JSONObject(context.body());
+            if (jsonObject.length() != 7) {
+                context.result("Can't create connection due to unfulfilled data requirements").status(400);
+                return;
+            }
+
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
             long nowMillis = System.currentTimeMillis();
@@ -114,9 +119,6 @@ public class AuthController {
             builder.setExpiration(exp);
 
             context.result(builder.compact()).status(200);
-            if (jsonObject.length() != 7) {
-                context.result("Can't create connection due to unfulfilled data requirements").status(400);
-            }
         } catch (Exception e) {
             e.printStackTrace();
             context.status(500);
