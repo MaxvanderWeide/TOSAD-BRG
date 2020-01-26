@@ -76,6 +76,9 @@ function loadFromStorage() {
         $("#dbInputPassword").val(values['password']);
 
         createConnection();
+    } else {
+        $(".db-info-wrapper").show();
+        $(".spinner-holder").hide();
     }
 }
 
