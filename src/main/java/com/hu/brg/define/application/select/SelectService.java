@@ -18,4 +18,5 @@ public interface SelectService {
     Table getTableByName(String name, Claims claims);
     List<Rule> getAllRules(int projectId);
     Rule getRuleById(int id);
+    int getTypeIdByOperatorName(String name);
 }

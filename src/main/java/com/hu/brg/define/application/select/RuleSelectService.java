@@ -55,6 +55,15 @@ public class RuleSelectService implements SelectService {
         return this.operatorDAO.getOperatorsByTypeId(typeId);
     }
 
+    public int getTypeIdByOperatorName(String name) {
+        for(RuleType type : ruleTypesDAO.getAllRuleTypes()) {
+            if(type.getType().equalsIgnoreCase(name)) {
+                return type.getId();
+            }
+        }
+        return -1;
+    }
+
     public List<Table> getAllTables(Claims claims) {
         this.targetDatabaseDAO = new TargetDatabaseDAOImpl();
         return targetDatabaseDAO.getTablesByProjectId(claims.get("username").toString(),

@@ -142,7 +142,7 @@ public class RuleController {
     public static void getOperatorsWithType(io.javalin.http.Context context) {
         Map<String, List<String>> operators = new HashMap<>();
         List<String> operatorNameList = new ArrayList<>();
-        for (Operator operator : getSelectService().getOperatorsByTypeId(context.pathParam("typeId", Integer.class).get())) {
+        for (Operator operator : getSelectService().getOperatorsByTypeId(getSelectService().getTypeIdByOperatorName(context.pathParam("typeName", String.class).get()))) {
             operatorNameList.add(operator.getName());
         }
         operators.put("Operators", operatorNameList);
