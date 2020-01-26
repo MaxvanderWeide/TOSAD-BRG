@@ -18,7 +18,7 @@ var Types = {
             "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
             "$(addAttribute).click(() => {" +
             "   const li = $(\"<li>\", {text: $(attributeInput).val()});" +
-            "    $(Types[\"Attribute_List\"].target).find(\".attributes-list\").append(li);" +
+            "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
             "});" +
             "" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);",

@@ -132,3 +132,7 @@ label {
 .search-button {
     float: right;
 }
+
+div.rule-values-wrapper {
+    display: none;
+}

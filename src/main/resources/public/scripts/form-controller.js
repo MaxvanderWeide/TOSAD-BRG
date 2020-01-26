@@ -42,6 +42,8 @@ $(document).ready(function () {
         showMenu();
     });
 
+    eventListeners();
+
 });
 $(document).ready(function(){
     $("#search-rule").on("keyup", function() {
@@ -260,7 +262,8 @@ function saveRule(element) {
 function displayBlock(type) {
     const tableSelection = $(type).parent().parent().parent(".rule-details-wrapper").find(".table-selection");
     $(type).parent().parent().parent(".rule-details-wrapper").find(".comparator-step").html("");
-    eval(Types[type.options[type.selectedIndex].text].block);
+    console.log($(type).val());
+    eval(Types[$(type).val()].block);
     $(tableSelection).unbind("change");
     fillTargetAttributes(tableSelection);
 }
@@ -274,118 +277,6 @@ function FillValuesTargetAttributes(element) {
             fillTargetAttributes(item.target, item.target);
         });
     }
-}
-
-function getAllRules() {
-    fetch("define/rules", {
-        method: "GET",
-        headers: {"Authorization": sessionStorage.getItem("access_token")},
-    })
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            }
-        }).then(response => {
-        if (response !== undefined) {
-            for (const index in response) {
-                const item = response[index];
-
-                const firstRow = $("<div>", {class: "row"});
-                const secondRow = $("<div>", {class: "row"});
-                const thirdRow = $("<div>", {class: "row"});
-
-                const ruleItem = $("<div>", {class: "rule-item"});
-                const nameWrapper = $("<div>", {class: "mb-3"});
-                nameWrapper.append($("<label>", {text: "Rule name:"}));
-                nameWrapper.append($("<input>", {type: "text", class: "form-input rule-name", value: index}));
-
-                const descriptionWrapper = $("<div>", {class: "mb-3"});
-                descriptionWrapper.append($("<label>", {text: "Description:"}));
-                descriptionWrapper.append($("<textarea>", {
-                    class: "rule-description form-input",
-                    text: item["Description"]
-                }));
-
-                const tableSelectionWrapper = $("<div>", {class: "col-md-6 mb-3"});
-                tableSelectionWrapper.append($("<label>", {text: "Select table:"}));
-                const tableSelection = ($("<select>", {class: "table-selection form-input"}));
-                tableSelection.append($("<option>", {
-                    disabled: "disable",
-                    selected: "selected",
-                    text: "Select a table"
-                }));
-                tableSelectionWrapper.append(tableSelection);
-
-                const typeSelectionWrapper = $("<div>", {class: "col-md-6 mb-3"});
-                typeSelectionWrapper.append($("<label>", {text: "Select rule type:"}));
-                const typeSelection = ($("<select>", {class: "type-selection form-input"}));
-                typeSelection.append($("<option>", {disabled: "disable", selected: "selected", text: "Select a type"}));
-                typeSelectionWrapper.append(typeSelection);
-
-                const attributeSelectionWrapper = $("<div>", {class: "col-md-6 mb-3"});
-                attributeSelectionWrapper.append($("<label>", {text: "Select target attribute:"}));
-                const attributeSelection = ($("<select>", {class: "attribute-selection form-input"}));
-                attributeSelection.append($("<option>", {
-                    disabled: "disable",
-                    selected: "selected",
-                    text: "Select an attribute"
-                }));
-                attributeSelectionWrapper.append(attributeSelection);
-
-                const operatorSelectionWrapper = $("<div>", {class: "col-md-6 mb-3"});
-                operatorSelectionWrapper.append($("<label>", {text: "Select an operator:"}));
-                const operatorSelection = ($("<select>", {class: "operator-selection form-input"}));
-                operatorSelection.append($("<option>", {
-                    disabled: "disable",
-                    selected: "selected",
-                    text: "Select an operator"
-                }));
-                operatorSelectionWrapper.append(operatorSelection);
-
-                const errorMessageWrapper = $("<div>", {class: "col-md-6 mb-3"});
-                errorMessageWrapper.append($("<label>", {text: "Define the error message:"}));
-                errorMessageWrapper.append($("<textarea>", {
-                    class: "error-message form-input",
-                    text: item["ErrorMessage"]
-                }));
-
-                const errorCodeWrapper = $("<div>", {class: "col-md-6 mb-3"});
-                errorCodeWrapper.append($("<label>", {text: "Error code:"}));
-                errorCodeWrapper.append($("<input>", {
-                    type: "number",
-                    class: "error-code form-input",
-                    placeholder: "-20080",
-                    value: item["ErrorCode"]
-                }));
-
-                const ruleValuesWrapper = $("<div>", {class: "mb-3 rule-values-wrapper"});
-                ruleValuesWrapper.append($("<h3>", {text: "Rule values:"}));
-                const formStepComparator = ($("<div>", {class: "form-step-comparator"}));
-                formStepComparator.append($("<div>", {class: "row comparator-step:"}));
-                ruleValuesWrapper.append(formStepComparator);
-
-                const buttonWrapper = $("<div>", {class: "text-center"});
-                buttonWrapper.append($("<button>", {
-                    class: "save-rule btn btn-primary btn-lg btn-block btn-save",
-                    text: "Save rule"
-                }))
-
-                $(firstRow).append(tableSelectionWrapper, typeSelectionWrapper);
-                $(secondRow).append(attributeSelectionWrapper, operatorSelectionWrapper);
-                $(thirdRow).append(errorMessageWrapper, errorCodeWrapper);
-
-                $(ruleItem).append(nameWrapper, descriptionWrapper, firstRow, secondRow, thirdRow, ruleValuesWrapper, buttonWrapper);
-
-                $(".rules-list-wrapper").append(ruleItem);
-            }
-            return "ok";
-        }
-    }).then(response => {
-        if (response === "ok") {
-            $(".rules-list-wrapper").show();
-            eventListeners();
-        }
-    });
 }
 
 function getAllRuleNames() {
