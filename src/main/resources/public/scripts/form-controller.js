@@ -3,7 +3,6 @@ $(document).ready(function () {
     fillTypes();
     $(".btn-connect").click(() => {
         createConnection();
-        showMenu();
     });
 
     $(".maintain-rule").click(() => {
@@ -23,15 +22,6 @@ $(document).ready(function () {
         showMenu();
     });
 
-    $(document).ready(function(){
-        $("#search-rule").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
-            $("#table-body tr").filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
-        });
-    });
-
     $(".search-button").click(() => {
         //filter table
 
@@ -43,15 +33,24 @@ $(document).ready(function () {
         showMenu();
     });
 
-    function showMenu() {
-        $(".action-button-box").show();
-        $(".db-info-wrapper").hide();
-        $(".new-rule-wrapper").hide();
-        $(".search-rule-wrapper").hide();
-        $(".back-maintain").hide();
-        $(".back-define").hide();
-    }
 });
+$(document).ready(function(){
+    $("#search-rule").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#table-body tr").filter(function() {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+});
+
+function showMenu() {
+    $(".action-button-box").show();
+    $(".db-info-wrapper").hide();
+    $(".new-rule-wrapper").hide();
+    $(".search-rule-wrapper").hide();
+    $(".back-maintain").hide();
+    $(".back-define").hide();
+}
 
 function eventListeners() {
     $(".table-selection").unbind("change");
@@ -105,6 +104,7 @@ function createConnection() {
             if (response.status !== 200) {
                 alert('Could not authenticate and make a connection')
             } else {
+                showMenu();
                 return response.text();
             }
         })
@@ -114,9 +114,6 @@ function createConnection() {
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
                 getAllRuleNames();
-
-                //getAllRules();
-                // $(".new-rule-wrapper").show();
             }
         });
 }
@@ -404,9 +401,9 @@ function getAllRuleNames() {
                     tableBody.innerHTML +=
                         "<tr>" +
                         "<th scope='row'>" + i + "</th>" +
-                        "<td>" + row["name"] + "</td>" +
+                        "<td>" + row["type"] + "</td>" +
                         "<td>" + row["table"] + "</td>" +
-                        "<td>" + row["other"] + "</td>" +
+                        "<td>" + row["typeCode"] + "</td>" +
                         "</tr>";
                 }
                 console.log(response);
