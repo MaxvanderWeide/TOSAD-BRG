@@ -225,15 +225,17 @@ function saveRule(element) {
     const attributeValuesArray = [];
     let attributeItem = {};
 
-    attributeItem["column"] = $(target).find(".attribute-selection").val();
+    attributeItem["column"] = $(target).find(".attribute-selection").val().split("-")[0].trim();
     attributeItem["operatorName"] = $(target).find(".operator-selection").val();
 
     $(target).find("ul.attributes-list li").each((index, item) => {
+        attributesValues = {};
         attributesValues["value"] = $(item).html().split("|")[3];
         attributesValues["valueType"] = $(item).html().split("|")[1].split("-")[1].trim();
         attributesValues["isLiteral"] = true;
         attributeValuesArray.push(attributesValues);
     });
+
     attributeItem["attributeValues"] = attributeValuesArray;
 
     attributes = attributeItem;
