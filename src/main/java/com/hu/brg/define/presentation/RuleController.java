@@ -5,7 +5,6 @@ import com.hu.brg.define.application.save.SaveService;
 import com.hu.brg.define.application.select.RuleSelectService;
 import com.hu.brg.define.application.select.SelectService;
 import com.hu.brg.define.domain.Attribute;
-import com.hu.brg.define.domain.AttributeValue;
 import com.hu.brg.define.domain.Column;
 import com.hu.brg.define.domain.Operator;
 import com.hu.brg.define.domain.Rule;
@@ -180,26 +179,7 @@ public class RuleController {
             return;
         }
 
-        JSONObject jsonObject = new JSONObject(context.body());
-        RuleType ruleType = getSelectService().getRuleTypeByName(jsonObject.getString("typeName"));
-
-        List<Attribute> attributes = new ArrayList<>();
-        for (int attributeIterator = 0; attributeIterator < jsonObject.getJSONArray("attributes").length(); attributeIterator++) {
-            JSONObject attributeObject = jsonObject.getJSONArray("attributes").getJSONObject(attributeIterator);
-
-            Operator operator = getSelectService().getOperatorByName(attributeObject.getString("operatorName"));
-
-            List<AttributeValue> attributeValues = new ArrayList<>();
-            for (int attributeValueIterator = 0; attributeValueIterator < jsonObject.getJSONArray("attributeValues").length(); attributeValueIterator++) {
-                JSONObject attributeValueObject = attributeObject.getJSONArray("attributeValues").getJSONObject(attributeValueIterator);
-
-                attributeValues.add(getSaveService().buildAttributeValue(attributeValueObject, claims));
-            }
-
-            attributes.add(getSaveService().buildAttribute(jsonObject, claims, operator, attributeValues));
-        }
-
-        Rule rule = getSaveService().buildRule(jsonObject, claims, ruleType, attributes);
+        Rule rule = getSaveService().buildRuleComplete(new JSONObject(context.body()), claims, getSelectService());
         rule = getSaveService().saveRule(rule);
 
         if (rule == null) {
