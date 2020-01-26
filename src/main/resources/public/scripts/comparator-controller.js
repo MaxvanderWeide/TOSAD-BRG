@@ -1,59 +1,27 @@
 var Types = {
     Attribute_Range: {
         block:
-            "var custInput1 = document.createElement(\"INPUT\");" +
-            "custInput1.setAttribute(\"rule_type\", \"text\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
-            "var custInput2 = document.createElement(\"INPUT\");" +
-            "custInput2.setAttribute(\"rule_type\", \"text\");" +
-            "custInput2.setAttribute(\"id\", \"custInput2\");" +
-            "custInput2.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput2);",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value" + "," +
-            "document.getElementById(\"custInput2\").value)"
+            "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3\"});" +
+            "const custInput2 = $(\"<input>\", {type: \"text\", id: \"custInput2\", class:\"form-input col-md-5 mb-3\"});" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1, custInput2);",
     },
     Attribute_Compare: {
         block:
-            "var custInput1 = document.createElement(\"INPUT\");" +
-            "custInput1.setAttribute(\"rule_type\", \"text\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
-        reval:
-            "new Array(" +
-            "document.getElementById(\"custInput1\").value)"
+            "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3\"});" +
+            "$(\".new-rule-wrapper\"].target).find(\".comparator-step\").append(custInput1);",
     },
     Attribute_List: {
         block:
-            "var attributeInput = document.createElement(\"INPUT\");" +
-            "var addAttribute = document.createElement(\"BUTTON\");" +
-            "addAttribute.setAttribute(\"class\", \"btn-success col-md-3 mb-3\");" +
-            "var br = document.createElement(\"br\");" +
-            "addAttribute.innerHTML = \"add\";" +
-            "var custInput1 = document.createElement(\"ul\");" +
-            "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"attributes-list form-input col-md-6 mb-3\");" +
-            "custInput1.style.block = \"block\";" +
-            "var attributeInput = document.createElement(\"INPUT\");" +
-            "addAttribute.addEventListener(\"click\", function() {" +
-            "   var li = document.createElement(\"li\");" +
-            "   li.innerHTML = attributeInput.value;" +
-            "   document.getElementsByClassName(\"attributes-list\")[0].appendChild(li);" +
+            "const attributeInput = $(\"<input>\");" +
+            "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3\", text: \"add\"});" +
+            "const br = $(\"<br>\");" +
+            "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
+            "$(addAttribute).click(() => {" +
+            "   const li = $(\"<li>\", {text: $(attributeInput).val()});" +
+            "    $(Types[\"Attribute_List\"].target).find(\".attributes-list\").append(li);" +
             "});" +
-            "document.getElementById(\"comparatorStep\").appendChild(attributeInput);" +
-            "document.getElementById(\"comparatorStep\").appendChild(addAttribute);" +
-            "document.getElementById(\"comparatorStep\").appendChild(br);" +
-            "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
-        reval:
-            "var items = new Array();" +
-            "for(const li of document.querySelectorAll(\"ul.attributes-list li\")) {" +
-            "    items.push(li.textContent);" +
-            "}" +
-            "items"
+            "" +
+            "$(\".new-rule-wrapper\"].target).find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);",
     },
     Tuple_Compare: {
         block:
