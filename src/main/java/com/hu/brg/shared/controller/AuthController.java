@@ -1,10 +1,11 @@
 package com.hu.brg.shared.controller;
 
-import com.hu.brg.define.domain.model.Project;
+import com.hu.brg.define.domain.DBEngine;
+import com.hu.brg.define.domain.Project;
 import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
-import com.hu.brg.define.persistence.tooldatabase.project.ProjectsDAO;
+import com.hu.brg.define.persistence.tooldatabase.ProjectDAO;
 import com.hu.brg.shared.ConfigSelector;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.security.Key;
+import java.util.Collections;
 import java.util.Date;
 
 public class AuthController {
@@ -41,8 +43,9 @@ public class AuthController {
             }
     )
     public static void createConnection(io.javalin.http.Context context) {
+        // TODO - Remove dependency from define
         try {
-            ProjectsDAO projects = DAOServiceProvider.getProjectsDAO();
+            ProjectDAO projects = DAOServiceProvider.getProjectDAO();
             JSONObject jsonObject = new JSONObject(context.body());
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
@@ -51,31 +54,30 @@ public class AuthController {
 
             byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-            Project project = new Project(DBEngine.valueOf(jsonObject.getString("engine")),
-                    jsonObject.getString("dbName"),
-                    jsonObject.getString("host"),
-                    Integer.parseInt(jsonObject.getString("port")),
-                    jsonObject.getString("service"));
+            Project project = new Project(jsonObject.getString("host"), Integer.parseInt(jsonObject.getString("port")),
+                    jsonObject.getString("service"),
+                    DBEngine.valueOf(jsonObject.getString("engine")),
+                    jsonObject.getString("dbName"), Collections.emptyList());
 
-            project.setUsername(jsonObject.getString("username"));
-            project.setPassword(jsonObject.getString("password"));
-            int projectId = projects.getProjectId(project);
-            TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
-                    DBEngine.ORACLE,
-                    project.getHost(),
-                    project.getPort(),
-                    project.getServiceName(),
-                    project.getUsername(),
-                    project.getPassword()
-            );
-            if (!targetDatabaseDAO.testConnection()) {
-                context.status(403);
-                return;
-            }
-            if (projectId == 0) {
-                projects.saveProject(project);
-                projectId = project.getId();
-            }
+//            project.setUsername(jsonObject.getString("username"));
+//            project.setPassword(jsonObject.getString("password"));
+//            int projectId = projects.getProjectById(project);
+//            TargetDatabaseDAO targetDatabaseDAO = TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
+//                    DBEngine.ORACLE,
+//                    project.getHost(),
+//                    project.getPort(),
+//                    project.getService(),
+//                    jsonObject.getString("username"),
+//                    jsonObject.getString("password")
+//            );
+//            if (!targetDatabaseDAO.testConnection()) {
+//                context.status(403);
+//                return;
+//            }
+//            if (projectId == 0) {
+//                projects.saveProject(project);
+//                projectId = project.getId();
+//            }
 
             JwtBuilder builder = Jwts.builder()
                     .setIssuedAt(now)
@@ -84,10 +86,10 @@ public class AuthController {
                     .claim("engine", project.getDbEngine().name())
                     .claim("dbName", project.getName())
                     .claim("host", project.getHost())
-                    .claim("service", project.getServiceName())
-                    .claim("password", project.getPassword())
-                    .claim("username", project.getUsername())
-                    .claim("projectId", projectId)
+                    .claim("service", project.getService())
+                    .claim("password", jsonObject.getString("username"))
+                    .claim("username", jsonObject.getString("password"))
+                    .claim("projectId", 33)
                     .claim("port", project.getPort())
                     .signWith(signatureAlgorithm, signingKey);
 
