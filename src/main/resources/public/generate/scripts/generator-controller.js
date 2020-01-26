@@ -1,15 +1,21 @@
 loadRules();
 
 function loadRules() {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            $(".rule-items-wrapper").show();
-            $(".spinner-holder").hide();
-            if (this.status == 200) {
-                const responseJSON = JSON.parse(this.responseText);
-                for (const k in responseJSON) {
-                    const item = responseJSON[k];
+    fetch("/generate/rules", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")},
+    })
+        .then(response => {
+            if (response.status === 200) {
+                $(".rule-items-wrapper").show();
+                $(".spinner-holder").hide();
+                return response.json();
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                for (const k in response) {
+                    const item = response[k];
                     const values = JSON.parse(item["Values"]);
                     const itemWrapper = document.createElement("div");
                     itemWrapper.setAttribute("class", "rule-item");
@@ -39,7 +45,9 @@ function loadRules() {
                     $(ruleRightBlock).append("<label>Table</label><input type='text' value='" + item["Table"] + "'>");
                     $(ruleRightBlock).append("<label>Attribute</label><input type='text' value='" + item["Attribute"] + "'>");
                     $(ruleRightBlock).append("<label>Operator</label><input type='text' value='" + item["Operator"] + "'>");
-                    $(ruleBottomBlock).append("<label>Values</label>");
+                    $(ruleBottomBlock).append("<br/><label>Description</label>");
+                    $(ruleBottomBlock).append("<textarea>" + item["Description"] + "</textarea>");
+                    $(ruleBottomBlock).append("<br/><label>Values</label>");
                     $(ruleBottomBlock).append(ul);
                     $(ruleInfoWrapper).append(ruleLeftBlock, ruleRightBlock, ruleBottomBlock);
                     $(generatedRuleWrapper).append("<span class='generated-rule-title'>Generated rule</span>");
@@ -47,30 +55,32 @@ function loadRules() {
                     $(itemWrapper).append("<div class='rule-name'>" + k + "</div>");
                     $(ruleWrapper).append(ruleInfoWrapper, generatedRuleWrapper);
                     $(itemWrapper).append(ruleWrapper);
-                    $(itemWrapper).append("<div class='rule-generator-wrapper'><button onclick='generateCode(this)' data-id='" + item["ID"] + "'>Generate code</button></div>");
-
+                    $(itemWrapper).append("<div class='rule-generator-wrapper'><button class='btn-generate-rule' data-id='" + item["ID"] + "'>Generate code</button></div>");
 
                     $("div.rule-items-wrapper").append(itemWrapper);
                 }
+
+                $("button.btn-generate-rule").click((item) => {
+                    generateCode(item.target);
+                });
             }
-        }
-    };
-    xhttp.open("GET", '/generate/rules', true);
-    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
-    xhttp.send();
+        });
 }
 
 function generateCode(element) {
-    const xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState == 4) {
-            if (this.status == 201) {
-                element.closest("div.rule-item").querySelector("div.generated-rule").textContent = this.responseText;
+    fetch("/generate/rules", {
+        method: "POST",
+        headers: {"Authorization": sessionStorage.getItem("access_token")},
+        body: $(element).data("id")
+    })
+        .then(response => {
+            if (response.status === 201) {
+                return response.text();
             }
-        }
-
-    };
-    xhttp.open("POST", '/generate/rules', true);
-    xhttp.setRequestHeader('Authorization', sessionStorage.getItem("access_token"));
-    xhttp.send($(element).data("id"));
+        })
+        .then(response => {
+            if (response !== undefined) {
+                $(element).parent().parent().find("div.generated-rule").text(response);
+            }
+        });
 }

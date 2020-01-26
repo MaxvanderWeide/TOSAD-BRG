@@ -4,6 +4,7 @@ import com.hu.brg.define.controller.RuleController;
 import com.hu.brg.generate.controller.GenerateController;
 import com.hu.brg.shared.controller.AuthController;
 import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -40,7 +41,10 @@ public class Main {
                     path(":typeName", () -> path("operators", () -> get(RuleController::getOperatorsWithType)));
                 });
 
-                path("rules", () -> post(RuleController::saveRuleDefinition));
+                path("rules", () -> {
+                    get(RuleController::getRuleDefinitions);
+                    post(RuleController::saveRuleDefinition);
+                });
             });
         }).start(4201);
     }

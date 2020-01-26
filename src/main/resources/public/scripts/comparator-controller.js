@@ -4,10 +4,12 @@ var Types = {
             "var custInput1 = document.createElement(\"INPUT\");" +
             "custInput1.setAttribute(\"rule_type\", \"text\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
             "var custInput2 = document.createElement(\"INPUT\");" +
             "custInput2.setAttribute(\"rule_type\", \"text\");" +
             "custInput2.setAttribute(\"id\", \"custInput2\");" +
+            "custInput2.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput2);",
         reval:
             "new Array(" +
@@ -19,6 +21,7 @@ var Types = {
             "var custInput1 = document.createElement(\"INPUT\");" +
             "custInput1.setAttribute(\"rule_type\", \"text\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
         reval:
             "new Array(" +
@@ -28,11 +31,12 @@ var Types = {
         block:
             "var attributeInput = document.createElement(\"INPUT\");" +
             "var addAttribute = document.createElement(\"BUTTON\");" +
+            "addAttribute.setAttribute(\"class\", \"btn-success col-md-3 mb-3\");" +
             "var br = document.createElement(\"br\");" +
             "addAttribute.innerHTML = \"add\";" +
             "var custInput1 = document.createElement(\"ul\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"attributes-list\");" +
+            "custInput1.setAttribute(\"class\", \"attributes-list form-input col-md-6 mb-3\");" +
             "custInput1.style.block = \"block\";" +
             "var attributeInput = document.createElement(\"INPUT\");" +
             "addAttribute.addEventListener(\"click\", function() {" +
@@ -55,6 +59,7 @@ var Types = {
         block:
             "var custInput1 = document.createElement(\"SELECT\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "var attributesSelection = document.getElementById(\"attributeSelection\");" +
             "custInput1.innerHTML = attributesSelection.innerHTML;" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
@@ -66,20 +71,22 @@ var Types = {
         block:
             "var custInput1 = document.createElement(\"SELECT\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "var tablesSelection = document.getElementById(\"tableSelection\");" +
             "custInput1.innerHTML = tablesSelection.innerHTML;" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
             "var custInput2 = document.createElement(\"SELECT\");" +
             "custInput2.setAttribute(\"id\", \"custInput2\");" +
+            "custInput2.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "custInput1.addEventListener(\"change\", function() {" +
             "custInput2.innerHTML = \"\";" +
             "var xhttp = new XMLHttpRequest();" +
             "    xhttp.onreadystatechange = function () {" +
             "        if (this.readyState == 4 && this.status == 200) {" +
-            "            console.log('GET SUCCESS: ' + this.responseText);" +
             "            var responseJSON = JSON.parse(this.responseText);" +
             "            for (var k in responseJSON.Attributes) {" +
             "                var option = document.createElement(\"option\");" +
+            "                option.value = k + ' - ' + responseJSON.Attributes[k];" +
             "                option.text = k + ' - ' + responseJSON.Attributes[k];" +
             "                custInput2.add(option)" +
             "            }" +
@@ -99,10 +106,11 @@ var Types = {
         block:
             "var custInput1 = document.createElement(\"SELECT\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "var br = document.createElement(\"br\");" +
             "var custInput2 = document.createElement(\"TEXTAREA\");" +
             "custInput2.setAttribute(\"id\", \"custInput2\");" +
-            "custInput2.setAttribute(\"class\", \"other-rule\");" +
+            "custInput2.setAttribute(\"class\", \"other-rule form-input col-md-5 mb-3\");" +
             "var attributesSelection = document.getElementById(\"attributeSelection\");" +
             "custInput1.innerHTML = attributesSelection.innerHTML;" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
@@ -120,10 +128,11 @@ var Types = {
         block:
             "var custInput1 = document.createElement(\"SELECT\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
+            "custInput1.setAttribute(\"class\", \"form-input col-md-5 mb-3\");" +
             "var br = document.createElement(\"br\");" +
             "var custInput2 = document.createElement(\"TEXTAREA\");" +
             "custInput2.setAttribute(\"id\", \"custInput2\");" +
-            "custInput2.setAttribute(\"class\", \"other-rule\");" +
+            "custInput2.setAttribute(\"class\", \"other-rule form-input col-md-5 mb-3\");" +
             "var attributesSelection = document.getElementById(\"attributeSelection\");" +
             "custInput1.innerHTML = attributesSelection.innerHTML;" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);" +
@@ -138,7 +147,7 @@ var Types = {
         block:
             "var custInput1 = document.createElement(\"TEXTAREA\");" +
             "custInput1.setAttribute(\"id\", \"custInput1\");" +
-            "custInput1.setAttribute(\"class\", \"other-rule\");" +
+            "custInput1.setAttribute(\"class\", \"other-rule form-input col-md-5 mb-3\");" +
             "document.getElementById(\"comparatorStep\").appendChild(custInput1);",
         reval:
             "new Array(" +

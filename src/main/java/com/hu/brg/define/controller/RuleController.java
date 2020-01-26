@@ -6,12 +6,14 @@ import com.hu.brg.define.builder.RuleDefinitionBuilder;
 import com.hu.brg.shared.model.physical.Attribute;
 import com.hu.brg.shared.model.physical.Table;
 import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.jsonwebtoken.Claims;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -173,7 +175,7 @@ public class RuleController {
 
         Table table = getRuleService().getTableByName(jsonObject.get("tableName").toString(), claims);
         RuleType type = getRuleService().getTypeByName(jsonObject.get("typeName").toString());
-        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString().split("-")[1].trim());
+        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString());
         Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
         List<Value> values = new ArrayList<>();
 
@@ -182,6 +184,7 @@ public class RuleController {
         }
 
         builder.setName(jsonObject.get("ruleName").toString());
+        builder.setDescription(jsonObject.get("description").toString());
         builder.setTable(table);
         builder.setType(type);
         builder.setAttribute(attribute);
@@ -197,6 +200,56 @@ public class RuleController {
             context.status(400).result("Rule not created");
         } else {
             context.result(String.valueOf(ruleDefinition.getProjectId())).status(201);
+        }
+    }
+
+    @OpenApi(
+            summary = "get Rule Definitions using the ProjectId",
+            operationId = "getRuleDefinitions",
+            path = "/define/rules",
+            method = HttpMethod.GET,
+            tags = {"Define", "Rules"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = RuleDefinition[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getRuleDefinitions(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+
+        try {
+            Map<String, Map<String, String>> definitions = new HashMap<>();
+            for (RuleDefinition definition : DAOServiceProvider.getRulesDAO().getRulesByProjectId(Integer.parseInt(claims.get("projectId").toString()), claims.get("username").toString(), claims.get("password").toString())) {
+                Map<String, String> definitionMap = new HashMap<>();
+                JSONArray jsonArray = new JSONArray();
+
+                for (Value value : definition.getValues()) {
+                    jsonArray.put(value.getLiteral());
+                }
+                definitionMap.put("Type", definition.getType().getType());
+                definitionMap.put("Description", definition.getDescription());
+                definitionMap.put("TypeCode", definition.getType().getCode());
+                definitionMap.put("Table", definition.getTable().getName());
+                definitionMap.put("ErrorMessage", definition.getErrorMessage());
+                definitionMap.put("Attribute", definition.getAttribute().getName());
+                definitionMap.put("ID", String.valueOf(definition.getId()));
+                definitionMap.put("ErrorCode", String.valueOf(definition.getErrorCode()));
+                definitionMap.put("Operator", definition.getOperator().getName());
+                definitionMap.put("Values", jsonArray.toString());
+                definitions.put(definition.getName(), definitionMap);
+            }
+            context.json(definitions).status(200);
+            if (definitions.isEmpty()) {
+                context.status(404).result("No definitions found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            context.status(500);
         }
     }
 }

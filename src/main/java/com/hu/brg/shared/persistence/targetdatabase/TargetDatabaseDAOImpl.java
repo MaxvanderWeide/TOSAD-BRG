@@ -76,7 +76,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
                 ResultSet tableAttributes = attributesResult.executeQuery();
 
                 while (tableAttributes.next()) {
-                    Attribute attribute = new Attribute(tableAttributes.getString("COLUMN_NAME"), tableAttributes.getString("DATA_TYPE"));
+                    ResultSet tempTableAttributes = tableAttributes;
+                    Attribute attribute = new Attribute(tempTableAttributes.getString("COLUMN_NAME"), tempTableAttributes.getString("DATA_TYPE"));
 
                     attributes.add(attribute);
                 }

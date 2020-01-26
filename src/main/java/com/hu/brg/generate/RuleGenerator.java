@@ -12,7 +12,6 @@ public class RuleGenerator {
     private String triggerName;
     private RuleDefinition ruleDefinition;
 
-    //test
     private ProjectsDAO projectsDAO = DAOServiceProvider.getProjectsDAO();
 
     private Project project;
@@ -31,8 +30,8 @@ public class RuleGenerator {
         this.triggerName = (String.format("%s_%s_%s_trigger_%s",
                 ConfigSelector.APPLICATION_NAME,
                 this.project.getName(),
-                this.ruleDefinition.getAttribute().getName().substring(0, 4),
-                this.ruleDefinition.getType().getType())
+                this.ruleDefinition.getTable().getName().substring(0, 3),
+                this.ruleDefinition.getType().getCode())
         ).toUpperCase();
     }
 
