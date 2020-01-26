@@ -226,12 +226,36 @@ function saveRule(element) {
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
     values["targetAttribute"] = $(target).find(".attribute-selection").val();
-    values["operatorId"] = $(target).find(".operator-selection").val();
+    values["operatorName"] = $(target).find(".operator-selection").val();
     values["errorMessage"] = $(target).find(".error-message").val();
     values["errorCode"] = $(target).find(".error-code").val();
     values["values"] = ruleValues;
     values["operation"] = ruleOperation;
     values = JSON.stringify(values);
+
+    /*
+    Dit is de wenselijke input naar de RuleController
+    {
+      "ruleName": "RuleName",
+      "description": "Description",
+      "tableName": "KLANTEN",
+      "typeName": "Attribute_Compare",
+      "errorMessage": "Error message",
+      "attributes": [
+        {
+          "column": "PRIJS",
+          "operatorName": "Equals",
+          "attributeValues": [
+            {
+              "value": "10",
+              "valueType": "NUMBER",
+              "isLiteral": true
+            }
+          ]
+        }
+      ]
+    }
+     */
 
     fetch("define/rules", {
         method: "POST",

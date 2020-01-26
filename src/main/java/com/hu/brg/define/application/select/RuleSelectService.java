@@ -18,31 +18,35 @@ import java.util.List;
 
 public class RuleSelectService implements SelectService {
 
-    private List<RuleType> types = new ArrayList<>();
     private RuleTypeDAO ruleTypesDAO = DAOServiceProvider.getRuleTypeDAO();
     private RuleDAO rulesDAO = DAOServiceProvider.getRuleDAO();
     private OperatorDAO operatorDAO = DAOServiceProvider.getOperatorDAO();
-    private TargetDatabaseDAO targetDatabaseDAO;
+
+    private List<RuleType> ruleTypeList = new ArrayList<>();
+    private List<Operator> operatorList = new ArrayList<>();
 
     public RuleSelectService() {
     }
 
-    public void addType(RuleType type) {
-        if (type != null) types.add(type);
+    private void addType(RuleType type) {
+        if (type != null) ruleTypeList.add(type);
     }
 
-    public List<RuleType> getTypes() {
+    @Override
+    public List<RuleType> getAllRuleTypes() {
         for (RuleType type : ruleTypesDAO.getAllRuleTypes()) {
             addType(type);
         }
-        return Collections.unmodifiableList(types);
+        return Collections.unmodifiableList(ruleTypeList);
     }
 
-    public RuleType getTypeByName(String name) {
-        if (types.isEmpty()) {
-            getTypes();
+    @Override
+    public RuleType getRuleTypeByName(String name) {
+        if (ruleTypeList.isEmpty()) {
+            getAllRuleTypes();
         }
-        for (RuleType brt : types) {
+
+        for (RuleType brt : ruleTypeList) {
             if (brt.getType().equalsIgnoreCase(name)) {
                 return brt;
             }
@@ -52,24 +56,38 @@ public class RuleSelectService implements SelectService {
 
     @Override
     public List<Operator> getOperatorsByTypeId(int typeId) {
-        return this.operatorDAO.getOperatorsByTypeId(typeId);
-    }
-
-    public int getTypeIdByOperatorName(String name) {
-        for(RuleType type : ruleTypesDAO.getAllRuleTypes()) {
-            if(type.getType().equalsIgnoreCase(name)) {
-                return type.getId();
+        List<Operator> operators = this.operatorDAO.getOperatorsByTypeId(typeId);
+        operators.forEach(operator -> {
+            if (!operatorList.contains(operator)) {
+                operatorList.add(operator);
             }
-        }
-        return -1;
+        });
+
+        return operators;
     }
 
+    @Override
+    public Operator getOperatorByName(String name) {
+        return operatorList.stream()
+                .filter(operator -> operator.getName().equalsIgnoreCase(name))
+                .findFirst()
+                .orElseGet(() -> {
+                    Operator operator = this.operatorDAO.getOperatorByName(name);
+                    if (!operatorList.contains(operator)) {
+                        operatorList.add(operator);
+                    }
+                    return operator;
+                });
+    }
+
+    @Override
     public List<Table> getAllTables(Claims claims) {
-        this.targetDatabaseDAO = new TargetDatabaseDAOImpl();
+        TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
         return targetDatabaseDAO.getTablesByProjectId(claims.get("username").toString(),
                 claims.get("password").toString(), Integer.parseInt(claims.get("projectId").toString()));
     }
 
+    @Override
     public Table getTableByName(String name, Claims claims) {
         for (Table table : getAllTables(claims)) {
             if (table.getName().equals(name)) {
@@ -79,6 +97,7 @@ public class RuleSelectService implements SelectService {
         return null;
     }
 
+    @Override
     public List<Rule> getAllRules(int projectId) {
         return this.rulesDAO.getRulesByProjectId(projectId);
     }
