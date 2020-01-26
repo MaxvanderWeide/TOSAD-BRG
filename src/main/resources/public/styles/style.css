@@ -62,7 +62,7 @@ textarea.other-rule {
     height: 300px;
 }
 
-.rule-details-wrapper, .rule-values-wrapper {
+.rule-details-wrapper, .new-rule-wrapper {
     display: none;
 }
 button.btn.btn-primary[type=submit] {
@@ -116,4 +116,12 @@ label {
 
 .rules-list-wrapper .rule-item {
     margin-top: 60px;
+}
+
+.action-button-box, .search-rule-wrapper {
+    display: none;
+}
+
+.back1 {
+    
 }

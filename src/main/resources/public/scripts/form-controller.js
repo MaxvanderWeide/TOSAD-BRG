@@ -8,14 +8,12 @@ $(document).ready(function () {
     });
 
     $(".maintain-rule").click(() => {
-        createConnection();
-        $(".new-rule-wrapper").show();
+        $(".search-rule-wrapper").show();
         $(".action-button-box").hide();
     });
 
     $(".new-rule").click(() => {
-        createConnection();
-        $(".rules-list-wrapper").show();
+        $(".new-rule-wrapper").show();
         $(".action-button-box").hide();
     });
 });
@@ -81,6 +79,7 @@ function createConnection() {
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
                 getAllRuleNames();
+
                 //getAllRules();
                 // $(".new-rule-wrapper").show();
             }
@@ -360,6 +359,21 @@ function getAllRuleNames() {
         })
         .then(response => {
             if (response !== undefined) {
+                let tableBody = document.getElementById('table-body');
+                tableBody.innerHTML = null;
+
+                let i = 0;
+                response.forEach(addRow, i);
+
+                function addRow(row, i) {
+                    tableBody.innerHTML +=
+                        "<tr>" +
+                        "<th scope='row'>" + i + "</th>" +
+                        "<td>" + row["name"] + "</td>" +
+                        "<td>" + row["table"] + "</td>" +
+                        "<td>" + row["other"] + "</td>" +
+                        "</tr>";
+                }
                 console.log(response);
             }
         });

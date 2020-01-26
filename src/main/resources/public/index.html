@@ -25,14 +25,14 @@
 <div class="container">
     <div class="py-5 text-center">
         <h1>Business Rule Generator</h1>
-        <p class="lead">Connect to a target database by filling in the desired fields below to start defining a
-            Businessrule.</p>
+        <p class="lead">Best rule generator in the business!</p>
     </div>
 
     <div class="row">
+<!--        Make connection form-->
         <div class="col-md-12">
             <form action="javascript:void(0);">
-                <div id="db-info-wrapper">
+                <div id="db-info-wrapper" class="db-info-wrapper">
                     <div class="mb-3">
                         <label for="dbEngine">Database Engine:</label>
                         <select class="custom-select d-block w-100 form-input" id="dbEngine">
@@ -73,73 +73,117 @@
                 </div>
             </form>
         </div>
+        <div class="col-md-12">
+            <div class="row action-button-box">
+                <button style="margin: auto" class="btn btn-primary btn-lg col-md-5 new-rule">Define new Rule</button>
+                <button style="margin: auto" class="btn btn-primary btn-lg col-md-5 maintain-rule">Maintain a existing rule</button>
+            </div>
+        </div>
     </div>
 
-    <div class="rule-details-wrapper new-rule-wrapper">
-        <div class="py-5 text-center">
-            <h2>Define your Business Rule</h2>
-            <p class="lead">Define your new Businessrule by selecting the correct values below.</p>
-        </div>
-        <div class="mb-3">
-            <label>Rule name:</label>
-            <input type="text" class="form-input rule-name" placeholder="My new Rule">
-        </div>
-        <div class="mb-3">
-            <label>Description:</label>
-            <textarea class="form-input rule-description" placeholder="New rule description"></textarea>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label>Select table:</label>
-                <select class="table-selection form-input">
-                    <option disabled selected>Select a table</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Select rule type:</label>
-                <select class="type-selection form-input">
-                    <option disabled selected>Select a type</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label>Select the target attribute:</label>
-                <select class="attribute-selection form-input">
-                    <option disabled selected>Select an attribute</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Select an operator:</label>
-                <select class="operator-selection form-input">
-                    <option disabled selected>Select an operator</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label>Define the error message:</label>
-                <textarea class="error-message form-input"></textarea>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Error code:</label>
-                <input type="number" class="form-input error-code" placeholder="-20000">
-            </div>
-        </div>
-        <div class="mb-3 rule-values-wrapper">
-            <h3>Rule values:</h3>
-            <div class="form-step-comparator">
-                <div class="row comparator-step"></div>
-            </div>
-        </div>
 
-        <div class="text-center">
-            <button class="save-rule btn btn-primary btn-lg btn-block btn-save">Save Rule</button>
-        </div>
-    </div>
-    <div class="rule-details-wrapper rules-list-wrapper">
-        <div class="py-5 text-center">
-            <h2>List of all business rules</h2>
+    <div class="row">
+        <div class="col-md-12">
+<!--            New businessrule-->
+            <div class="rule-details-wrapper new-rule-wrapper">
+                <div class="py-5 text-center">
+                    <h2>Define your new Business Rule</h2>
+                    <p class="lead">Define your new Businessrule by selecting the correct values below.</p>
+                </div>
+                <div class="mb-3">
+                    <label>Rule name:</label>
+                    <input type="text" class="form-input rule-name" placeholder="My new Rule">
+                </div>
+                <div class="mb-3">
+                    <label>Description:</label>
+                    <textarea class="form-input rule-description" placeholder="New rule description"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Select table:</label>
+                        <select class="table-selection form-input">
+                            <option disabled selected>Select a table</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Select rule type:</label>
+                        <select class="type-selection form-input">
+                            <option disabled selected>Select a type</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Select the target attribute:</label>
+                        <select class="attribute-selection form-input">
+                            <option disabled selected>Select an attribute</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Select an operator:</label>
+                        <select class="operator-selection form-input">
+                            <option disabled selected>Select an operator</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Define the error message:</label>
+                        <textarea class="error-message form-input"></textarea>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Error code:</label>
+                        <input type="number" class="form-input error-code" placeholder="-20000">
+                    </div>
+                </div>
+                <div class="mb-3 rule-values-wrapper">
+                    <h3>Rule values:</h3>
+                    <div class="form-step-comparator">
+                        <div class="row comparator-step"></div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button class="save-rule btn btn-primary btn-lg btn-block btn-save">Save Rule</button>
+                </div>
+            </div>
+
+<!--            Search businessrule-->
+            <div class="rule-details-wrapper search-rule-wrapper">
+                <div class="py-5 text-center">
+                    <h2>Search Business rule</h2>
+                    <p class="lead">Search for the desired Rule below.</p>
+                    <input id="search-rule" class="form-input">
+
+                    <br>
+
+                    <h3>Existing Rules</h3>
+                    <p class="lead"></p>
+
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">RuleName</th>
+                            <th scope="col">Applied table</th>
+                            <th scope="col">Other</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body">
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="back-button-box">
+                <button class="btn btn-primary back1">Back</button>
+            </div>
         </div>
     </div>
 </div>
