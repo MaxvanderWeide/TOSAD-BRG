@@ -1,108 +1,92 @@
 package com.hu.brg.define.persistence.targetdatabase;
 
-import com.hu.brg.define.domain.model.Attribute;
-import com.hu.brg.define.domain.model.Table;
+import com.hu.brg.define.domain.Column;
+import com.hu.brg.define.domain.Project;
+import com.hu.brg.define.domain.Table;
 import com.hu.brg.define.persistence.BaseDAO;
-import com.hu.brg.define.persistence.DBEngine;
-import com.hu.brg.shared.ConfigSelector;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO {
 
-    private static TargetDatabaseDAO instance;
-
-    private DBEngine dbEngine;
-    private String host;
-    private int port;
-    private String serviceName;
-    private String username;
-    private String password;
-
-    private TargetDatabaseDAOImpl(DBEngine dbEngine, String host, int port, String serviceName, String username, String password) {
-        this.dbEngine = dbEngine;
-        this.host = host;
-        this.port = port;
-        this.serviceName = serviceName;
-        this.username = username;
-        this.password = password;
-    }
-
-    public static TargetDatabaseDAO getDefaultInstance() {
-        if (instance == null) {
-            instance = createTargetDatabaseDAOImpl(DBEngine.ORACLE, ConfigSelector.HOST, ConfigSelector.PORT, ConfigSelector.SERVICE,  ConfigSelector.USERNAME,
-                    ConfigSelector.PASSWORD);
-        }
-
-        return instance;
-    }
-
-    public static TargetDatabaseDAOImpl createTargetDatabaseDAOImpl(DBEngine dbEngine, String host, int port, String serviceName, String username, String password) {
-        return new TargetDatabaseDAOImpl(dbEngine, host, port, serviceName, username, password);
-    }
-
-    private Connection getConnection() {
-        return this.getConnection(dbEngine, host, port, serviceName, username, password);
-    }
-
-    public boolean testConnection() {
-        Connection connection = getConnection();
-        return connection != null;
-    }
-
     @Override
-    public List<Table> getTables(String targetSchema) {
-        try (Connection conn = getConnection()) {
-            List<Table> tables = new ArrayList<>();
+    public List<Table> getTablesByProject(String username, String password, Project project) {
+        List<Table> tableList = new ArrayList<>();
 
-            PreparedStatement tableSt = conn.prepareStatement("select TABLE_NAME from ALL_TABLES where owner = ?");
-            tableSt.setString(1, targetSchema);
-            ResultSet result = tableSt.executeQuery();
+        try (Connection conn = getConnection(project, username, password)) {
+            String query = "SELECT TABLE_NAME FROM ALL_TABLES WHERE OWNER = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, project.getName());
 
-            while (result.next()) {
-                String tableName = result.getString("TABLE_NAME");
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-                List<Attribute> attributes = new ArrayList<>();
-                PreparedStatement attributesResult = conn.prepareStatement("select column_name, data_type from USER_TAB_COLUMNS " +
-                        "where TABLE_NAME = ?");
-                attributesResult.setString(1, tableName);
-                ResultSet tableAttributes = attributesResult.executeQuery();
-
-                while (tableAttributes.next()) {
-                    ResultSet tempTableAttributes = tableAttributes;
-                    Attribute attribute = new Attribute(tempTableAttributes.getString("COLUMN_NAME"), tempTableAttributes.getString("DATA_TYPE"));
-
-                    attributes.add(attribute);
-                }
-
-                Table table = new Table(tableName, attributes);
-
-                tables.add(table);
-                attributesResult.close();
-                tableAttributes.close();
+            while (resultSet.next()) {
+                Table table = processTableResult(conn, resultSet);
+                tableList.add(table);
             }
 
-            this.closeConnection();
-            result.close();
-            tableSt.close();
-
-            return tables;
+            resultSet.close();
+            preparedStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return Collections.emptyList();
+        return tableList;
     }
 
     @Override
-    public void insertRule(String sql) {
-        try (Connection conn = getConnection(); Statement statement = conn.createStatement()) {
-            statement.execute(sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public List<Table> getTablesByProjectId(String username, String password, int id) {
+        throw new UnsupportedOperationException("Not implemented yet");
+    }
+
+    private Table processTableResult(Connection conn, ResultSet resultSet) throws SQLException {
+        Table table = getTablesStatement(resultSet);
+
+        PreparedStatement attributeStatement = conn.prepareStatement("SELECT COLUMN_NAME, DATA_TYPE FROM USER_TAB_COLUMNS " +
+                "WHERE TABLE_NAME = ?");
+        attributeStatement.setString(1, table.getName());
+        ResultSet attributeResult = attributeStatement.executeQuery();
+
+        List<Column> columnList = new ArrayList<>();
+        while (attributeResult.next()) {
+            Column column = getColumnStatement(attributeResult);
+            columnList.add(column);
         }
+
+        attributeResult.close();
+        attributeStatement.close();
+
+        table.setColumnList(columnList);
+
+        return table;
+    }
+
+    private Table getTablesStatement(ResultSet resultSet) throws SQLException {
+        String tableName = resultSet.getString("TABLE_NAME");
+
+        return new Table(
+                tableName,
+                Collections.emptyList()
+        );
+    }
+
+    private Column getColumnStatement(ResultSet resultSet) throws SQLException {
+        String columnName = resultSet.getString("COLUMN_NAME");
+        String columnType = resultSet.getString("DATA_TYPE");
+
+        return new Column(
+                columnName,
+                columnType
+        );
+    }
+
+    private Connection getConnection(Project project, String username, String password) {
+        return getConnection(project.getDbEngine(), project.getHost(), project.getPort(), project.getService(), username, password);
     }
 }

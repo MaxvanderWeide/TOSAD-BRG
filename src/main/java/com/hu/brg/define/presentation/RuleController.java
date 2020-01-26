@@ -4,7 +4,11 @@ import com.hu.brg.define.application.save.RuleSaveService;
 import com.hu.brg.define.application.save.SaveService;
 import com.hu.brg.define.application.select.RuleSelectService;
 import com.hu.brg.define.application.select.SelectService;
-import com.hu.brg.define.domain.model.*;
+import com.hu.brg.define.domain.Attribute;
+import com.hu.brg.define.domain.Column;
+import com.hu.brg.define.domain.Operator;
+import com.hu.brg.define.domain.RuleType;
+import com.hu.brg.define.domain.Table;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
@@ -12,7 +16,6 @@ import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.jsonwebtoken.Claims;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,7 +56,7 @@ public class RuleController {
         Map<String, Map<String, String>> types = new HashMap<>();
         Map<String, String> tempTypes = new HashMap<>();
         for (RuleType type : getSelectService().getTypes()) {
-            tempTypes.put(type.getType(), type.getCode());
+            tempTypes.put(type.getType(), type.getTypeCode());
         }
         types.put("Types", tempTypes);
         context.json(types).status(200);
@@ -116,8 +119,8 @@ public class RuleController {
 
         Map<String, List<String>> attributes = new HashMap<>();
         List<String> tempAttribute = new ArrayList<>();
-        for (Attribute attribute : getSelectService().getTableByName(context.pathParam("tableName", String.class).get(), claims).getAttributes()) {
-            tempAttribute.add(attribute.getName());
+        for (Column column : getSelectService().getTableByName(context.pathParam("tableName", String.class).get(), claims).getColumnList()) {
+            tempAttribute.add(column.getName());
         }
         attributes.put("Attributes", tempAttribute);
         context.json(attributes).status(200);
@@ -143,7 +146,7 @@ public class RuleController {
     public static void getOperatorsWithType(io.javalin.http.Context context) {
         Map<String, List<String>> operators = new HashMap<>();
         List<String> operatorNameList = new ArrayList<>();
-        for (Operator operator : getSelectService().getTypeByName(context.pathParam("typeName", String.class).get()).getOperators()) {
+        for (Operator operator : getSelectService().getOperatorsByTypeId(context.pathParam("typeId", Integer.class).get())) {
             operatorNameList.add(operator.getName());
         }
         operators.put("Operators", operatorNameList);
@@ -166,32 +169,34 @@ public class RuleController {
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
+
     public static void saveRuleDefinition(io.javalin.http.Context context) {
-        Claims claims = decodeJWT(context.req.getHeader("authorization"));
-        if (claims == null) {
-            context.status(403);
-            return;
-        }
-        JSONObject jsonObject = new JSONObject(context.body());
-
-        Table table = getSelectService().getTableByName(jsonObject.get("tableName").toString(), claims);
-        RuleType type = getSelectService().getTypeByName(jsonObject.get("typeName").toString());
-        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString());
-        Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
-        List<Value> values = new ArrayList<>();
-
-        for(int i = 0; i < jsonObject.getJSONArray("values").length(); i++) {
-            values.add(new Value(jsonObject.getJSONArray("values").get(i).toString()));
-        }
-
-        RuleDefinition rule = getSaveService().buildRule(jsonObject, claims, table, type, attribute, operator, values);
-        boolean saved = getSaveService().saveRule(rule);
-
-        if(!saved) {
-            context.status(400).result("Rule not created");
-            return;
-        }
-        context.result(String.valueOf(rule.getProjectId())).status(201);
+        //TODO: Fix this -> use
+//        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+//        if (claims == null) {
+//            context.status(403);
+//            return;
+//        }
+//        JSONObject jsonObject = new JSONObject(context.body());
+//
+//        Table table = getSelectService().getTableByName(jsonObject.get("tableName").toString(), claims);
+//        RuleType type = getSelectService().getTypeByName(jsonObject.get("typeName").toString());
+//        Attribute attribute = table.getAttributeByName(jsonObject.get("targetAttribute").toString());
+//        Operator operator = type.getOperatorByName(jsonObject.get("operatorName").toString());
+//        List<Value> values = new ArrayList<>();
+//
+//        for(int i = 0; i < jsonObject.getJSONArray("values").length(); i++) {
+//            values.add(new Value(jsonObject.getJSONArray("values").get(i).toString()));
+//        }
+//
+//        RuleDefinition rule = getSaveService().buildRule(jsonObject, claims, table, type, attribute, operator, values);
+//        boolean saved = getSaveService().saveRule(rule);
+//
+//        if(!saved) {
+//            context.status(400).result("Rule not created");
+//            return;
+//        }
+//        context.result(String.valueOf(rule.getProjectId())).status(201);
     }
 
     @OpenApi(
@@ -213,8 +218,7 @@ public class RuleController {
             return;
         }
 
-        List<String> names = new ArrayList<>();
-        names.addAll(getSelectService().getAllRuleNames((int)claims.get("projectId")));
+        List<String> names = new ArrayList<>(getSelectService().getAllRuleNames((int) claims.get("projectId")));
         context.json(names).status(200);
 
         if (names.isEmpty()) {

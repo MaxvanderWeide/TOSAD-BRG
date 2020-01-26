@@ -1,6 +1,6 @@
-package com.hu.brg.define.persistence;
+package com.hu.brg.generate.persistence;
 
-import com.hu.brg.define.domain.DBEngine;
+import com.hu.brg.generate.domain.DBEngine;
 import oracle.jdbc.pool.OracleDataSource;
 
 import java.sql.Connection;
@@ -15,16 +15,14 @@ public abstract class BaseDAO {
 
     protected Connection getConnection(DBEngine dbEngine, String host, int port, String serviceName, String user, String password) {
         try {
-            if (connection == null || connection.isClosed()) {
-                switch (dbEngine) {
-                    case ORACLE:
-                    default: {
-                        OracleDataSource ods = new OracleDataSource();
-                        ods.setURL(String.format("jdbc:oracle:thin:@//%s:%d/%s", host, port, serviceName)); // jdbc:oracle:thin@//[hostname]:[port]/[DB service name]
-                        ods.setUser(user); // [username]
-                        ods.setPassword(password); // [password]
-                        connection = ods.getConnection();
-                    }
+            switch (dbEngine) {
+                case ORACLE:
+                default: {
+                    OracleDataSource ods = new OracleDataSource();
+                    ods.setURL(String.format("jdbc:oracle:thin:@//%s:%d/%s", host, port, serviceName)); // jdbc:oracle:thin@//[hostname]:[port]/[DB service name]
+                    ods.setUser(user); // [username]
+                    ods.setPassword(password); // [password]
+                    connection = ods.getConnection();
                 }
             }
         } catch (SQLException e) {

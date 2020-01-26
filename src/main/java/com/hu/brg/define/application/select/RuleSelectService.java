@@ -1,26 +1,28 @@
 package com.hu.brg.define.application.select;
 
-import com.hu.brg.define.domain.model.*;
-import com.hu.brg.define.persistence.DBEngine;
+import com.hu.brg.define.domain.Operator;
+import com.hu.brg.define.domain.Rule;
+import com.hu.brg.define.domain.RuleType;
+import com.hu.brg.define.domain.Table;
 import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
-import com.hu.brg.define.persistence.tooldatabase.rule.RulesDAO;
-import com.hu.brg.define.persistence.tooldatabase.type.RuleTypesDAO;
-import com.hu.brg.shared.ConfigSelector;
+import com.hu.brg.define.persistence.tooldatabase.OperatorDAO;
+import com.hu.brg.define.persistence.tooldatabase.RuleDAO;
+import com.hu.brg.define.persistence.tooldatabase.RuleTypeDAO;
 import io.jsonwebtoken.Claims;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class RuleSelectService implements SelectService {
 
     private List<RuleType> types = new ArrayList<>();
-    private RuleTypesDAO ruleTypesDAO = DAOServiceProvider.getRuleTypesDAO();
-    private RulesDAO rulesDAO = DAOServiceProvider.getRulesDAO();
+    private RuleTypeDAO ruleTypesDAO = DAOServiceProvider.getRuleTypeDAO();
+    private RuleDAO rulesDAO = DAOServiceProvider.getRuleDAO();
+    private OperatorDAO operatorDAO = DAOServiceProvider.getOperatorDAO();
     private TargetDatabaseDAO targetDatabaseDAO;
 
     public RuleSelectService() {
@@ -31,7 +33,7 @@ public class RuleSelectService implements SelectService {
     }
 
     public List<RuleType> getTypes() {
-        for (RuleType type : ruleTypesDAO.getRuleTypes()) {
+        for (RuleType type : ruleTypesDAO.getAllRuleTypes()) {
             addType(type);
         }
         return Collections.unmodifiableList(types);
@@ -49,16 +51,15 @@ public class RuleSelectService implements SelectService {
         return null;
     }
 
+    @Override
+    public List<Operator> getOperatorsByTypeId(int typeId) {
+        return this.operatorDAO.getOperatorsByTypeId(typeId);
+    }
+
     public List<Table> getAllTables(Claims claims) {
-        this.targetDatabaseDAO = claims != null ? TargetDatabaseDAOImpl.createTargetDatabaseDAOImpl(
-                DBEngine.ORACLE,
-                claims.get("host").toString(),
-                Integer.parseInt(claims.get("port").toString()),
-                claims.get("service").toString(),
-                claims.get("username").toString(),
-                claims.get("password").toString()
-        ) : this.targetDatabaseDAO;
-        return targetDatabaseDAO.getTables(Objects.requireNonNull(claims).get("dbName").toString());
+        this.targetDatabaseDAO = new TargetDatabaseDAOImpl();
+        return targetDatabaseDAO.getTablesByProjectId(claims.get("username").toString(),
+                claims.get("password").toString(), Integer.parseInt(claims.get("projectId").toString()));
     }
 
     public Table getTableByName(String name, Claims claims) {
@@ -70,19 +71,12 @@ public class RuleSelectService implements SelectService {
         return null;
     }
 
-    public List<RuleDefinition> getAllRules(int projectId) {
-        return this.rulesDAO.getRulesByProjectId(projectId, ConfigSelector.USERNAME, ConfigSelector.PASSWORD);
+    public List<Rule> getAllRules(int projectId) {
+        return this.rulesDAO.getRulesByProjectId(projectId);
     }
 
     public List<String> getAllRuleNames(int projectId) {
-        List<String> ruleNames = new ArrayList<>();
-
-        for (RuleDefinition ruleDefinition : getAllRules(projectId)) {
-            ruleNames.add(ruleDefinition.getName());
-        }
-
-        return ruleNames;
+        return getAllRules(projectId).stream().map(Rule::getName).collect(Collectors.toList());
     }
-
 
 }

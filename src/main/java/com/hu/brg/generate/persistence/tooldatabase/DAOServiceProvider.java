@@ -1,4 +1,4 @@
-package com.hu.brg.define.persistence.tooldatabase;
+package com.hu.brg.generate.persistence.tooldatabase;
 
 public class DAOServiceProvider {
     private static OperatorDAO operatorDAO;

@@ -11,7 +11,7 @@ import com.hu.brg.generate.domain.Project;
 import com.hu.brg.generate.domain.Rule;
 import com.hu.brg.generate.domain.RuleType;
 import com.hu.brg.generate.domain.Table;
-import com.hu.brg.generate.persistance.tooldatabase.DAOServiceProvider;
+import com.hu.brg.generate.persistence.tooldatabase.DAOServiceProvider;
 
 import java.util.Arrays;
 import java.util.Collections;
