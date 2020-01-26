@@ -193,4 +193,32 @@ public class RuleController {
         }
         context.result(String.valueOf(rule.getProjectId())).status(201);
     }
+
+    @OpenApi(
+            summary = "Get all rule names",
+            operationId = "getRuleNames",
+            path = "/define/rules/names",
+            method = HttpMethod.GET,
+            tags = {"Define", "Rule", "Names"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getRuleNames(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+
+        List<String> names = new ArrayList<>();
+        names.addAll(getSelectService().getAllRuleNames((int)claims.get("projectId")));
+        context.json(names).status(200);
+
+        if (names.isEmpty()) {
+            context.status(404).result("No rule names Found");
+        }
+    }
 }

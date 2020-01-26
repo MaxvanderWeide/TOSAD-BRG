@@ -42,6 +42,9 @@ public class Main {
                 path("rules", () -> {
 //                    get(RuleController::getRuleDefinitions);
                     post(RuleController::saveRuleDefinition);
+                    path("names", () -> {
+                        get(RuleController::getRuleNames);
+                    });
                 });
             });
         }).start(4201);
