@@ -3,19 +3,54 @@ $(document).ready(function () {
     fillTypes();
     $(".btn-connect").click(() => {
         createConnection();
-        $(".db-info-wrapper").hide();
-        $(".action-button-box").show();
+        showMenu();
     });
 
     $(".maintain-rule").click(() => {
         $(".search-rule-wrapper").show();
         $(".action-button-box").hide();
+        $(".back-maintain").show();
+        $(".search-button").show();
     });
 
     $(".new-rule").click(() => {
         $(".new-rule-wrapper").show();
         $(".action-button-box").hide();
+        $(".back-define").show();
     });
+
+    $(".back-maintain").click(() => {
+        showMenu();
+    });
+
+    $(document).ready(function(){
+        $("#search-rule").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#table-body tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    $(".search-button").click(() => {
+        //filter table
+
+        //show form
+        $(".new-rule-wrapper").show();
+    });
+
+    $(".back-define").click(() => {
+        showMenu();
+    });
+
+    function showMenu() {
+        $(".action-button-box").show();
+        $(".db-info-wrapper").hide();
+        $(".new-rule-wrapper").hide();
+        $(".search-rule-wrapper").hide();
+        $(".back-maintain").hide();
+        $(".back-define").hide();
+    }
 });
 
 function eventListeners() {
@@ -379,6 +414,4 @@ function getAllRuleNames() {
         });
 }
 
-function getRuleByName(target) {
-
-}
+function getRuleByName(target) {}
