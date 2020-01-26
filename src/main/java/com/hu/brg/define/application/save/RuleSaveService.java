@@ -21,9 +21,17 @@ public class RuleSaveService implements SaveService {
     public RuleSaveService() {
     }
 
+    public AttributeValue buildAttributeValue(JSONObject object, Claims claims) {
+        AttributeValueSaveBuilder builder = new AttributeValueSaveBuilder();
+        AttributeValue attributeValue = builder.build();
+        return attributeValue;
+    }
+
     public Attribute buildAttribute(JSONObject object, Claims claims, List<AttributeValue> attributeValueList) {
         AttributeSaveBuilder builder = new AttributeSaveBuilder();
         Attribute attribute = builder.build();
+
+        attributeValueList.forEach(attributeValue -> attributeValue.setAttribute(attribute));
         return attribute;
     }
 
