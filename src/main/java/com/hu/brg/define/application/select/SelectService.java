@@ -5,6 +5,7 @@ import com.hu.brg.define.domain.Rule;
 import com.hu.brg.define.domain.RuleType;
 import com.hu.brg.define.domain.Table;
 import io.jsonwebtoken.Claims;
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -16,5 +17,4 @@ public interface SelectService {
     List<Table> getAllTables(Claims claims);
     Table getTableByName(String name, Claims claims);
     List<Rule> getAllRules(int projectId);
-    List<String> getAllRuleNames(int projectId);
 }

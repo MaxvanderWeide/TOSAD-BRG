@@ -15,7 +15,6 @@ import io.jsonwebtoken.Claims;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RuleSelectService implements SelectService {
 
@@ -73,10 +72,6 @@ public class RuleSelectService implements SelectService {
 
     public List<Rule> getAllRules(int projectId) {
         return this.rulesDAO.getRulesByProjectId(projectId);
-    }
-
-    public List<String> getAllRuleNames(int projectId) {
-        return getAllRules(projectId).stream().map(Rule::getName).collect(Collectors.toList());
     }
 
 }

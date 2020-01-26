@@ -43,7 +43,7 @@ public class Main {
 //                    get(RuleController::getRuleDefinitions);
                     post(RuleController::saveRuleDefinition);
                     path("names", () -> {
-                        get(RuleController::getRuleNames);
+                        get(RuleController::getMaintainRulesData);
                     });
                 });
             });

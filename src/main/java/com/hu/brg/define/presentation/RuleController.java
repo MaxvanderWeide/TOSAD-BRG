@@ -4,11 +4,7 @@ import com.hu.brg.define.application.save.RuleSaveService;
 import com.hu.brg.define.application.save.SaveService;
 import com.hu.brg.define.application.select.RuleSelectService;
 import com.hu.brg.define.application.select.SelectService;
-import com.hu.brg.define.domain.Attribute;
-import com.hu.brg.define.domain.Column;
-import com.hu.brg.define.domain.Operator;
-import com.hu.brg.define.domain.RuleType;
-import com.hu.brg.define.domain.Table;
+import com.hu.brg.define.domain.*;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
@@ -200,29 +196,40 @@ public class RuleController {
     }
 
     @OpenApi(
-            summary = "Get all rule names",
-            operationId = "getRuleNames",
-            path = "/define/rules/names",
+            summary = "Get the necessary rules data",
+            operationId = "getMaintainRulesData",
+            path = "/define/rules/data",
             method = HttpMethod.GET,
-            tags = {"Define", "Rule", "Names"},
+            tags = {"Define", "Rule", "Data"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
-    public static void getRuleNames(io.javalin.http.Context context) {
+    public static void getMaintainRulesData(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
             context.status(403);
             return;
         }
 
-        List<String> names = new ArrayList<>(getSelectService().getAllRuleNames((int) claims.get("projectId")));
-        context.json(names).status(200);
+        List<Map<String, Map<String, String>>> rules = new ArrayList<>();
+        Map<String, Map<String, String>> tempRules = new HashMap<>();
 
-        if (names.isEmpty()) {
-            context.status(404).result("No rule names Found");
+        for (Rule rule : getSelectService().getAllRules((int)claims.get("projectId"))) {
+            Map<String, String> tempRule = new HashMap<>();
+            tempRule.put("table", rule.getTargetTable().getName());
+            tempRule.put("type", rule.getRuleType().getType());
+            tempRule.put("typeCode", rule.getRuleType().getTypeCode());
+            tempRules.put(rule.getName(), tempRule);
+        }
+        rules.add(tempRules);
+
+        context.json(rules).status(200);
+
+        if (rules.isEmpty()) {
+            context.status(404).result("No rules found");
         }
     }
 }
