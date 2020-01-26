@@ -10,6 +10,7 @@ $(document).ready(function () {
         $(".action-button-box").hide();
         $(".back-maintain").show();
         $(".search-button").show();
+        $(".btn-delete").show();
     });
 
     $(".new-rule").click(() => {
@@ -22,20 +23,11 @@ $(document).ready(function () {
         showMenu();
     });
 
-    $(document).ready(function () {
-        $("#search-rule").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("#table-body tr").filter(function () {
-                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-            });
+    $("#search-rule").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#table-body tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
-    });
-
-    $(".search-button").click(() => {
-        //filter table
-
-        //show form
-        $(".new-rule-wrapper").show();
     });
 
     $(".back-define").click(() => {
@@ -43,15 +35,6 @@ $(document).ready(function () {
     });
 
     eventListeners();
-
-});
-$(document).ready(function(){
-    $("#search-rule").on("keyup", function() {
-        var value = $(this).val().toLowerCase();
-        $("#table-body tr").filter(function() {
-            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-        });
-    });
 });
 
 function showMenu() {
@@ -61,6 +44,7 @@ function showMenu() {
     $(".search-rule-wrapper").hide();
     $(".back-maintain").hide();
     $(".back-define").hide();
+    $(".btn-delete").hide();
 }
 
 function eventListeners() {
@@ -295,9 +279,10 @@ function getAllRuleNames() {
                 const tableBody = $("#table-body").html("");
 
                 for (const index in response) {
+                    let id = response[index]['id'];
                     $(tableBody).append("" +
-                        "<tr>" +
-                            "<td>" + response[index]['id'] + "</td>" +
+                        "<tr onclick='clickTable("+ id +")'>" +
+                            "<td>" + id + "</td>" +
                             "<td>" + index + "</td>" +
                             "<td>" + response[index]['table'] + "</td>" +
                             "<td>" + response[index]['type'] + "</td>" +
@@ -310,5 +295,26 @@ function getAllRuleNames() {
         });
 }
 
-function getRuleByName(target) {
+function clickTable(id) {
+    $(".new-rule-wrapper").show();
+
+    getRuleById(id);
+}
+
+function getRuleById(target) {
+    fetch("define/rules/"+target, {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                //TODO: waardes in FE laden.
+                console.log(response);
+            }
+        });
 }

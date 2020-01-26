@@ -108,7 +108,13 @@ label {
 
 .btn-save {
     background-color: var(--button-color);
-    margin-bottom: 3rem;
+    margin: auto;
+    min-width: 45%;
+}
+
+.btn-delete {
+    margin: auto;
+    min-width: 45%;
 }
 
 .rule-description {

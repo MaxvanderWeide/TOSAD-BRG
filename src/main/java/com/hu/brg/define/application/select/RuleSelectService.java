@@ -74,4 +74,9 @@ public class RuleSelectService implements SelectService {
         return this.rulesDAO.getRulesByProjectId(projectId);
     }
 
+    @Override
+    public Rule getRuleById(int id) {
+        return this.rulesDAO.getRule(id);
+    }
+
 }

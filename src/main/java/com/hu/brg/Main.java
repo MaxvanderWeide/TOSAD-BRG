@@ -45,6 +45,9 @@ public class Main {
                     path("names", () -> {
                         get(RuleController::getMaintainRulesData);
                     });
+                    path(":id", () -> {
+                        get(RuleController::getRuleById);
+                    });
                 });
             });
         }).start(4201);

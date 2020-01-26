@@ -233,4 +233,42 @@ public class RuleController {
             context.status(404).result("No rules found");
         }
     }
+
+    @OpenApi(
+            summary = "gets the rule by provided id",
+            operationId = "getRuleById",
+            path = "/define/rules/:id",
+            method = HttpMethod.GET,
+            pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},
+            tags = {"Define", "rules", "rule"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void getRuleById(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+        Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
+
+        if (rule == null) {
+            context.status(404).result("No rule was found");
+            return;
+        }
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", rule.getName());
+        map.put("id", rule.getId());
+        map.put("type", rule.getRuleType());
+        map.put("description", rule.getDescription());
+        map.put("table", rule.getTargetTable().getName());
+        map.put("attributes", rule.getAttributesList());
+        map.put("errorMessages", rule.getErrorMessage());
+
+        context.json(map).status(200);
+    }
 }
