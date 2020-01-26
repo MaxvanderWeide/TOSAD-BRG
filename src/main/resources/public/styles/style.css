@@ -62,7 +62,7 @@ textarea.other-rule {
     height: 300px;
 }
 
-.rule-details-wrapper {
+.rule-details-wrapper, .rule-values-wrapper {
     display: none;
 }
 button.btn.btn-primary[type=submit] {
@@ -110,6 +110,10 @@ label {
     background-color: var(--button-color);
 }
 
-#ruleDescription {
+.rule-description {
     height: 100px;
+}
+
+.rules-list-wrapper .rule-item {
+    margin-top: 60px;
 }

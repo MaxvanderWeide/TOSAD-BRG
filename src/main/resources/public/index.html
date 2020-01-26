@@ -25,7 +25,8 @@
 <div class="container">
     <div class="py-5 text-center">
         <h1>Business Rule Generator</h1>
-        <p class="lead">Connect to a target database by filling in the desired fields below to start defining a Businessrule.</p>
+        <p class="lead">Connect to a target database by filling in the desired fields below to start defining a
+            Businessrule.</p>
     </div>
 
     <div class="row">
@@ -74,66 +75,71 @@
         </div>
     </div>
 
-    <div class="rule-details-wrapper">
+    <div class="rule-details-wrapper new-rule-wrapper">
         <div class="py-5 text-center">
             <h2>Define your Business Rule</h2>
             <p class="lead">Define your new Businessrule by selecting the correct values below.</p>
         </div>
         <div class="mb-3">
-            <label for="ruleName">Rule Name:</label>
-            <input type="text" id="ruleName" class="form-input" placeholder="My new Rule">
+            <label>Rule name:</label>
+            <input type="text" class="form-input rule-name" placeholder="My new Rule">
         </div>
         <div class="mb-3">
-            <label for="ruleDescription">Description:</label>
-            <textarea id="ruleDescription" class="form-input" placeholder="New rule description"></textarea>
+            <label>Description:</label>
+            <textarea class="form-input rule-description" placeholder="New rule description"></textarea>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="tableSelection">Select Table:</label>
-                <select id="tableSelection" class="form-input">
+                <label>Select table:</label>
+                <select class="table-selection form-input">
                     <option disabled selected>Select a table</option>
                 </select>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="typeSelection">Select Rule-Type:</label>
-                <select id="typeSelection" class="form-input">
+                <label>Select rule type:</label>
+                <select class="type-selection form-input">
                     <option disabled selected>Select a type</option>
                 </select>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="attributeSelection">Select the target-attribute:</label>
-                <select id="attributeSelection" class="form-input">
+                <label>Select the target attribute:</label>
+                <select class="attribute-selection form-input">
                     <option disabled selected>Select an attribute</option>
                 </select>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="operatorSelection">Select an operator:</label>
-                <select id="operatorSelection" class="form-input">
+                <label>Select an operator:</label>
+                <select class="operator-selection form-input">
                     <option disabled selected>Select an operator</option>
                 </select>
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label for="errorMessage">Define the errorMessage:</label>
-                <textarea id="errorMessage" class="form-input"></textarea>
+                <label>Define the error message:</label>
+                <textarea class="error-message form-input"></textarea>
             </div>
             <div class="col-md-6 mb-3">
-                <label for="errorCode">ErrorCode:</label>
-                <input type="number" id="errorCode" class="form-input" placeholder="-20000">
+                <label>Error code:</label>
+                <input type="number" class="form-input error-code" placeholder="-20000">
             </div>
         </div>
-        <div class="mb-3">
+        <div class="mb-3 rule-values-wrapper">
             <h3>Rule values:</h3>
             <div class="form-step-comparator">
-                <div class="row" id="comparatorStep"></div>
+                <div class="row comparator-step"></div>
             </div>
         </div>
 
         <div class="text-center">
             <button class="save-rule btn btn-primary btn-lg btn-block btn-save">Save Rule</button>
+        </div>
+    </div>
+    <div class="rule-details-wrapper rules-list-wrapper">
+        <div class="py-5 text-center">
+            <h2>List of all business rules</h2>
         </div>
     </div>
 </div>
