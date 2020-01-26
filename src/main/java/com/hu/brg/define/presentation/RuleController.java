@@ -113,10 +113,10 @@ public class RuleController {
             return;
         }
 
-        Map<String, List<String>> attributes = new HashMap<>();
-        List<String> tempAttribute = new ArrayList<>();
+        Map<String, Map<String, String>> attributes = new HashMap<>();
+        Map<String, String> tempAttribute = new HashMap<>();
         for (Column column : getSelectService().getTableByName(context.pathParam("tableName", String.class).get(), claims).getColumnList()) {
-            tempAttribute.add(column.getName());
+            tempAttribute.put(column.getName(), column.getDataType());
         }
         attributes.put("Attributes", tempAttribute);
         context.json(attributes).status(200);

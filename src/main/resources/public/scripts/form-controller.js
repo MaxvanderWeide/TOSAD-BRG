@@ -39,7 +39,6 @@ $(document).ready(function () {
 
 function showMenu() {
     $(".action-button-box").show();
-    $(".db-info-wrapper").hide();
     $(".new-rule-wrapper").hide();
     $(".search-rule-wrapper").hide();
     $(".back-maintain").hide();
@@ -105,11 +104,16 @@ function createConnection() {
         })
         .then(response => {
             if (response !== undefined) {
+                showMenu();
+                $(".db-info-wrapper").hide();
                 sessionStorage.setItem("access_token", response);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
                 getAllRuleNames();
+            } else {
+                $(".db-info-wrapper").show();
             }
+            $(".spinner-holder").hide();
         });
 }
 
@@ -222,7 +226,7 @@ function saveRule(element) {
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
     values["targetAttribute"] = $(target).find(".attribute-selection").val();
-    values["operatorName"] = $(target).find(".operator-selection").val();
+    values["operatorId"] = $(target).find(".operator-selection").val();
     values["errorMessage"] = $(target).find(".error-message").val();
     values["errorCode"] = $(target).find(".error-code").val();
     values["values"] = ruleValues;
