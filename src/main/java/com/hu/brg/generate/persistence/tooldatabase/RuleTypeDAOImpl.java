@@ -122,7 +122,7 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
     private RuleType getRuleTypeStatement(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt(1);
         String name = resultSet.getString(2);
-        String code = resultSet.getString(2);
+        String code = resultSet.getString(3);
 
         return new RuleType(
                 id,
