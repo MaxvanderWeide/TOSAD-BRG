@@ -153,7 +153,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             for (Attribute attribute : rule.getAttributesList()) {
                 query = "UPDATE ATTRIBUTES SET RULESID = ?, ATTR_COLUMN = ?, OPERATORID = ?, ATTR_ORDER = ?, " +
-                        "TARGETTABLEFK = ?, TABLEOTHERPK = ?, TABLEOTHER = ?, COLUMNOTHER = ? " +
+                        "TARGETTABLEFK = ?, TABLEOTHERPK = ?, TABLEOTHERPK = ?, TABLEOTHER = ?, COLUMNOTHER = ? " +
                         "WHERE ID = ?";
                 PreparedStatement attributeStatement = conn.prepareStatement(query);
                 setAttributeStatement(attributeStatement, attribute);
@@ -276,7 +276,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
         Connection conn = getConnection();
         Rule rule = getRuleStatement(resultSet, project);
 
-        String query = "SELECT ID, RULESID, ATTR_COLUMN, OPERATORID, ATTR_ORDER, TARGETTABLEFK, TABLEOTHER, COLUMNOTHER " +
+        String query = "SELECT ID, RULESID, ATTR_COLUMN, OPERATORID, ATTR_ORDER, TARGETTABLEFK, TABLEOTHERPK, TABLEOTHER, COLUMNOTHER " +
                 "FROM ATTRIBUTES " +
                 "WHERE RULESID = ?";
         PreparedStatement attributeStatement = conn.prepareStatement(query);
