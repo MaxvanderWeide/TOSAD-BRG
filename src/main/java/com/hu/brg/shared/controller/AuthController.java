@@ -2,8 +2,6 @@ package com.hu.brg.shared.controller;
 
 import com.hu.brg.define.domain.DBEngine;
 import com.hu.brg.define.domain.Project;
-import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAO;
-import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.define.persistence.tooldatabase.ProjectDAO;
 import com.hu.brg.shared.ConfigSelector;
@@ -54,10 +52,21 @@ public class AuthController {
 
             byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(secretKey);
             Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-            Project project = new Project(jsonObject.getString("host"), Integer.parseInt(jsonObject.getString("port")),
+
+            Project project = DAOServiceProvider.getProjectDAO().getProjectByIdentifiers(jsonObject.getString("host"), Integer.parseInt(jsonObject.getString("port")),
                     jsonObject.getString("service"),
                     DBEngine.valueOf(jsonObject.getString("engine")),
-                    jsonObject.getString("dbName"), Collections.emptyList());
+                    jsonObject.getString("dbName"));
+
+            if (project == null) {
+                project = new Project(jsonObject.getString("host"), Integer.parseInt(jsonObject.getString("port")),
+                        jsonObject.getString("service"),
+                        DBEngine.valueOf(jsonObject.getString("engine")),
+                        jsonObject.getString("dbName"), Collections.emptyList());
+
+                project = DAOServiceProvider.getProjectDAO().saveProject(project);
+            }
+
 
 //            project.setUsername(jsonObject.getString("username"));
 //            project.setPassword(jsonObject.getString("password"));
@@ -89,7 +98,7 @@ public class AuthController {
                     .claim("service", project.getService())
                     .claim("password", jsonObject.getString("username"))
                     .claim("username", jsonObject.getString("password"))
-                    .claim("projectId", 33)
+                    .claim("projectId", project.getId())
                     .claim("port", project.getPort())
                     .signWith(signatureAlgorithm, signingKey);
 
