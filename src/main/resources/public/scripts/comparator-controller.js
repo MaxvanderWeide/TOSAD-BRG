@@ -25,9 +25,15 @@ var Types = {
     },
     Tuple_Compare: {
         block:
-            "const custInput1 = $(\"<div>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
-            "custInput1.html($(\"#attributeSelection\").html());" +
-            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);"
+            "const attributeInput = $(\"<input>\");" +
+            "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3\", text: \"add\"});" +
+            "const br = $(\"<br>\");" +
+            "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
+            "$(addAttribute).click(() => {" +
+            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \".\" + $(\".attribute-selection\").val() + \" \" + $(\".operator-selection\").val() + \" \" +  $(attributeInput).val()});" +
+            "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "});" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"
     },
     InterEntity_Compare: {
         block:
@@ -60,27 +66,27 @@ var Types = {
     },
     Entity_Other: {
         block:
-            "const custInput1 = $(\"<select>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
+            "const attributeInput = $(\"<input>\");" +
+            "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3\", text: \"add\"});" +
             "const br = $(\"<br>\");" +
-            "const custInput2 = $(\"<textarea>\", {id: \"custInput2\", class: \"other-rule form-input col-md-5 mb-3\"});" +
-            "const attributesSelection = $(\"#attributeSelection\").html();" +
-            "custInput1.html(attributesSelection);" +
-            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1, br, custInput2);" +
-            "$(\".new-rule-wrapper\").find(\".table-selection\").change(() => {" +
-            "    custInput1.html(attributesSelection);" +
-            "});"
+            "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
+            "$(addAttribute).click(() => {" +
+            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \".\" + $(\".attribute-selection\").val() + \" \" + $(\".operator-selection\").val() + \" \" +  $(attributeInput).val()});" +
+            "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "});" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"
     },
     Tuple_Other: {
         block:
-            "const custInput1 = $(\"<select>\", {id: \"custInput1\", class: \"form-input col-md-5 mb-3\"});" +
+            "const attributeInput = $(\"<input>\");" +
+            "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3\", text: \"add\"});" +
             "const br = $(\"<br>\");" +
-            "const custInput2 = $(\"<textarea>\", {id: \"custInput2\", class: \"other-rule form-input col-md-5 mb-3\"});" +
-            "const attributesSelection = $(\"#attributeSelection\").html();" +
-            "custInput1.html(attributesSelection);" +
-            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1, br, custInput2);" +
-            "$(\".new-rule-wrapper\").find(\".table-selection\").change(() => {" +
-            "    custInput1.html(attributesSelection);" +
-            "});"
+            "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
+            "$(addAttribute).click(() => {" +
+            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \".\" + $(\".attribute-selection\").val() + \" \" + $(\".operator-selection\").val() + \" \" +  $(attributeInput).val()});" +
+            "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "});" +
+            "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"
     },
     Attribute_Other: {
         block:
