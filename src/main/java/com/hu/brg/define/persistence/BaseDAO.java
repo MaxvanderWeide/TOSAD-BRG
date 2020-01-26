@@ -15,7 +15,7 @@ public abstract class BaseDAO {
 
     protected Connection getConnection(DBEngine dbEngine, String host, int port, String serviceName, String user, String password) {
         try {
-            if (connection == null || connection.isClosed()) {
+            if (connection == null || connection.isClosed() || !connection.isValid(10)) {
                 switch (dbEngine) {
                     case ORACLE:
                     default: {
@@ -24,6 +24,7 @@ public abstract class BaseDAO {
                         ods.setUser(user); // [username]
                         ods.setPassword(password); // [password]
                         connection = ods.getConnection();
+                        connection.setAutoCommit(true);
                     }
                 }
             }

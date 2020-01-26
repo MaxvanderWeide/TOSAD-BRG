@@ -2,6 +2,7 @@ package com.hu.brg.shared.controller;
 
 import com.hu.brg.define.domain.DBEngine;
 import com.hu.brg.define.domain.Project;
+import com.hu.brg.define.persistence.targetdatabase.TargetDatabaseDAOImpl;
 import com.hu.brg.define.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.define.persistence.tooldatabase.ProjectDAO;
 import com.hu.brg.shared.ConfigSelector;
@@ -24,7 +25,8 @@ import java.util.Date;
 
 public class AuthController {
 
-    private AuthController() {}
+    private AuthController() {
+    }
 
     private static String secretKey = ConfigSelector.SECRET_KEY;
 
@@ -45,6 +47,11 @@ public class AuthController {
         try {
             ProjectDAO projects = DAOServiceProvider.getProjectDAO();
             JSONObject jsonObject = new JSONObject(context.body());
+            if (jsonObject.length() != 7) {
+                context.result("Can't create connection due to unfulfilled data requirements").status(400);
+                return;
+            }
+
             SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
             long nowMillis = System.currentTimeMillis();
@@ -67,6 +74,10 @@ public class AuthController {
                 project = DAOServiceProvider.getProjectDAO().saveProject(project);
             }
 
+            if (!new TargetDatabaseDAOImpl().testConnection(jsonObject.getString("username"), jsonObject.getString("password"), project)) {
+                context.status(403);
+                return;
+            }
 
             //TODO: Bart: this can be removed I think
 //            project.setUsername(jsonObject.getString("username"));
@@ -108,9 +119,6 @@ public class AuthController {
             builder.setExpiration(exp);
 
             context.result(builder.compact()).status(200);
-            if (jsonObject.length() != 7) {
-                context.result("Can't create connection due to unfulfilled data requirements").status(400);
-            }
         } catch (Exception e) {
             e.printStackTrace();
             context.status(500);
