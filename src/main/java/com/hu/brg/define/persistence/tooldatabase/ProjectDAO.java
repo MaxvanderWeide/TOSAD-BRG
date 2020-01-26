@@ -1,5 +1,6 @@
 package com.hu.brg.define.persistence.tooldatabase;
 
+import com.hu.brg.define.domain.DBEngine;
 import com.hu.brg.define.domain.Project;
 
 public interface ProjectDAO {
@@ -23,4 +24,5 @@ public interface ProjectDAO {
      */
     Project getProjectById(int id);
     Project getProjectById(int id, boolean eagerLoadRules);
+    Project getProjectByIdentifiers(String host, int port, String service, DBEngine dbEngine, String name);
 }

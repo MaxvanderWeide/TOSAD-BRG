@@ -156,6 +156,38 @@ public class ProjectDAOImpl extends BaseDAO implements ProjectDAO {
         return project;
     }
 
+    @Override
+    public Project getProjectByIdentifiers(String host, int port, String service, DBEngine dbEngine, String name) {
+        Project project = null;
+
+        try (Connection conn = getConnection()) {
+            String query = "SELECT ID, HOST, PORT, SERVICE, DBENGINE, NAME " +
+                    "FROM PROJECTS " +
+                    "WHERE HOST = ? AND PORT = ? AND SERVICE = ? AND DBENGINE = ? AND NAME = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, host);
+            preparedStatement.setInt(2, port);
+            preparedStatement.setString(3, service);
+            preparedStatement.setString(4, dbEngine.name().toUpperCase());
+            preparedStatement.setString(5, name);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                project = getProjectStatement(resultSet);
+                resultSet.close();
+                preparedStatement.close();
+                return project;
+            }
+
+            resultSet.close();
+            preparedStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return project;
+    }
+
     private void setProjectStatement(PreparedStatement preparedStatement, Project project) throws SQLException {
         preparedStatement.setString(1, project.getHost());
         preparedStatement.setInt(2, project.getPort());
