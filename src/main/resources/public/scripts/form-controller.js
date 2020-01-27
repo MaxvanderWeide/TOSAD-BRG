@@ -41,11 +41,11 @@ function startupEventListeners() {
     });
 
     $(".new-rule-wrapper .table-selection").change((item) => {
-        fillTargetAttributes(item.target, false, "define");
+        fillTargetAttributes(item.target.value, false);
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
-        fillOperators(item.target, "define");
+        fillOperators(item.target.value);
         displayBlock(item.target);
         fillValuesTargetAttributes(item.target);
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
@@ -166,8 +166,8 @@ function fillTypes() {
         });
 }
 
-function fillTargetAttributes(tableSelection, interEntityRuleType = false, target) {
-    fetch("define/tables/" + $(tableSelection).val() + "/attributes ", {
+function fillTargetAttributes(table, interEntityRuleType = false) {
+    fetch("define/tables/" + table + "/attributes ", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
     })
@@ -178,12 +178,7 @@ function fillTargetAttributes(tableSelection, interEntityRuleType = false, targe
         })
         .then(response => {
             if (response !== undefined) {
-                let selectionTarget = "";
-                if (interEntityRuleType) {
-                    selectionTarget = target === "define" ? $(".new-rule-wrapper #custInput2") : $(".update-rule-wrapper #custInput2");
-                } else {
-                    selectionTarget = target === "define" ? $(".new-rule-wrapper .attribute-selection") : $(".update-rule-wrapper .attributeselection");
-                }
+                const selectionTarget = interEntityRuleType ? $(".new-rule-wrapper #custInput2") : $(".new-rule-wrapper .attribute-selection");
 
                 $(selectionTarget).empty();
                 for (const index in response.Attributes) {
@@ -193,8 +188,8 @@ function fillTargetAttributes(tableSelection, interEntityRuleType = false, targe
         });
 }
 
-function fillOperators(type, target) {
-    fetch("define/types/" + $(type).val() + "/operators", {
+function fillOperators(type) {
+    fetch("define/types/" + type + "/operators", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
     })
@@ -207,7 +202,7 @@ function fillOperators(type, target) {
         })
         .then(response => {
             if (response !== undefined) {
-                const operatorSelection = target === "define" ? $(".new-rule-wrapper .operator-selection") : $(".update-rule-wrapper .operator-selection");
+                const operatorSelection = $(".new-rule-wrapper .operator-selection");
                 operatorSelection.empty();
                 if (typeof response == 'string' || response instanceof String) {
                     $(operatorSelection).append("<option value='null'>No operators associated to rule type</option>");
@@ -263,7 +258,7 @@ function saveRule(element) {
             const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
             attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
         });
-    } else if(checkTypeSelected["InterEntity_Compare"], selectedType) {
+    } else if (checkTypeSelected["InterEntity_Compare"], selectedType) {
         attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
         attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
@@ -327,7 +322,7 @@ function deleteRule(element) {
     //TODO: get id and delete...
     let id = element;
     console.log(id);
-    fetch("define/rules/delete/"+id, {
+    fetch("define/rules/delete/" + id, {
         method: "POST",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
         body: values
@@ -351,7 +346,7 @@ function fillValuesTargetAttributes(element) {
     const typeNameSplit = typeName.split("_");
     if (typeNameSplit[0].trim() === "InterEntity") {
         $(".new-rule-wrapper .table-selection").change((item) => {
-            fillTargetAttributes(item.target, true, "define");
+            fillTargetAttributes(item.target.value, true);
         });
     }
 }
@@ -423,12 +418,14 @@ function getRuleById(target) {
 
 function fillFormFields(rule) {
     let table = rule.table;
+    const type = rule.type.type;
     $(".rule-name").val(rule.name);
     $(".rule-description").val(rule.description);
     $(".table-selection").val(table);
-    $(".type-selection").val(rule.type.type);
+    $(".type-selection").val(type);
 
-    fillTargetAttributes(table, false, "define");
+    fillTargetAttributes(table, false);
+    fillOperators(type);
     $(".attribute-selection").val(rule.attributes.column);
     $(".operator-selection").val(rule.attributes.operatorName);
     $(".error-message").val(rule.errorMessages);
