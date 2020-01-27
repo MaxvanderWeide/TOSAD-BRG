@@ -189,3 +189,7 @@ li {
 .maintain-table-body {
     cursor: pointer;
 }
+
+.alert-success, .alert-danger {
+    display: none;
+}

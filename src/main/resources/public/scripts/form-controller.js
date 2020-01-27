@@ -16,6 +16,7 @@ function startupEventListeners() {
         $(".search-button").show();
         $(".btn-delete").show();
         $(".new-rule-header").hide();
+        clearFormFields();
     });
 
     $(".new-rule").click(() => {
@@ -23,6 +24,7 @@ function startupEventListeners() {
         $(".action-button-box").hide();
         $(".back-define").show();
         $(".new-rule-header").show();
+        clearFormFields();
     });
 
     $(".back-maintain").click(() => {
@@ -67,6 +69,7 @@ function showMenu() {
     $(".back-maintain").hide();
     $(".back-define").hide();
     $(".btn-delete").hide();
+    $(".alert-success").hide();
 }
 
 function loadFromStorage() {
@@ -310,34 +313,41 @@ function saveRule(element) {
     })
         .then(response => {
             if (response.status === 201) {
-                alert('Rule was created');
+                let alertSuccess = $('.alert-success');
+                alertSuccess.append("Your new BusinessRule was created!");
+                alertSuccess.show();
             } else if (response.status === 400) {
-                alert('Rule was not created');
+                let alertDanger = $('.alert-danger');
+                alertDanger.append("Your Business Rule was not created! You may want to recheck your inpur...");
+                alertDanger.show();
             }
         });
 }
 
 function deleteRule(element) {
     //TODO: get id and delete...
-    let id = element;
+    let id = $('.rule-id').val();
     console.log(id);
     fetch("define/rules/delete/" + id, {
-        method: "POST",
+        method: "DELETE",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
-        body: values
     })
         .then(response => {
             if (response.status === 201) {
-                alert('Rule was deleted');
+                let alertSuccess = $('.alert-success');
+                alertSuccess.append("The BusinessRule was deleted!");
+                alertSuccess.show();
             } else if (response.status === 400) {
-                alert('Rule was not deleted');
+                let alertDanger = $('.alert-danger');
+                alertDanger.append("The rule was not deleted...");
+                alertDanger.show();
             }
         });
 }
 
 function displayBlock(type) {
-    $(type).parent().parent().parent(".rule-details-wrapper").find(".comparator-step").html("");
-    eval(Types[$(type).val()].block);
+    $(".comparator-step").html("");
+    eval(Types[type].block);
 }
 
 function fillValuesTargetAttributes(element) {
@@ -391,6 +401,7 @@ function getAllRules() {
 }
 
 function clickTable(id) {
+    clearFormFields();
     $(".new-rule-wrapper").show();
 
     getRuleById(id);
@@ -408,8 +419,6 @@ function getRuleById(target) {
         })
         .then(response => {
             if (response !== undefined) {
-                //TODO: waardes in FE laden.
-                console.log(response);
                 fillFormFields(response)
             }
         });
@@ -417,7 +426,7 @@ function getRuleById(target) {
 
 function fillFormFields(rule) {
     let table = rule.table;
-    const type = rule.type.type;
+    let type = rule.type.type;
     $(".rule-name").val(rule.name);
     $(".rule-description").val(rule.description);
     $(".table-selection").val(table);
@@ -431,5 +440,11 @@ function fillFormFields(rule) {
 }
 
 function clearFormFields() {
-
+    $(".rule-name").val('');
+    $(".rule-description").val('');
+    $(".table-selection").val('');
+    $(".type-selection").val('');
+    $(".attribute-selection").val('');
+    $(".operator-selection").val('');
+    $(".error-message").val('');
 }
