@@ -292,7 +292,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                     "FROM RULE_VALUES " +
                     "WHERE ATTRIBUTEID = ?";
             PreparedStatement attributeValueStatement = conn.prepareStatement(query);
-            attributeValueStatement.setInt(1, rule.getId());
+            attributeValueStatement.setInt(1, attribute.getId());
 
             ResultSet attributeValueResult = attributeValueStatement.executeQuery();
             List<AttributeValue> attributeValueList = new ArrayList<>();
