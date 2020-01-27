@@ -48,7 +48,7 @@ function startupEventListeners() {
 
     $(".new-rule-wrapper .type-selection").change((item) => {
         fillOperators(item.target.value);
-        displayBlock(item.target);
+        displayBlock(item.target.value);
         fillValuesTargetAttributes(item.target);
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
     });
@@ -325,10 +325,8 @@ function saveRule(element) {
 }
 
 function deleteRule(element) {
-    //TODO: get id and delete...
     let id = $('.rule-id').val();
-    console.log(id);
-    fetch("define/rules/delete/" + id, {
+    fetch("maintain/rules/delete/" + id, {
         method: "DELETE",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
     })
@@ -419,6 +417,7 @@ function getRuleById(target) {
         })
         .then(response => {
             if (response !== undefined) {
+                console.log(response);
                 fillFormFields(response)
             }
         });
@@ -427,6 +426,7 @@ function getRuleById(target) {
 function fillFormFields(rule) {
     let table = rule.table;
     let type = rule.type.type;
+    $(".rule-id").val(rule.id);
     $(".rule-name").val(rule.name);
     $(".rule-description").val(rule.description);
     $(".table-selection").val(table);
@@ -434,9 +434,13 @@ function fillFormFields(rule) {
 
     fillTargetAttributes(table, false);
     fillOperators(type);
+    displayBlock(type);
     $(".attribute-selection").val(rule.attributes.column);
     $(".operator-selection").val(rule.attributes.operatorName);
     $(".error-message").val(rule.errorMessages);
+    //TODO: Values tonen in define FE
+    // $(".custInput1").val();
+    // $(".custInput2").val();
 }
 
 function clearFormFields() {
@@ -447,4 +451,6 @@ function clearFormFields() {
     $(".attribute-selection").val('');
     $(".operator-selection").val('');
     $(".error-message").val('');
+    $(".custInput1").val('');
+    $(".custInput2").val('');
 }
