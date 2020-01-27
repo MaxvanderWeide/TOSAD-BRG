@@ -41,29 +41,30 @@ public class RuleSaveService implements SaveService {
     @Override
     public Attribute buildAttribute(JSONObject object, Claims claims, Operator operator, List<AttributeValue> attributeValueList) {
         AttributeSaveBuilder builder = new AttributeSaveBuilder();
-        Attribute attribute = builder
+        builder = builder
                 .setRule(null) // This can be null as long buildRule is called
                 .setColumn(new Column(object.getString("column"), null))
                 .setOperator(operator)
                 .setOrder(object.has("order ") ? object.getInt("order") : 0)
-                .setAttributeValueList(attributeValueList)
-                .build();
+                .setAttributeValueList(attributeValueList);
 
         if (object.has("targetTableFK")) {
-            builder.setTargetTableFK(new Column(object.getString("targetTableFK"), null));
+            builder = builder.setTargetTableFK(new Column(object.getString("targetTableFK"), null));
         }
 
         if (object.has("otherTablePK")) {
-            builder.setOtherTablePK(new Column(object.getString("otherTablePK"), null));
+            builder = builder.setOtherTablePK(new Column(object.getString("otherTablePK"), null));
         }
 
         if (object.has("otherTable")) {
-            builder.setOtherTable(new Table(object.getString("otherTable"), Collections.emptyList()));
+            builder = builder.setOtherTable(new Table(object.getString("otherTable"), Collections.emptyList()));
         }
 
         if (object.has("otherColumn")) {
-            builder.setOtherColumn(new Column(object.getString("otherColumn"), null));
+            builder = builder.setOtherColumn(new Column(object.getString("otherColumn"), null));
         }
+
+        Attribute attribute = builder.build();
 
         attributeValueList.forEach(attributeValue -> attributeValue.setAttribute(attribute));
         return attribute;
