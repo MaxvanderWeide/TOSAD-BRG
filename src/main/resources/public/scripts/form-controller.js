@@ -16,6 +16,8 @@ function startupEventListeners() {
         $(".search-button").show();
         $(".btn-delete").show();
         $(".new-rule-header").hide();
+        $(".btn-update").show();
+        $(".btn-save").hide();
         clearFormFields();
         getAllRules();
     });
@@ -25,10 +27,15 @@ function startupEventListeners() {
         $(".action-button-box").hide();
         $(".back-define").show();
         $(".new-rule-header").show();
+        $(".btn-save").show();
         clearFormFields();
     });
 
     $(".back-maintain").click(() => {
+        showMenu();
+    });
+
+    $(".back-define").click(() => {
         showMenu();
     });
 
@@ -37,10 +44,6 @@ function startupEventListeners() {
         $("#table-body tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
-    });
-
-    $(".back-define").click(() => {
-        showMenu();
     });
 
     $(".new-rule-wrapper .table-selection").change((item) => {
@@ -61,6 +64,10 @@ function startupEventListeners() {
     $(".btn-delete").click((item) => {
         deleteRule(item);
     });
+
+    $(".btn-update").click((item) => {
+        updateRule(item);
+    });
 }
 
 function showMenu() {
@@ -70,7 +77,9 @@ function showMenu() {
     $(".back-maintain").hide();
     $(".back-define").hide();
     $(".btn-delete").hide();
+    $(".btn-update").hide();
     $(".alert-success").hide();
+    $(".alert-danger").hide();
 }
 
 function loadFromStorage() {
@@ -316,11 +325,13 @@ function saveRule(element) {
         .then(response => {
             if (response.status === 201) {
                 let alertSuccess = $('.alert-success');
+                alertSuccess.val();
                 alertSuccess.append("Your new BusinessRule was created!");
                 alertSuccess.show();
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.append("Your Business Rule was not created! You may want to recheck your inpur...");
+                alertDanger.val();
+                alertDanger.append("Your Business Rule was not created! You may want to recheck your input...");
                 alertDanger.show();
             }
         });
@@ -335,14 +346,20 @@ function deleteRule(element) {
         .then(response => {
             if (response.status === 201) {
                 let alertSuccess = $('.alert-success');
+                alertSuccess.val();
                 alertSuccess.append("The BusinessRule was deleted!");
                 alertSuccess.show();
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
+                alertDanger.val();
                 alertDanger.append("The rule was not deleted...");
                 alertDanger.show();
             }
         });
+}
+
+function updateRule() {
+    alert("Not implemented yet...")
 }
 
 function displayBlock(type) {

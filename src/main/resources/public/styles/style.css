@@ -117,6 +117,12 @@ label {
     min-width: 45%;
 }
 
+.btn-update {
+    background-color: var(--button-color);
+    margin: auto;
+    min-width: 45%;
+}
+
 .rule-description {
     height: 100px;
 }

@@ -269,6 +269,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setInt(1, id);
 
+            //TODO: delete rule from target db and cascade delete on other tables
+
             preparedStatement.executeUpdate();
 
             return true;
