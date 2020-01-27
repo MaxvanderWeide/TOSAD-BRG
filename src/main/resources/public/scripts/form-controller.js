@@ -51,9 +51,12 @@ function startupEventListeners() {
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
+        console.log($._data( $('.table-selection').get(0), 'events' ).change.length);
         fillOperators(item.target.value);
         displayBlock(item.target.value);
-        fillValuesTargetAttributes(item.target);
+        if ($._data( $('.table-selection').get(0), "events").change.length < 3) {
+            fillValuesTargetAttributes(item.target);
+        }
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
     });
 
@@ -314,7 +317,6 @@ function saveRule(element) {
     values["typeName"] = selectedType;
     values["errorMessage"] = $(target).find(".error-message").val();
     values["attributes"] = attributes;
-    console.log(values);
     values = JSON.stringify(values);
 
     fetch("define/rules", {
@@ -363,7 +365,7 @@ function updateRule() {
 }
 
 function displayBlock(type) {
-    $(".comparator-step").html("");
+    $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     eval(Types[type].block);
 }
 
@@ -471,12 +473,11 @@ function clearFormFields() {
     $(".attribute-selection").val('');
     $(".operator-selection").val('');
     $(".error-message").val('');
-    $(".custInput1").val('');
-    $(".custInput2").val('');
+    $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
+    $(".rule-values-wrapper").hide();
 }
 
 function fillFormValues(ruleData) {
-    console.log(ruleData);
     for (const attribute of ruleData.attributes) {
         switch (ruleData.type.type) {
             case "Attribute_List":
@@ -490,14 +491,7 @@ function fillFormValues(ruleData) {
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
             case "InterEntity_Compare":
-                setTimeout(() => {
-                    $(".target-foreign-key option").each((index, item) => {
-                        if ($(item).text() == attribute.attributeValues[0].otherTable) {
-                            console.log($(item).text());
-                        }
-                    });
-                }, 1500);
-
+                //TODO - select correct values
             default:
                 break;
         }

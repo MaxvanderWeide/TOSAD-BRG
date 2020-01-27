@@ -37,98 +37,100 @@ var Types = {
     },
     InterEntity_Compare: {
         block:
-            "const fkLabel = $(\"<label>\", {text: \"Select the target table foreign key\"});\n" +
-            "const fkSelect = $(\"<select>\", {class: \"target-foreign-key form-input\"});\n" +
-            "const firstRowFirstCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
-            "const firstRowSecondCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
-            "\n" +
-            "const secondRow = $(\"<div>\", {class: \"row comparator-step-second\"});\n" +
-            "const secondRowFirstCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
-            "const secondRowSecondCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
-            "const otherTableLabel = $(\"<label>\", {text: \"Other target table\"});\n" +
-            "const otherTableSelection = $(\"<select>\", {class: \"other-table-selection form-input\"});\n" +
-            "const otherAttributeLabel = $(\"<label>\", {text: \"Other target attribute\"});\n" +
-            "const otherAttributeSelection = $(\"<select>\", {class: \"other-attribute-selection form-input\"});\n" +
-            "const otherTablePkLabel = $(\"<label>\", {text: \"Other target table primary key attribute\"});\n" +
-            "const otherTablePkSelection = $(\"<select>\", {class: \"other-table-pk-selection form-input\"});\n" +
-            "\n" +
-            "function fillIEAttributes(target) {\n" +
-            "    const tableSelection = target === \"entity\" ? $(\".table-selection\").val() : $(\".other-table-selection\").val();\n" +
-            "    fetch(\"define/tables/\" + tableSelection + \"/attributes \", {\n" +
-            "        method: \"GET\",\n" +
-            "        headers: {\"Authorization\": sessionStorage.getItem(\"access_token\")}\n" +
-            "    })\n" +
-            "        .then(response => {\n" +
-            "            if (response.status === 200) {\n" +
-            "                return response.json();\n" +
-            "            }\n" +
-            "        })\n" +
-            "        .then(response => {\n" +
-            "            if (response !== undefined) {\n" +
-            "                if (target === \"entity\") {\n" +
-            "                    $(fkSelect).empty();\n" +
-            "                } else {\n" +
-            "                    $(otherAttributeSelection).empty();\n" +
-            "                    $(otherTablePkSelection).empty();\n" +
-            "                }\n" +
-            "                for (const index in response.Attributes) {\n" +
-            "                    if (target === \"entity\") {\n" +
-            "                        $(fkSelect).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
-            "                    } else {\n" +
-            "                        $(otherAttributeSelection).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
-            "                        $(otherTablePkSelection).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
-            "                    }\n" +
-            "                }\n" +
-            "                return \"ok\";\n" +
-            "            }\n" +
-            "        }).then(response => {\n" +
-            "        if (response === \"ok\") {\n" +
-            "            $(firstRowFirstCol).append(fkLabel, fkSelect);\n" +
-            "            $(secondRowFirstCol).append(otherTablePkLabel, otherTablePkSelection);\n" +
-            "            $(secondRow).append(secondRowFirstCol, secondRowSecondCol);\n" +
-            "            $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowFirstCol);\n" +
-            "            $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);\n" +
-            "        }\n" +
-            "    });\n" +
-            "}\n" +
-            "\n" +
-            "fillIEAttributes(\"entity\");\n" +
-            "\n" +
-            "fetch(\"define/tables\", {\n" +
-            "    method: \"GET\",\n" +
-            "    headers: {\"Authorization\": sessionStorage.getItem(\"access_token\")}\n" +
-            "})\n" +
-            "    .then(response => {\n" +
-            "        if (response.status === 200) {\n" +
-            "            return response.json();\n" +
-            "        }\n" +
-            "    })\n" +
-            "    .then(response => {\n" +
-            "        if (response !== undefined) {\n" +
-            "            $(otherTableSelection).append(\"<option>Select a table</option>\");\n" +
-            "            for (const index in response.Tables) {\n" +
-            "                const value = response.Tables[index];\n" +
-            "                $(otherTableSelection).append(\"<option value='\" + value + \"'>\" + value + \"</option>\");\n" +
-            "            }\n" +
-            "            return \"ok\";\n" +
-            "        }\n" +
-            "    }).then(response => {\n" +
-            "    if (response === \"ok\") {\n" +
-            "        $(firstRowSecondCol).append(otherTableLabel, otherTableSelection);\n" +
-            "        $(secondRowSecondCol).append(otherAttributeLabel, otherAttributeSelection);\n" +
-            "        $(secondRow).append(secondRowSecondCol);\n" +
-            "        $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowSecondCol);\n" +
-            "        $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);\n" +
-            "\n" +
-            "        $(\".other-table-selection\").change(() => {\n" +
-            "           fillIEAttributes(\"interentity\");\n" +
-            "        });\n" +
-            "    }\n" +
-            "});\n" +
-            "\n" +
-            "$(\".table-selection\").change(() => {\n" +
-            "    fillIEAttributes(\"entity\");\n" +
-            "});"
+            "const fkLabel = $(\"<label>\", {text: \"Select the target table foreign key\"});" +
+            "const fkSelect = $(\"<select>\", {class: \"target-foreign-key form-input\"});" +
+            "const firstRowFirstCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});" +
+            "const firstRowSecondCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});" +
+            "" +
+            "const secondRow = $(\"<div>\", {class: \"row comparator-step-second\"});" +
+            "const secondRowFirstCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});" +
+            "const secondRowSecondCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});" +
+            "const otherTableLabel = $(\"<label>\", {text: \"Other target table\"});" +
+            "const otherTableSelection = $(\"<select>\", {class: \"other-table-selection form-input\"});" +
+            "const otherAttributeLabel = $(\"<label>\", {text: \"Other target attribute\"});" +
+            "const otherAttributeSelection = $(\"<select>\", {class: \"other-attribute-selection form-input\"});" +
+            "const otherTablePkLabel = $(\"<label>\", {text: \"Other target table primary key attribute\"});" +
+            "const otherTablePkSelection = $(\"<select>\", {class: \"other-table-pk-selection form-input\"});" +
+            "" +
+            "function fillIEAttributes(target) {" +
+            "    const tableSelection = target === \"entity\" ? $(\".table-selection\").val() : $(\".other-table-selection\").val();" +
+            "    fetch(\"define/tables/\" + tableSelection + \"/attributes \", {" +
+            "        method: \"GET\"," +
+            "        headers: {\"Authorization\": sessionStorage.getItem(\"access_token\")}" +
+            "    })" +
+            "        .then(response => {" +
+            "            if (response.status === 200) {" +
+            "                return response.json();" +
+            "            }" +
+            "        })" +
+            "        .then(response => {" +
+            "            if (response !== undefined) {" +
+            "                if (target === \"entity\") {" +
+            "                    $(fkSelect).empty();" +
+            "                } else {" +
+            "                    $(otherAttributeSelection).empty();" +
+            "                    $(otherTablePkSelection).empty();" +
+            "                }" +
+            "                for (const index in response.Attributes) {" +
+            "                    if (target === \"entity\") {" +
+            "                        $(fkSelect).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));" +
+            "                    } else {" +
+            "                        $(otherAttributeSelection).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));" +
+            "                        $(otherTablePkSelection).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));" +
+            "                    }" +
+            "                }" +
+            "                return \"ok\";" +
+            "            }" +
+            "        }).then(response => {" +
+            "        if (response === \"ok\") {" +
+            "            $(firstRowFirstCol).append(fkLabel, fkSelect);" +
+            "            $(secondRowFirstCol).append(otherTablePkLabel, otherTablePkSelection);" +
+            "            $(secondRow).append(secondRowFirstCol, secondRowSecondCol);" +
+            "            $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowFirstCol);" +
+            "            $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);" +
+            "        }" +
+            "    });" +
+            "}" +
+            "" +
+            "fillIEAttributes(\"entity\");" +
+            "" +
+            "fetch(\"define/tables\", {" +
+            "    method: \"GET\"," +
+            "    headers: {\"Authorization\": sessionStorage.getItem(\"access_token\")}" +
+            "})" +
+            "    .then(response => {" +
+            "        if (response.status === 200) {" +
+            "            return response.json();" +
+            "        }" +
+            "    })" +
+            "    .then(response => {" +
+            "        if (response !== undefined) {" +
+            "            $(otherTableSelection).append(\"<option>Select a table</option>\");" +
+            "            for (const index in response.Tables) {" +
+            "                const value = response.Tables[index];" +
+            "                $(otherTableSelection).append(\"<option value='\" + value + \"'>\" + value + \"</option>\");" +
+            "            }" +
+            "            return \"ok\";" +
+            "        }" +
+            "    }).then(response => {" +
+            "    if (response === \"ok\") {" +
+            "        $(firstRowSecondCol).append(otherTableLabel, otherTableSelection);" +
+            "        $(secondRowSecondCol).append(otherAttributeLabel, otherAttributeSelection);" +
+            "        $(secondRow).append(secondRowSecondCol);" +
+            "        $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowSecondCol);" +
+            "        $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);" +
+            "" +
+            "        $(\".other-table-selection\").change(() => {" +
+            "           fillIEAttributes(\"interentity\");" +
+            "        });" +
+            "    }" +
+            "});" +
+            "" +
+            "if ($._data( $('.table-selection').get(0), \"events\").change.length < 3) {" +
+            "    $(\".table-selection\").change(() => {" +
+            "        fillIEAttributes(\"entity\");" +
+            "    });" +
+            "}"
     },
     Entity_Other: {
         block:
