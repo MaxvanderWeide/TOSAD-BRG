@@ -86,7 +86,7 @@ var Types = {
             "            $(firstRowFirstCol).append(fkLabel, fkSelect);" +
             "            $(secondRowFirstCol).append(otherTablePkLabel, otherTablePkSelection);" +
             "            $(secondRow).append(secondRowFirstCol, secondRowSecondCol);" +
-            "            $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowFirstCol);" +
+            "            $(\".new-rule-wrapper\").find(\".comparator-step\").prepend(firstRowFirstCol);" +
             "            $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);" +
             "        }" +
             "    });" +
@@ -119,7 +119,6 @@ var Types = {
             "        $(secondRow).append(secondRowSecondCol);" +
             "        $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowSecondCol);" +
             "        $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);" +
-            "" +
             "        $(\".other-table-selection\").change(() => {" +
             "           fillIEAttributes(\"interentity\");" +
             "        });" +
