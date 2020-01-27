@@ -25,15 +25,17 @@ public abstract class BaseDAO {
         try {
             if (connection == null || connection.isClosed() || !connection.isValid(10)) {
                 switch (dbEngine) {
-                    case ORACLE:
-                    default: {
+                    case ORACLE: {
                         OracleDataSource ods = new OracleDataSource();
                         ods.setURL(String.format("jdbc:oracle:thin:@//%s:%d/%s", host, port, serviceName)); // jdbc:oracle:thin@//[hostname]:[port]/[DB service name]
                         ods.setUser(user); // [username]
                         ods.setPassword(password); // [password]
                         connection = ods.getConnection();
                         connection.setAutoCommit(true);
+                        break;
                     }
+                    default:
+                        return null;
                 }
             }
         } catch (SQLException e) {

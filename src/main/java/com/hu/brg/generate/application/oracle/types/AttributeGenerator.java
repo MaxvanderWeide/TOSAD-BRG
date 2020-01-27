@@ -13,7 +13,7 @@ public class AttributeGenerator implements TypeGenerator {
 
     @Override
     public void fillStringTemplate(ST stringTemplate, List<Attribute> attributeList, String groupPath) {
-        if (attributeList.size() == 0) {
+        if (attributeList.isEmpty()) {
             throw new IllegalStateException("AttributeList cannnot be empty");
         }
 
@@ -28,7 +28,7 @@ public class AttributeGenerator implements TypeGenerator {
 
             stringTemplate.add("value_min", attribute.getAttributeValues().get(0).sanitizedValue());
             stringTemplate.add("value_max", attribute.getAttributeValues().get(1).sanitizedValue());
-        } else if (attribute.getRule().getRuleType().isList() && attribute.getAttributeValues().size() > 0) {
+        } else if (attribute.getRule().getRuleType().isList() && attribute.getAttributeValues().isEmpty()) {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("(");
 
