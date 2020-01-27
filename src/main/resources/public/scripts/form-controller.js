@@ -289,6 +289,7 @@ function saveRule(element) {
         const attributeItem = {};
         attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
         attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
+        attributeItem["column"] = $(item).html().split("|")[1].split("-")[0].trim();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
         attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
@@ -435,7 +436,7 @@ function fillFormFields(rule) {
     fillTargetAttributes(table, false);
     fillOperators(type);
     displayBlock(type);
-    fillFormValues(rule.attributes);
+    fillFormValues(rule);
     $(".rule-values-wrapper").show();
     $(".attribute-selection").val(rule.attributes.column);
     $(".operator-selection").val(rule.attributes.operatorName);
@@ -457,8 +458,8 @@ function clearFormFields() {
     $(".custInput2").val('');
 }
 
-function fillFormValues(attributes) {
-    for (const attribute of attributes) {
+function fillFormValues(ruleData) {
+    for (const attribute of ruleData.attributes) {
         for (const value of attribute.attributeValues) {
             $(".attributes-list").append($("<li>", {text: value.value}));
         }
