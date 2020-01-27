@@ -198,7 +198,7 @@ public class RuleController {
             method = HttpMethod.GET,
             tags = {"Define", "Rule", "Data"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
@@ -264,12 +264,12 @@ public class RuleController {
     @OpenApi(
             summary = "deletes rule of provided id",
             operationId = "deleteRule",
-            path = "/maintain/rules/delete/:id",
+            path = "/maintain/rules/:id",
             method = HttpMethod.DELETE,
             pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},
             tags = {"Define", "rules", "rule", "delete"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }

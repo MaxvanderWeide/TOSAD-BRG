@@ -51,10 +51,10 @@ function startupEventListeners() {
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
-        console.log($._data( $('.table-selection').get(0), 'events' ).change.length);
+        console.log($._data($('.table-selection').get(0), 'events').change.length);
         fillOperators(item.target.value);
         displayBlock(item.target.value);
-        if ($._data( $('.table-selection').get(0), "events").change.length < 3) {
+        if ($._data($('.table-selection').get(0), "events").change.length < 3) {
             fillValuesTargetAttributes(item.target);
         }
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
@@ -341,7 +341,7 @@ function saveRule(element) {
 
 function deleteRule(element) {
     let id = $('.rule-id').val();
-    fetch("maintain/rules/delete/" + id, {
+    fetch("maintain/rules/" + id, {
         method: "DELETE",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
     })
@@ -491,7 +491,7 @@ function fillFormValues(ruleData) {
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
             case "InterEntity_Compare":
-                //TODO - select correct values
+            //TODO - select correct values
             default:
                 break;
         }
