@@ -8,6 +8,7 @@ import com.hu.brg.generate.domain.Rule;
 import com.hu.brg.generate.domain.Table;
 import com.hu.brg.generate.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.generate.persistence.targetdatabase.TargetDatabaseDAOImpl;
+import com.hu.brg.shared.ConfigSelector;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -39,7 +40,7 @@ public class OracleGenerator implements Generator {
             smallTableName = smallTableName.replaceAll("[AEIOU]", "");
             smallTableName = smallTableName.substring(0, Math.min(smallTableName.length(), 10));
 
-            baseStringTemplate.add("trigger_name", String.format("BRG_%s_%s_TRIGGER", project.getName(), smallTableName));
+            baseStringTemplate.add("trigger_name", String.format("%s_%s_%s_TRIGGER", ConfigSelector.APPLICATION_NAME, project.getName(), smallTableName));
             baseStringTemplate.add("trigger_table", table.getName());
             baseStringTemplate.add("trigger_error_code", -20000);
 
