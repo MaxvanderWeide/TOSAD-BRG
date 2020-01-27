@@ -302,7 +302,7 @@ function saveRule(element) {
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
     values["errorMessage"] = $(target).find(".error-message").val();
-    values["attributes"] = [attributes];
+    values["attributes"] = attributes;
     console.log(values);
     values = JSON.stringify(values);
 
