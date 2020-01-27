@@ -51,7 +51,7 @@ public class AttributeSaveBuilder {
         return this;
     }
 
-    public AttributeSaveBuilder setOtherTablePk(Column otherTablePk) {
+    public AttributeSaveBuilder setOtherTablePK(Column otherTablePk) {
         this.otherTablePk = otherTablePk;
         return this;
     }

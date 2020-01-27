@@ -46,12 +46,24 @@ public class RuleSaveService implements SaveService {
                 .setColumn(new Column(object.getString("column"), null))
                 .setOperator(operator)
                 .setOrder(object.has("order ") ? object.getInt("order") : 0)
-                .setTargetTableFK(null)
-                .setOtherTablePk(null)
-                .setOtherTable(null)
-                .setOtherColumn(null)
                 .setAttributeValueList(attributeValueList)
                 .build();
+
+        if (object.has("targetTableFK")) {
+            builder.setTargetTableFK(new Column(object.getString("targetTableFK"), null));
+        }
+
+        if (object.has("otherTablePK")) {
+            builder.setOtherTablePK(new Column(object.getString("otherTablePK"), null));
+        }
+
+        if (object.has("otherTable")) {
+            builder.setOtherTable(new Table(object.getString("otherTable"), Collections.emptyList()));
+        }
+
+        if (object.has("otherColumn")) {
+            builder.setOtherColumn(new Column(object.getString("otherColumn"), null));
+        }
 
         attributeValueList.forEach(attributeValue -> attributeValue.setAttribute(attribute));
         return attribute;

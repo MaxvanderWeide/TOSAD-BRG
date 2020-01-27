@@ -258,8 +258,8 @@ function saveRule(element) {
             attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
         });
     } else if(checkTypeSelected["InterEntity_Compare"], selectedType) {
-        attributeItem["targetTableFk"] = $(".target-foreign-key").val().split("-")[0].trim();
-        attributeItem["otherTablePk"] = $(".other-table-pk-selection").val().split("-")[0].trim();
+        attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
+        attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
         attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
     }
