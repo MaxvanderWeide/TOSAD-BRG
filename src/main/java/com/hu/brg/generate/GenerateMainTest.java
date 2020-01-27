@@ -57,7 +57,7 @@ public class GenerateMainTest {
                 project,
                 "Test2",
                 "Test description",
-                new Table("KLANTEN2"),
+                new Table("KLANTEN"),
                 new RuleType(4, "Tuple_Compare", "TCMP"),
                 "Error message",
                 Collections.emptyList()
