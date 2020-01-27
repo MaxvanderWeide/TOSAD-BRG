@@ -172,3 +172,16 @@ div.spinner-border {
 table.existing-rules-wrapper {
     display: none;
 }
+
+.attr-lst-input, .attr-lst-btn {
+    max-width: 45%;
+}
+
+.attr-lst-btn {
+    margin-bottom: 0!important;
+}
+
+li {
+    color: red;
+    font-weight: bold;
+}

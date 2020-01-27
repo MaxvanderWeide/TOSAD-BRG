@@ -12,10 +12,10 @@ var Types = {
     },
     Attribute_List: {
         block:
-            "const attributeInput = $(\"<input>\");" +
-            "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3\", text: \"add\"});" +
+            "const attributeInput = $(\"<input>\", {class: \"form-input attr-lst-input\"});" +
+            "const addAttribute = $(\"<button>\", {class: \"btn-success col-md-3 mb-3 attr-lst-btn\", text: \"add\"});" +
             "const br = $(\"<br>\");" +
-            "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
+            "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list col-md-6 mb-3\"});" +
             "$(addAttribute).click(() => {" +
             "   const li = $(\"<li>\", {text: $(attributeInput).val()});" +
             "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
