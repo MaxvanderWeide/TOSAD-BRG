@@ -98,10 +98,13 @@ public class RuleSaveService implements SaveService {
             Operator operator = selectService.getOperatorByName(attributeObject.getString("operatorName"));
 
             List<AttributeValue> attributeValues = new ArrayList<>();
-            for (int attributeValueIterator = 0; attributeValueIterator < attributeObject.getJSONArray("attributeValues").length(); attributeValueIterator++) {
-                JSONObject attributeValueObject = attributeObject.getJSONArray("attributeValues").getJSONObject(attributeValueIterator);
 
-                attributeValues.add(buildAttributeValue(attributeValueObject, claims));
+            if (attributeObject.has("attributeValues")) {
+                for (int attributeValueIterator = 0; attributeValueIterator < attributeObject.getJSONArray("attributeValues").length(); attributeValueIterator++) {
+                    JSONObject attributeValueObject = attributeObject.getJSONArray("attributeValues").getJSONObject(attributeValueIterator);
+
+                    attributeValues.add(buildAttributeValue(attributeValueObject, claims));
+                }
             }
 
             attributes.add(buildAttribute(attributeObject, claims, operator, attributeValues));
