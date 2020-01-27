@@ -275,7 +275,7 @@ function saveRule(element) {
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
     values["errorMessage"] = $(target).find(".error-message").val();
-    values["attributes"] = attributes;
+    values["attributes"] = [attributes]; //TODO: Bart: This is a quick fix for making the attributes an array
     values = JSON.stringify(values);
 
     /*
