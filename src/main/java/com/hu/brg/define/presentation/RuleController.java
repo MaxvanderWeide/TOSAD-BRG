@@ -334,22 +334,17 @@ public class RuleController {
             context.status(403);
             return;
         }
-//        Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
-//
-//        if (rule == null) {
-//            context.status(404).result("No rule was found");
-//            return;
-//        }
-//
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("name", rule.getName());
-//        map.put("id", rule.getId());
-//        map.put("type", rule.getRuleType());
-//        map.put("description", rule.getDescription());
-//        map.put("table", rule.getTargetTable().getName());
-//        map.put("attributes", rule.getAttributesList());
-//        map.put("errorMessages", rule.getErrorMessage());
-//
-//        context.json(map).status(200);
+        Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
+
+        if (rule == null) {
+            context.status(404).result("No rule was found");
+            return;
+        }
+
+        if (getSaveService().deleteRule(context.pathParam("id", Integer.class).get())) {
+            context.result("OK").status(200);
+        } else {
+            context.result("FAIL").status(501);
+        }
     }
 }
