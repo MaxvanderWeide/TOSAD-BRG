@@ -69,6 +69,7 @@ function showMenu() {
     $(".back-maintain").hide();
     $(".back-define").hide();
     $(".btn-delete").hide();
+    $(".alert-success").hide();
 }
 
 function loadFromStorage() {
@@ -313,34 +314,41 @@ function saveRule(element) {
     })
         .then(response => {
             if (response.status === 201) {
-                alert('Rule was created');
+                let alertSuccess = $('.alert-success');
+                alertSuccess.append("Your new BusinessRule was created!");
+                alertSuccess.show();
             } else if (response.status === 400) {
-                alert('Rule was not created');
+                let alertDanger = $('.alert-danger');
+                alertDanger.append("Your Business Rule was not created! You may want to recheck your inpur...");
+                alertDanger.show();
             }
         });
 }
 
 function deleteRule(element) {
     //TODO: get id and delete...
-    let id = element;
+    let id = $('.rule-id').val();
     console.log(id);
     fetch("define/rules/delete/" + id, {
-        method: "POST",
+        method: "DELETE",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
-        body: values
     })
         .then(response => {
             if (response.status === 201) {
-                alert('Rule was deleted');
+                let alertSuccess = $('.alert-success');
+                alertSuccess.append("The BusinessRule was deleted!");
+                alertSuccess.show();
             } else if (response.status === 400) {
-                alert('Rule was not deleted');
+                let alertDanger = $('.alert-danger');
+                alertDanger.append("The rule was not deleted...");
+                alertDanger.show();
             }
         });
 }
 
 function displayBlock(type) {
-    $(type).parent().parent().parent(".rule-details-wrapper").find(".comparator-step").html("");
-    eval(Types[$(type).val()].block);
+    $(".comparator-step").html("");
+    eval(Types[type].block);
 }
 
 function fillValuesTargetAttributes(element) {
