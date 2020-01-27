@@ -28,7 +28,7 @@
         <p class="lead"><i>Best rule generator in the business!</i></p>
     </div>
 
-    <div class="spinner-holder">
+    <div class="spinner-holder initial-spinner">
         <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
@@ -163,9 +163,14 @@
                     <input id="search-rule" class="form-input">
                     <br>
                     <h3>Existing Rules</h3>
+                    <div class="spinner-holder maintain-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
                     <p class="lead"></p>
 
-                    <table class="table">
+                    <table class="table existing-rules-wrapper">
                         <thead class="thead-dark">
                         <tr>
                             <th scope="col">#</th>
@@ -174,14 +179,7 @@
                             <th scope="col">Rule type</th>
                         </tr>
                         </thead>
-                        <tbody id="table-body">
-                        <tr class="rows">
-                            <th scope="row">0</th>
-                            <td>No</td>
-                            <td>Rule</td>
-                            <td>Yet</td>
-                        </tr>
-                        </tbody>
+                        <tbody id="table-body"></tbody>
                     </table>
                 </div>
             </div>

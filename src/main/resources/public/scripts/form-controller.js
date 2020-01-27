@@ -1,6 +1,10 @@
 $(document).ready(function () {
     loadFromStorage();
     fillTypes();
+    startupEventListeners();
+});
+
+function startupEventListeners() {
     $(".btn-connect").click(() => {
         createConnection();
     });
@@ -24,7 +28,7 @@ $(document).ready(function () {
     });
 
     $("#search-rule").on("keyup", function () {
-        var value = $(this).val().toLowerCase();
+        const value = $(this).val().toLowerCase();
         $("#table-body tr").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
@@ -34,8 +38,21 @@ $(document).ready(function () {
         showMenu();
     });
 
-    eventListeners();
-});
+    $(".new-rule-wrapper .table-selection").change((item) => {
+        fillTargetAttributes(item.target, false, "define");
+    });
+
+    $(".new-rule-wrapper .type-selection").change((item) => {
+        fillOperators(item.target, "define");
+        displayBlock(item.target);
+        fillValuesTargetAttributes(item.target);
+        $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
+    });
+
+    $(".btn-save").click((item) => {
+        saveRule(item);
+    })
+}
 
 function showMenu() {
     $(".action-button-box").show();
@@ -44,24 +61,6 @@ function showMenu() {
     $(".back-maintain").hide();
     $(".back-define").hide();
     $(".btn-delete").hide();
-}
-
-function eventListeners() {
-    $(".table-selection").unbind("change");
-    $(".table-selection").change((item) => {
-        fillTargetAttributes(item.target);
-    });
-
-    $(".type-selection").change((item) => {
-        fillOperators(item.target);
-        displayBlock(item.target);
-        FillValuesTargetAttributes(item.target)
-        $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
-    });
-
-    $(".btn-save").click((item) => {
-        saveRule(item);
-    })
 }
 
 function loadFromStorage() {
@@ -78,7 +77,7 @@ function loadFromStorage() {
         createConnection();
     } else {
         $(".db-info-wrapper").show();
-        $(".spinner-holder").hide();
+        $(".spinner-holder.initial-spinner").hide();
     }
 }
 
@@ -112,11 +111,11 @@ function createConnection() {
                 sessionStorage.setItem("access_token", response);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
-                getAllRuleNames();
+                getAllRules();
             } else {
                 $(".db-info-wrapper").show();
             }
-            $(".spinner-holder").hide();
+            $(".spinner-holder.initial-spinner").hide();
         });
 }
 
@@ -161,7 +160,7 @@ function fillTypes() {
         });
 }
 
-function fillTargetAttributes(tableSelection, entityRuleType = false) {
+function fillTargetAttributes(tableSelection, interEntityRuleType = false, target) {
     fetch("define/tables/" + $(tableSelection).val() + "/attributes ", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
@@ -172,17 +171,27 @@ function fillTargetAttributes(tableSelection, entityRuleType = false) {
             }
         })
         .then(response => {
-            if (response !== undefined) {
-                const selection = entityRuleType ? $("#custInput1") : $(".attribute-selection");
-                $(selection).empty();
-                for (const index in response.Attributes) {
-                    $(selection).append("<option value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
+                if (response !== undefined) {
+                    let selectionTarget = "";
+                    if (interEntityRuleType) {
+                        selectionTarget = target === "define" ? $(".new-rule-wrapper #custInput2") : $(".update-rule-wrapper #custInput2");
+                    } else {
+                        selectionTarget = target === "define" ? $(".new-rule-wrapper .attribute-selection") : $(".update-rule-wrapper .attributeselection");
+                    }
+
+                    console.log(selectionTarget);
+
+                    $(selectionTarget).empty();
+                    for (const index in response.Attributes) {
+                        $(selectionTarget).append("<option value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
+                    }
                 }
             }
-        });
+        )
+    ;
 }
 
-function fillOperators(type) {
+function fillOperators(type, target) {
     fetch("define/types/" + $(type).val() + "/operators", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
@@ -190,55 +199,66 @@ function fillOperators(type) {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 404) {
+                return response.text();
             }
         })
         .then(response => {
             if (response !== undefined) {
-                $(".operator-selection").empty();
-                for (const index in response.Operators) {
-                    $(".operator-selection").append("<option value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
+                const operatorSelection = target === "define" ? $(".new-rule-wrapper .operator-selection") : $(".update-rule-wrapper .operator-selection");
+                operatorSelection.empty();
+                if (typeof response == 'string' || response instanceof String) {
+                    $(operatorSelection).append("<option value='null'>No operators associated to rule type</option>");
+                } else {
+                    for (const index in response.Operators) {
+                        $(operatorSelection).append("<option value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
+                    }
                 }
             }
         });
+}
+
+function checkTypeSelected(valuesArray, type) {
+    return valuesArray.indexOf(type.trim()) > -1;
+}
+
+function setAttributeValues(value, type, isLiteral) {
+    const attributeValues = {};
+
+    attributeValues["value"] = value;
+    attributeValues["valueType"] = type;
+    attributeValues["isLiteral"] = isLiteral;
+
+    return attributeValues;
 }
 
 function saveRule(element) {
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
-    const ruleOperation = $(target).hasClass("new-rule-wrapper") ? "insert" : "update";
-
-    const ruleValues = [];
-
-    if (selectedType === "Attribute_List") {
-        $(target).find("ul.attributes-list li").each((index, item) => {
-            ruleValues.push($(item).html());
-        });
-    } else {
-        if (["Tuple", "Entity"].indexOf(selectedType.split("_")[0].trim()) > -1) {
-            ruleValues.push(selectedTable);
-        }
-        $(target).find($("[id^=custInput]")).each((index, item) => {
-            ruleValues.push($(item).val());
-        });
-    }
 
     let attributes = {};
-    let attributesValues = {};
     const attributeValuesArray = [];
     let attributeItem = {};
 
-    attributeItem["column"] = $(target).find(".attribute-selection").val().split("-")[0].trim();
+    if (checkTypeSelected(["Tuple_Other", "Entity_Other"], selectedType)) {
+        $(target).find("ul.attributes-list li").each((index, item) => {
+            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3], $(item).html().split("|")[1].split("-")[1].trim(), true));
+        });
+    } else if (checkTypeSelected(["Attribute_Range"], selectedType)) {
+        $("[id^=custInput]").each((index, item) => {
+            attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", true));
+        });
+    } else if (checkTypeSelected(["Attribute_Compare", "Attribute_Other"], selectedType)) {
+        attributeValuesArray.push(setAttributeValues($("#custInput1").val(), $(".attribute-selection").val().split("-")[1].trim(), true));
+    } else if (checkTypeSelected(["Attribute_List"], selectedType)) {
+        $(target).find("ul.attributes-list li").each((index, item) => {
+            attributeValuesArray.push(setAttributeValues($(item).html().trim(), $(".attribute-selection").val().split("-")[1].trim(), true));
+        });
+    }
+
+    attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
     attributeItem["operatorName"] = $(target).find(".operator-selection").val();
-
-    $(target).find("ul.attributes-list li").each((index, item) => {
-        attributesValues = {};
-        attributesValues["value"] = $(item).html().split("|")[3];
-        attributesValues["valueType"] = $(item).html().split("|")[1].split("-")[1].trim();
-        attributesValues["isLiteral"] = true;
-        attributeValuesArray.push(attributesValues);
-    });
-
     attributeItem["attributeValues"] = attributeValuesArray;
 
     attributes = attributeItem;
@@ -291,27 +311,22 @@ function saveRule(element) {
 }
 
 function displayBlock(type) {
-    const tableSelection = $(type).parent().parent().parent(".rule-details-wrapper").find(".table-selection");
     $(type).parent().parent().parent(".rule-details-wrapper").find(".comparator-step").html("");
-    console.log($(type).val());
     eval(Types[$(type).val()].block);
-    $(tableSelection).unbind("change");
-    fillTargetAttributes(tableSelection);
 }
 
-function FillValuesTargetAttributes(element) {
+function fillValuesTargetAttributes(element) {
     const typeName = $(element).val();
     const typeNameSplit = typeName.split("_");
-    if (typeNameSplit[0].trim() === "Entity" ||
-        typeNameSplit[0].trim() === "Tuple") {
-        $(".table-selection").change((item) => {
-            fillTargetAttributes(item.target, item.target);
+    if (typeNameSplit[0].trim() === "InterEntity") {
+        $(".new-rule-wrapper .table-selection").change((item) => {
+            fillTargetAttributes(item.target, true, "define");
         });
     }
 }
 
-function getAllRuleNames() {
-    fetch("define/rules/names", {
+function getAllRules() {
+    fetch("maintain/rules", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
     })
@@ -337,9 +352,17 @@ function getAllRuleNames() {
                     );
                 }
 
-                $("table.table").append(tableBody);
+                $("table.existing-rules-wrapper").append(tableBody);
+                return "ok";
+            } else {
+                $("#table-body").html("No rules found")
             }
-        });
+        }).then(response => {
+        $(".spinner-holder.maintain-spinner").hide();
+
+        $("table.existing-rules-wrapper").show();
+
+    });
 }
 
 function clickTable(id) {

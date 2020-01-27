@@ -193,7 +193,7 @@ public class RuleController {
     @OpenApi(
             summary = "Get the necessary rules data",
             operationId = "getMaintainRulesData",
-            path = "/define/rules/data",
+            path = "/maintain/rules",
             method = HttpMethod.GET,
             tags = {"Define", "Rule", "Data"},
             responses = {
@@ -232,7 +232,7 @@ public class RuleController {
     @OpenApi(
             summary = "gets the rule by provided id",
             operationId = "getRuleById",
-            path = "/define/rules/:id",
+            path = "/maintain/rules/:id",
             method = HttpMethod.GET,
             pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},
             tags = {"Define", "rules", "rule"},

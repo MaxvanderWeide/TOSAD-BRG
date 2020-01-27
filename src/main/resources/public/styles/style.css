@@ -168,3 +168,7 @@ div.spinner-border {
     width: 4rem;
     height: 4rem;
 }
+
+table.existing-rules-wrapper {
+    display: none;
+}

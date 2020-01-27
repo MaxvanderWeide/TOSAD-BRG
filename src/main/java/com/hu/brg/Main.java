@@ -40,11 +40,12 @@ public class Main {
                 });
 
                 path("rules", () -> {
-//                    get(RuleController::getRuleDefinitions);
                     post(RuleController::saveRuleDefinition);
-                    path("names", () -> {
-                        get(RuleController::getMaintainRulesData);
-                    });
+                });
+            });
+            path("maintain", () -> {
+                path("rules", () -> {
+                    get(RuleController::getMaintainRulesData);
                     path(":id", () -> {
                         get(RuleController::getRuleById);
                     });
