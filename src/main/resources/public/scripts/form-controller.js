@@ -16,6 +16,7 @@ function startupEventListeners() {
         $(".search-button").show();
         $(".btn-delete").show();
         $(".new-rule-header").hide();
+        clearFormFields();
     });
 
     $(".new-rule").click(() => {
@@ -23,6 +24,7 @@ function startupEventListeners() {
         $(".action-button-box").hide();
         $(".back-define").show();
         $(".new-rule-header").show();
+        clearFormFields();
     });
 
     $(".back-maintain").click(() => {
@@ -392,6 +394,7 @@ function getAllRules() {
 }
 
 function clickTable(id) {
+    clearFormFields();
     $(".new-rule-wrapper").show();
 
     getRuleById(id);
@@ -409,8 +412,6 @@ function getRuleById(target) {
         })
         .then(response => {
             if (response !== undefined) {
-                //TODO: waardes in FE laden.
-                console.log(response);
                 fillFormFields(response)
             }
         });
@@ -418,7 +419,7 @@ function getRuleById(target) {
 
 function fillFormFields(rule) {
     let table = rule.table;
-    const type = rule.type.type;
+    let type = rule.type.type;
     $(".rule-name").val(rule.name);
     $(".rule-description").val(rule.description);
     $(".table-selection").val(table);
@@ -432,5 +433,11 @@ function fillFormFields(rule) {
 }
 
 function clearFormFields() {
-
+    $(".rule-name").val('');
+    $(".rule-description").val('');
+    $(".table-selection").val('');
+    $(".type-selection").val('');
+    $(".attribute-selection").val('');
+    $(".operator-selection").val('');
+    $(".error-message").val('');
 }
