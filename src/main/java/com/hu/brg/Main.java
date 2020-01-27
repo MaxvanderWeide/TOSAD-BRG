@@ -49,6 +49,13 @@ public class Main {
                     path(":id", () -> {
                         get(RuleController::getRuleById);
                     });
+                    path("delete", () -> {
+                        get(RuleController::getMaintainRulesData);
+                        path(":id", () -> {
+                            get(RuleController::deleteRule);
+                        });
+
+                    });
                 });
             });
         }).start(4201);

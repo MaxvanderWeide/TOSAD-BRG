@@ -22,4 +22,6 @@ public interface SaveService {
     Rule buildRuleComplete(JSONObject object, Claims claims, SelectService selectService);
 
     Rule saveRule(Rule ruleDefinition);
+
+    boolean deleteRule(int id);
 }

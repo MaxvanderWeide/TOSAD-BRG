@@ -15,12 +15,14 @@ function startupEventListeners() {
         $(".back-maintain").show();
         $(".search-button").show();
         $(".btn-delete").show();
+        $(".new-rule-header").hide();
     });
 
     $(".new-rule").click(() => {
         $(".new-rule-wrapper").show();
         $(".action-button-box").hide();
         $(".back-define").show();
+        $(".new-rule-header").show();
     });
 
     $(".back-maintain").click(() => {
@@ -51,7 +53,11 @@ function startupEventListeners() {
 
     $(".btn-save").click((item) => {
         saveRule(item);
-    })
+    });
+
+    $(".btn-delete").click((item) => {
+        deleteRule(item);
+    });
 }
 
 function showMenu() {
@@ -317,6 +323,24 @@ function saveRule(element) {
         });
 }
 
+function deleteRule(element) {
+    //TODO: get id and delete...
+    let id = element;
+    console.log(id);
+    fetch("define/rules/delete/"+id, {
+        method: "POST",
+        headers: {"Authorization": sessionStorage.getItem("access_token")},
+        body: values
+    })
+        .then(response => {
+            if (response.status === 201) {
+                alert('Rule was deleted');
+            } else if (response.status === 400) {
+                alert('Rule was not deleted');
+            }
+        });
+}
+
 function displayBlock(type) {
     $(type).parent().parent().parent(".rule-details-wrapper").find(".comparator-step").html("");
     eval(Types[$(type).val()].block);
@@ -379,7 +403,7 @@ function clickTable(id) {
 }
 
 function getRuleById(target) {
-    fetch("define/rules/" + target, {
+    fetch("maintain/rules/" + target, {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
     })
@@ -392,6 +416,24 @@ function getRuleById(target) {
             if (response !== undefined) {
                 //TODO: waardes in FE laden.
                 console.log(response);
+                fillFormFields(response)
             }
         });
+}
+
+function fillFormFields(rule) {
+    let table = rule.table;
+    $(".rule-name").val(rule.name);
+    $(".rule-description").val(rule.description);
+    $(".table-selection").val(table);
+    $(".type-selection").val(rule.type.type);
+
+    fillTargetAttributes(table, false, "define");
+    $(".attribute-selection").val(rule.attributes.column);
+    $(".operator-selection").val(rule.attributes.operatorName);
+    $(".error-message").val(rule.errorMessages);
+}
+
+function clearFormFields() {
+
 }
