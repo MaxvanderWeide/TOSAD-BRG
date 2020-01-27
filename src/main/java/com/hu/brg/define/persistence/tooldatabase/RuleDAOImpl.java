@@ -264,11 +264,17 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
     @Override
     public boolean deleteRule(int id) {
-        //noinspection ConstantConditions
-        if (true) {
-            throw new UnsupportedOperationException("Not implemented yet");
-        }
+        try (Connection conn = getConnection()) {
+            String query = "DELETE FROM RULES WHERE ID = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, id);
 
+            preparedStatement.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 
