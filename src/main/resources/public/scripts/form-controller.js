@@ -17,6 +17,7 @@ function startupEventListeners() {
         $(".btn-delete").show();
         $(".new-rule-header").hide();
         clearFormFields();
+        getAllRules();
     });
 
     $(".new-rule").click(() => {
@@ -120,7 +121,6 @@ function createConnection() {
                 sessionStorage.setItem("access_token", response);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
-                getAllRules();
             } else {
                 $(".db-info-wrapper").show();
             }
@@ -460,10 +460,20 @@ function clearFormFields() {
 
 function fillFormValues(ruleData) {
     console.log(ruleData);
-
     for (const attribute of ruleData.attributes) {
-        for (const value of attribute.attributeValues) {
-            $(".attributes-list").append($("<li>", {text: value.value}));
+        switch (ruleData.type.type) {
+            case "Attribute_List":
+                for (const value of attribute.attributeValues) {
+                    $(".attributes-list").append($("<li>", {text: value.value}));
+                }
+                break;
+            case "Attribute_Range":
+                $("#custInput1").val(attribute.attributeValues[0].value);
+                $("#custInput2").val(attribute.attributeValues[1].value);
+            case "Attribute_Compare":
+                $("#custInput1").val(attribute.attributeValues[0].value);
+            default:
+                break;
         }
     }
 }
