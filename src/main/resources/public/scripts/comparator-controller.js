@@ -30,7 +30,7 @@ var Types = {
             "const br = $(\"<br>\");" +
             "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list form-input col-md-6 mb-3\"});" +
             "$(addAttribute).click(() => {" +
-            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \".\" + $(\".attribute-selection\").val() + \" \" + $(\".operator-selection\").val() + \" \" +  $(attributeInput).val()});" +
+            "   const li = $(\"<li>\", {text: $(attributeInput).val()});" +
             "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
             "});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"

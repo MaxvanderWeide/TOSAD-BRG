@@ -250,10 +250,16 @@ function saveRule(element) {
             attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", true));
         });
     } else if (checkTypeSelected(["Attribute_Compare", "Attribute_Other"], selectedType)) {
-        attributeValuesArray.push(setAttributeValues($("#custInput1").val(), $(".attribute-selection").val().split("-")[1].trim(), true));
+        attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "VARCHAR2", true));
     } else if (checkTypeSelected(["Attribute_List"], selectedType)) {
         $(target).find("ul.attributes-list li").each((index, item) => {
-            attributeValuesArray.push(setAttributeValues($(item).html().trim(), $(".attribute-selection").val().split("-")[1].trim(), true));
+            const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
+            attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
+        });
+    } else if (checkTypeSelected(["Tuple_Compare"], selectedType)) {
+        $(target).find("ul.attributes-list li").each((index, item) => {
+            const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
+            attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
         });
     }
 
