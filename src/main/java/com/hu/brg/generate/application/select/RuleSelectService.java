@@ -13,4 +13,9 @@ public class RuleSelectService implements SelectService {
     public List<Rule> getRulesWithProjectId(int id) {
         return ruleDAO.getRulesByProjectId(id);
     }
+
+    public Rule getRuleWithId(int id, int projectId) {
+        Rule rule = ruleDAO.getRule(id);
+        return rule.getProject().getId() == projectId ? rule : null;
+    }
 }

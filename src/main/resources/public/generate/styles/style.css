@@ -3,74 +3,6 @@ div.container {
     margin: 50px auto;
 }
 
-div.rule-wrapper, div.rule-info-top-block {
-    display: flex;
-    justify-content: space-between;
-}
-
-div.rule-info-wrapper {
-    display: flex;
-    justify-content: space-around;
-    flex-flow: row wrap;
-}
-
-div.rule-info-wrapper {
-    background-color: #ccc;
-    padding: 10px;
-}
-
-div.generated-rule-wrapper {
-    padding-top: 10px;
-    background-color: #bbbbbb;
-}
-
-div.generated-rule {
-    padding: 10px;
-}
-
-div.rule-info-wrapper, div.generated-rule-wrapper {
-    width: 50%;
-}
-
-div.rule-info-wrapper label, div.rule-info-wrapper input {
-    display: block;
-}
-
-div.rule-info-wrapper input {
-    margin-bottom: 14px;
-}
-
-div.rule-info-bottom-block ul {
-    list-style: none;
-    padding: 6px 4px;
-    margin: 0;
-    background-color: #fff;
-}
-
-div.rule-info-bottom-block {
-    width: 100%;
-}
-
-div.generated-rule {
-    margin: 10px;
-    background-color: #fff;
-}
-
-span.generated-rule-title {
-    font-size: 20px;
-    margin: 10px;
-}
-
-div.rule-name {
-    background-color: #ddd;
-    padding: 10px;
-    font-size: 20px;
-}
-
-div.rule-item {
-    margin-bottom: 100px;
-}
-
 .spinner-holder {
     left: 50%;
     margin: 0 -50% 0 0;
@@ -97,10 +29,11 @@ div.spinner-border {
     height: 4rem;
 }
 
-div.rule-items-wrapper {
-    display: none;
+table {
+    margin-top: 2vw;
 }
 
-textarea {
-    width: 100%;
+tbody tr:hover {
+    opacity: .8;
+    cursor: pointer;
 }
