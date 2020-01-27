@@ -2,8 +2,8 @@ package com.hu.brg;
 
 import com.hu.brg.define.presentation.RuleController;
 import com.hu.brg.generate.presentation.GenerateController;
-import com.hu.brg.shared.controller.AuthController;
-import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.service.controller.AuthController;
+import com.hu.brg.service.model.web.ErrorResponse;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -24,6 +24,7 @@ public class Main {
             path("generate", () -> path("rules", () -> {
                 get(GenerateController::getRuleDefinitions);
                 post(GenerateController::generateCode);
+                path(":id", () -> get(GenerateController::getRule));
             }));
             path("auth", () -> path("connection", () -> post(AuthController::createConnection)));
             path("define", () -> {

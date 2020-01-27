@@ -83,7 +83,7 @@ public class Rule {
     public String toString() {
         return "Rule{" +
                 "id=" + id +
-                ", project=" + project +
+                ", required=" + project +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", targetTable=" + targetTable +

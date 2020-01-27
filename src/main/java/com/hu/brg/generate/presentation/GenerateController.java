@@ -5,7 +5,7 @@ import com.hu.brg.generate.application.select.SelectService;
 import com.hu.brg.generate.domain.Attribute;
 import com.hu.brg.generate.domain.AttributeValue;
 import com.hu.brg.generate.domain.Rule;
-import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.service.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.*;
 import io.jsonwebtoken.Claims;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hu.brg.shared.controller.AuthController.decodeJWT;
+import static com.hu.brg.service.controller.AuthController.decodeJWT;
 
 public class GenerateController {
 
@@ -50,7 +50,7 @@ public class GenerateController {
         Map<String, Map<String, Object>> rules = new HashMap<>();
         try {
             for (Rule rule : getSelectService().getRulesWithProjectId(Integer.parseInt(claims.get("projectId").toString()))) {
-                Map<String, Object> map = serializeRuleToJson(rule, true);
+                Map<String, Object> map = serializeRuleToJson(rule, false);
                 rules.put(rule.getName(), map);
             }
             context.json(rules).status(200);
@@ -124,6 +124,7 @@ public class GenerateController {
         map.put("table", rule.getTargetTable().getName());
 
         if (!keepShort) {
+            // TODO - ^ plz no touch. (Max) will remove
 
             map.put("description", rule.getDescription());
             map.put("errorMessages", rule.getErrorMessage());

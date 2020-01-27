@@ -66,7 +66,7 @@ public class ProjectDAOImpl extends BaseDAO implements ProjectDAO {
         }
 
         if (project.getId() != 0) {
-            throw new IllegalStateException(String.format("Project can't be inserted if the id is not 0; project (%s)", project.toString()));
+            throw new IllegalStateException(String.format("Project can't be inserted if the id is not 0; required (%s)", project.toString()));
         }
 
         try (Connection conn = getConnection()) {
@@ -97,7 +97,7 @@ public class ProjectDAOImpl extends BaseDAO implements ProjectDAO {
         }
 
         if (project.getId() == 0) {
-            throw new IllegalStateException(String.format("Project can't be updated if the id is 0; project (%s)", project.toString()));
+            throw new IllegalStateException(String.format("Project can't be updated if the id is 0; required (%s)", project.toString()));
         }
 
         try (Connection conn = getConnection()) {

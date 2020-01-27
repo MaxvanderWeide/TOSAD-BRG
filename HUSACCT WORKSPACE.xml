@@ -132,12 +132,12 @@
             <name>shared</name>
             <SoftwareUnitDefinitions>
               <SoftwareUnitDefinition>
-                <name>com.hu.brg.shared</name>
+                <name>com.hu.brg.service</name>
                 <type>PACKAGE</type>
               </SoftwareUnitDefinition>
             </SoftwareUnitDefinitions>
             <PhysicalPaths>
-              <path>com.hu.brg.shared</path>
+              <path>com.hu.brg.service</path>
             </PhysicalPaths>
             <SubModules>
               <ModuleStrategy>
@@ -147,12 +147,12 @@
                 <name>persistence</name>
                 <SoftwareUnitDefinitions>
                   <SoftwareUnitDefinition>
-                    <name>com.hu.brg.shared.persistence</name>
+                    <name>com.hu.brg.service.persistence</name>
                     <type>PACKAGE</type>
                   </SoftwareUnitDefinition>
                 </SoftwareUnitDefinitions>
                 <PhysicalPaths>
-                  <path>com.hu.brg.shared.persistence</path>
+                  <path>com.hu.brg.service.persistence</path>
                 </PhysicalPaths>
                 <SubModules>
                   <ModuleStrategy>
@@ -168,12 +168,12 @@
                     <name>toolDatabase</name>
                     <SoftwareUnitDefinitions>
                       <SoftwareUnitDefinition>
-                        <name>com.hu.brg.shared.persistence.tooldatabase</name>
+                        <name>com.hu.brg.service.persistence.tooldatabase</name>
                         <type>PACKAGE</type>
                       </SoftwareUnitDefinition>
                     </SoftwareUnitDefinitions>
                     <PhysicalPaths>
-                      <path>com.hu.brg.shared.persistence.tooldatabase</path>
+                      <path>com.hu.brg.service.persistence.tooldatabase</path>
                     </PhysicalPaths>
                     <SubModules>
                       <ModuleStrategy>
@@ -191,12 +191,12 @@
                     <name>targetDatabase</name>
                     <SoftwareUnitDefinitions>
                       <SoftwareUnitDefinition>
-                        <name>com.hu.brg.shared.persistence.targetdatabase</name>
+                        <name>com.hu.brg.service.persistence.targetdatabase</name>
                         <type>PACKAGE</type>
                       </SoftwareUnitDefinition>
                     </SoftwareUnitDefinitions>
                     <PhysicalPaths>
-                      <path>com.hu.brg.shared.persistence.targetdatabase</path>
+                      <path>com.hu.brg.service.persistence.targetdatabase</path>
                     </PhysicalPaths>
                     <SubModules>
                       <ModuleStrategy>
@@ -216,12 +216,12 @@
                 <name>domain</name>
                 <SoftwareUnitDefinitions>
                   <SoftwareUnitDefinition>
-                    <name>com.hu.brg.shared.model</name>
+                    <name>com.hu.brg.service.model</name>
                     <type>PACKAGE</type>
                   </SoftwareUnitDefinition>
                 </SoftwareUnitDefinitions>
                 <PhysicalPaths>
-                  <path>com.hu.brg.shared.model</path>
+                  <path>com.hu.brg.service.model</path>
                 </PhysicalPaths>
                 <SubModules>
                   <ModuleStrategy>
@@ -237,12 +237,12 @@
                     <name>definition</name>
                     <SoftwareUnitDefinitions>
                       <SoftwareUnitDefinition>
-                        <name>com.hu.brg.shared.model.definition</name>
+                        <name>com.hu.brg.service.model.definition</name>
                         <type>PACKAGE</type>
                       </SoftwareUnitDefinition>
                     </SoftwareUnitDefinitions>
                     <PhysicalPaths>
-                      <path>com.hu.brg.shared.model.definition</path>
+                      <path>com.hu.brg.service.model.definition</path>
                     </PhysicalPaths>
                     <SubModules>
                       <ModuleStrategy>
@@ -260,12 +260,12 @@
                     <name>physical</name>
                     <SoftwareUnitDefinitions>
                       <SoftwareUnitDefinition>
-                        <name>com.hu.brg.shared.model.physical</name>
+                        <name>com.hu.brg.service.model.physical</name>
                         <type>PACKAGE</type>
                       </SoftwareUnitDefinition>
                     </SoftwareUnitDefinitions>
                     <PhysicalPaths>
-                      <path>com.hu.brg.shared.model.physical</path>
+                      <path>com.hu.brg.service.model.physical</path>
                     </PhysicalPaths>
                     <SubModules>
                       <ModuleStrategy>
@@ -283,12 +283,12 @@
                     <name>web</name>
                     <SoftwareUnitDefinitions>
                       <SoftwareUnitDefinition>
-                        <name>com.hu.brg.shared.model.web</name>
+                        <name>com.hu.brg.service.model.web</name>
                         <type>PACKAGE</type>
                       </SoftwareUnitDefinition>
                     </SoftwareUnitDefinitions>
                     <PhysicalPaths>
-                      <path>com.hu.brg.shared.model.web</path>
+                      <path>com.hu.brg.service.model.web</path>
                     </PhysicalPaths>
                     <SubModules>
                       <ModuleStrategy>

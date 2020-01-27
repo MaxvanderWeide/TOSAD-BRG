@@ -1,4 +1,4 @@
-package com.hu.brg.shared;
+package com.hu.brg.service;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,7 +1,7 @@
-package com.hu.brg.define.persistence;
+package com.hu.brg.service.persistance;
 
-import com.hu.brg.define.domain.DBEngine;
 import com.hu.brg.service.ConfigSelector;
+import com.hu.brg.service.model.required.DBEngine;
 import oracle.jdbc.pool.OracleDataSource;
 
 import java.sql.Connection;
@@ -19,7 +19,6 @@ public abstract class BaseDAO {
                 ConfigSelector.USERNAME,
                 ConfigSelector.PASSWORD
         );
-//        return getConnection(DBEngine.ORACLE, "ondora04.hu.nl", 8521, "EDUC17",  "TOSAD2", "tosad1234");
     }
 
     protected Connection getConnection(DBEngine dbEngine, String host, int port, String serviceName, String user, String password) {

@@ -6,8 +6,8 @@ import com.hu.brg.define.domain.Project;
 public interface ProjectDAO {
 
     /**
-     * Saves the project if it doesn't exist and update it if it does.
-     * IMPORTANT: this function doesn't cascade save the rules belonging to the project
+     * Saves the required if it doesn't exist and update it if it does.
+     * IMPORTANT: this function doesn't cascade save the rules belonging to the required
      * @param project Project object
      * @return given Project object in the parameters
      */

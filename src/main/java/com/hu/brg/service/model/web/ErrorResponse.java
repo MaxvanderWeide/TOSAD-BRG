@@ -1,4 +1,4 @@
-package com.hu.brg.shared.model.web;
+package com.hu.brg.service.model.web;
 
 import java.util.Map;
 

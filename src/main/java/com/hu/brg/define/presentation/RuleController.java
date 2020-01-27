@@ -11,7 +11,7 @@ import com.hu.brg.define.domain.Operator;
 import com.hu.brg.define.domain.Rule;
 import com.hu.brg.define.domain.RuleType;
 import com.hu.brg.define.domain.Table;
-import com.hu.brg.shared.model.web.ErrorResponse;
+import com.hu.brg.service.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
 import io.javalin.plugin.openapi.annotations.OpenApiContent;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hu.brg.shared.controller.AuthController.decodeJWT;
+import static com.hu.brg.service.controller.AuthController.decodeJWT;
 
 public class RuleController {
 

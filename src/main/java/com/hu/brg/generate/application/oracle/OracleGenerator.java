@@ -8,7 +8,7 @@ import com.hu.brg.generate.domain.Rule;
 import com.hu.brg.generate.domain.Table;
 import com.hu.brg.generate.persistence.targetdatabase.TargetDatabaseDAO;
 import com.hu.brg.generate.persistence.targetdatabase.TargetDatabaseDAOImpl;
-import com.hu.brg.shared.ConfigSelector;
+import com.hu.brg.service.ConfigSelector;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;

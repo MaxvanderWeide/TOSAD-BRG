@@ -1,7 +1,7 @@
 package com.hu.brg.generate.persistence;
 
 import com.hu.brg.generate.domain.DBEngine;
-import com.hu.brg.shared.ConfigSelector;
+import com.hu.brg.service.ConfigSelector;
 import oracle.jdbc.pool.OracleDataSource;
 
 import java.sql.Connection;
