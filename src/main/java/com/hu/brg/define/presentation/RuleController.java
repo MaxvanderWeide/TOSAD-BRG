@@ -256,6 +256,12 @@ public class RuleController {
             return;
         }
 
+        Map<String, Object> map = serializeRuleToJson(rule);
+
+        context.json(map).status(200);
+    }
+
+    private static Map<String, Object> serializeRuleToJson(Rule rule) {
         Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> attributesList = new ArrayList<>();
         map.put("name", rule.getName());
@@ -306,7 +312,6 @@ public class RuleController {
         }
 
         map.put("attributes", attributesList);
-
-        context.json(map).status(200);
+        return map;
     }
 }
