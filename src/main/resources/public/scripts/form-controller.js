@@ -298,7 +298,7 @@ function saveRule(element) {
         const attributeItem = {};
         attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
         attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
-        attributeItem["column"] = $(".attribute-selection").val();
+        attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
         attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
@@ -489,6 +489,15 @@ function fillFormValues(ruleData) {
                 $("#custInput2").val(attribute.attributeValues[1].value);
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
+            case "InterEntity_Compare":
+                setTimeout(() => {
+                    $(".target-foreign-key option").each((index, item) => {
+                        if ($(item).text() == attribute.attributeValues[0].otherTable) {
+                            console.log($(item).text());
+                        }
+                    });
+                }, 1500);
+
             default:
                 break;
         }
