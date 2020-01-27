@@ -219,12 +219,14 @@ function checkTypeSelected(valuesArray, type) {
     return valuesArray.indexOf(type.trim()) > -1;
 }
 
-function setAttributeValues(value, type, isLiteral) {
+function setAttributeValues(value, type, index, doIndex = false) {
     const attributeValues = {};
 
     attributeValues["value"] = value;
     attributeValues["valueType"] = type;
-    attributeValues["isLiteral"] = isLiteral;
+    if(doIndex) {
+        attributeValues["order"] = index;
+    }
 
     return attributeValues;
 }
@@ -235,41 +237,61 @@ function saveRule(element) {
     const selectedType = $(target).find(".type-selection").val();
 
     let attributes = {};
+    let attributeItems = [];
     const attributeValuesArray = [];
-    let attributeItem = {};
 
     if (checkTypeSelected(["Tuple_Other", "Entity_Other"], selectedType)) {
         $(target).find("ul.attributes-list li").each((index, item) => {
-            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3], $(item).html().split("|")[1].split("-")[1].trim(), true));
+            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3], $(item).html().split("|")[1].split("-")[1].trim()));
         });
     } else if (checkTypeSelected(["Attribute_Range"], selectedType)) {
+        const attributeItem = {};
         $("[id^=custInput]").each((index, item) => {
-            attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", true));
+            attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", index, true));
         });
+        attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
+        attributeItem["operatorName"] = $(target).find(".operator-selection").val();
+        attributeItem["attributeValues"] = attributeValuesArray;
+        attributeItems.push(attributeItem);
     } else if (checkTypeSelected(["Attribute_Compare", "Attribute_Other"], selectedType)) {
-        attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "VARCHAR2", true));
+        const attributeItem = {};
+
+        attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "VARCHAR2"));
+        attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
+        attributeItem["operatorName"] = $(target).find(".operator-selection").val();
+        attributeItem["attributeValues"] = attributeValuesArray;
+        attributeItems.push(attributeItem);
     } else if (checkTypeSelected(["Attribute_List"], selectedType)) {
+        const attributeItem = {};
+
         $(target).find("ul.attributes-list li").each((index, item) => {
             const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
-            attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
+            attributeValuesArray.push(setAttributeValues($(item).html().trim(), type));
         });
+
+        attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
+        attributeItem["operatorName"] = $(target).find(".operator-selection").val();
+        attributeItem["attributeValues"] = attributeValuesArray;
+        attributeItems.push(attributeItem);
     } else if (checkTypeSelected(["Tuple_Compare"], selectedType)) {
         $(target).find("ul.attributes-list li").each((index, item) => {
-            const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
-            attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
+            const attributeItem = {};
+            const type = $(item).html().split("|")[1].split("-")[1].trim();
+            attributeItem["column"] = $(item).html().split("|")[1].split("-")[0].trim();
+            attributeItem["operatorName"] = $(item).html().split("|")[2];
+            attributeItem["attributeValues"] = setAttributeValues($(item).html().split("|")[3], type);
+            attributeItems.push(attributeItem);
         });
     } else if (checkTypeSelected["InterEntity_Compare"], selectedType) {
+        const attributeItem = {};
         attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
         attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
         attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
+        attributeItems.push(attributeItem);
     }
 
-    attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
-    attributeItem["operatorName"] = $(target).find(".operator-selection").val();
-    attributeItem["attributeValues"] = attributeValuesArray;
-
-    attributes = attributeItem;
+    attributes = attributeItems;
 
     let values = {};
     values["ruleName"] = $(target).find(".rule-name").val();
@@ -278,31 +300,8 @@ function saveRule(element) {
     values["typeName"] = selectedType;
     values["errorMessage"] = $(target).find(".error-message").val();
     values["attributes"] = [attributes];
+    console.log(values);
     values = JSON.stringify(values);
-
-    /*
-    Dit is de wenselijke input naar de RuleController
-    {
-      "ruleName": "RuleName",
-      "description": "Description",
-      "tableName": "KLANTEN",
-      "typeName": "Attribute_Compare",
-      "errorMessage": "Error message",
-      "attributes": [
-        {
-          "column": "PRIJS",
-          "operatorName": "Equals",
-          "attributeValues": [
-            {
-              "value": "10",
-              "valueType": "NUMBER",
-              "isLiteral": true
-            }
-          ]
-        }
-      ]
-    }
-     */
 
     fetch("define/rules", {
         method: "POST",
