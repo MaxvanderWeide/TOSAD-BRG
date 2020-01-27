@@ -284,8 +284,8 @@ public class RuleController {
                 attributesMap.put("targetTableFK", attribute.getTargetTableFK().getName());
             }
 
-            if (attribute.getOtherTablePk() != null) {
-                attributesMap.put("otherTablePk", attribute.getOtherTablePk().getName());
+            if (attribute.getOtherTablePK() != null) {
+                attributesMap.put("otherTablePK", attribute.getOtherTablePK().getName());
             }
 
             if (attribute.getOtherTable() != null) {

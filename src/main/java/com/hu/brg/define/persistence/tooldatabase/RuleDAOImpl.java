@@ -332,7 +332,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
         preparedStatement.setString(5, attribute.getTargetTableFK() != null ? attribute.getTargetTableFK().getName() : null);
         preparedStatement.setString(6, attribute.getOtherTable() != null ? attribute.getOtherTable().getName() : null);
         preparedStatement.setString(7, attribute.getOtherColumn() != null ? attribute.getOtherColumn().getName() : null);
-        preparedStatement.setString(8, attribute.getOtherTablePk() != null ? attribute.getOtherTablePk().getName() : null);
+        preparedStatement.setString(8, attribute.getOtherTablePK() != null ? attribute.getOtherTablePK().getName() : null);
     }
 
     private void setAttributeValueStatement(PreparedStatement preparedStatement, AttributeValue attributeValue) throws SQLException {

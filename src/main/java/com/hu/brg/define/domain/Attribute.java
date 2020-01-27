@@ -11,32 +11,32 @@ public class Attribute {
     private Operator operator;
     private int order;
     private Column targetTableFK;
-    private Column otherTablePk;
+    private Column otherTablePK;
     private Table otherTable;
     private Column otherColumn;
 
     private List<AttributeValue> attributeValues;
 
-    public Attribute(Rule rule, Column column, Operator operator, int order, Column targetTableFK, Column otherTablePk, Table otherTable, Column otherColumn, List<AttributeValue> attributeValues) {
+    public Attribute(Rule rule, Column column, Operator operator, int order, Column targetTableFK, Column otherTablePK, Table otherTable, Column otherColumn, List<AttributeValue> attributeValues) {
         this.rule = rule;
         this.column = column;
         this.operator = operator;
         this.order = order;
         this.targetTableFK = targetTableFK;
-        this.otherTablePk = otherTablePk;
+        this.otherTablePK = otherTablePK;
         this.otherTable = otherTable;
         this.otherColumn = otherColumn;
         this.attributeValues = attributeValues;
     }
 
-    public Attribute(int id, Rule rule, Column column, Operator operator, int order, Column targetTableFK, Column otherTablePk, Table otherTable, Column otherColumn, List<AttributeValue> attributeValues) {
+    public Attribute(int id, Rule rule, Column column, Operator operator, int order, Column targetTableFK, Column otherTablePK, Table otherTable, Column otherColumn, List<AttributeValue> attributeValues) {
         this.id = id;
         this.rule = rule;
         this.column = column;
         this.operator = operator;
         this.order = order;
         this.targetTableFK = targetTableFK;
-        this.otherTablePk = otherTablePk;
+        this.otherTablePK = otherTablePK;
         this.otherTable = otherTable;
         this.otherColumn = otherColumn;
         this.attributeValues = attributeValues;
@@ -78,8 +78,8 @@ public class Attribute {
         return targetTableFK;
     }
 
-    public Column getOtherTablePk() {
-        return otherTablePk;
+    public Column getOtherTablePK() {
+        return otherTablePK;
     }
 
     public Table getOtherTable() {
@@ -108,7 +108,7 @@ public class Attribute {
                 ", operator=" + operator +
                 ", order=" + order +
                 ", targetTableFK=" + targetTableFK +
-                ", otherTablePk=" + otherTablePk +
+                ", otherTablePk=" + otherTablePK +
                 ", otherTable=" + otherTable +
                 ", otherColumn=" + otherColumn +
                 ", attributeValues=" + attributeValues +

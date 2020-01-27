@@ -28,7 +28,7 @@ public class InterEntityGenerator implements TypeGenerator {
         if (attribute.getTargetTableFK() == null) {
             throw new IllegalStateException("Target table foreign key needs to be filled for the ruletype");
         }
-        if (attribute.getOtherTablePk() == null) {
+        if (attribute.getOtherTablePK() == null) {
             throw new IllegalStateException("Other table primary key needs to be filled for the ruletype");
         }
 
@@ -38,7 +38,7 @@ public class InterEntityGenerator implements TypeGenerator {
         if (attribute.getRule().getRuleType().isCompare()) {
             stringTemplate.add("table_other", attribute.getOtherTable().getName());
             stringTemplate.add("column_other", attribute.getOtherColumn().getName());
-            stringTemplate.add("table_other_pk", attribute.getOtherTablePk().getName());
+            stringTemplate.add("table_other_pk", attribute.getOtherTablePK().getName());
             stringTemplate.add("table_fk", attribute.getTargetTableFK().getName());
         }
     }
