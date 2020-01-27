@@ -33,8 +33,8 @@ public class RuleSaveService implements SaveService {
                 .setAttribute(null) // This can be null as long buildAttribute is called
                 .setValue(object.getString("value"))
                 .setValueType(object.getString("valueType"))
-                .setOrder(object.getInt("order"))
-                .setLiteral(object.getBoolean("isLiteral"))
+                .setOrder(object.has("order ") ? object.getInt("order") : 0)
+                .setLiteral(!object.has("isLiteral") || object.getBoolean("isLiteral"))
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class RuleSaveService implements SaveService {
                 .setRule(null) // This can be null as long buildRule is called
                 .setColumn(new Column(object.getString("column"), null))
                 .setOperator(operator)
-                .setOrder(object.getInt("order"))
+                .setOrder(object.has("order ") ? object.getInt("order") : 0)
                 .setTargetTableFK(null)
                 .setOtherTablePk(null)
                 .setOtherTable(null)
@@ -63,7 +63,7 @@ public class RuleSaveService implements SaveService {
         Rule rule = builder
                 .setName(object.get("ruleName").toString())
                 .setDescription(object.get("description").toString())
-                .setTargetTable(new Table(object.getString("table"), Collections.emptyList()))
+                .setTargetTable(new Table(object.getString("tableName"), Collections.emptyList()))
                 .setRuleType(type)
                 .setAttributesList(attributeList)
                 .setErrorMessage(object.get("errorMessage").toString())
