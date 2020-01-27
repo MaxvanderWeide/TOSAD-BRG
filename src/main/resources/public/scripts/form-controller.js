@@ -435,6 +435,7 @@ function fillFormFields(rule) {
     fillTargetAttributes(table, false);
     fillOperators(type);
     displayBlock(type);
+    $(".rule-values-wrapper").show();
     $(".attribute-selection").val(rule.attributes.column);
     $(".operator-selection").val(rule.attributes.operatorName);
     $(".error-message").val(rule.errorMessages);
