@@ -257,6 +257,11 @@ function saveRule(element) {
             const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
             attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, true));
         });
+    } else if(checkTypeSelected["InterEntity_Compare"], selectedType) {
+        attributeItem["targetTableFk"] = $(".target-foreign-key").val().split("-")[0].trim();
+        attributeItem["otherTablePk"] = $(".other-table-pk-selection").val().split("-")[0].trim();
+        attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
+        attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
     }
 
     attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
@@ -271,7 +276,7 @@ function saveRule(element) {
     values["tableName"] = selectedTable;
     values["typeName"] = selectedType;
     values["errorMessage"] = $(target).find(".error-message").val();
-    values["attributes"] = [attributes]; //TODO: Bart: This is a quick fix for making the attributes an array
+    values["attributes"] = [attributes];
     values = JSON.stringify(values);
 
     /*

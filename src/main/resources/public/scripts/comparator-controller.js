@@ -37,9 +37,7 @@ var Types = {
     },
     InterEntity_Compare: {
         block:
-            "const pkLabel = $(\"<label>\", {text: \"Select the target table primary key\"});\n" +
             "const fkLabel = $(\"<label>\", {text: \"Select the target table foreign key\"});\n" +
-            "const pkSelect = $(\"<select>\", {class: \"target-primary-key form-input\"});\n" +
             "const fkSelect = $(\"<select>\", {class: \"target-foreign-key form-input\"});\n" +
             "const firstRowFirstCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
             "const firstRowSecondCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
@@ -48,9 +46,11 @@ var Types = {
             "const secondRowFirstCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
             "const secondRowSecondCol = $(\"<div>\", {class: \"col-md-6 mb-3\"});\n" +
             "const otherTableLabel = $(\"<label>\", {text: \"Other target table\"});\n" +
-            "const otherAttributeLabel = $(\"<label>\", {text: \"Other target attribute\"});\n" +
             "const otherTableSelection = $(\"<select>\", {class: \"other-table-selection form-input\"});\n" +
+            "const otherAttributeLabel = $(\"<label>\", {text: \"Other target attribute\"});\n" +
             "const otherAttributeSelection = $(\"<select>\", {class: \"other-attribute-selection form-input\"});\n" +
+            "const otherTablePkLabel = $(\"<label>\", {text: \"Other target table primary key attribute\"});\n" +
+            "const otherTablePkSelection = $(\"<select>\", {class: \"other-table-pk-selection form-input\"});\n" +
             "\n" +
             "function fillIEAttributes(target) {\n" +
             "    const tableSelection = target === \"entity\" ? $(\".table-selection\").val() : $(\".other-table-selection\").val();\n" +
@@ -65,27 +65,29 @@ var Types = {
             "        })\n" +
             "        .then(response => {\n" +
             "            if (response !== undefined) {\n" +
-            "                if (target === \"entity\") {" +
+            "                if (target === \"entity\") {\n" +
             "                    $(fkSelect).empty();\n" +
-            "                    $(pkSelect).empty();\n" +
-            "                } else {" +
-            "                    $(otherAttributeSelection).empty();" +
-            "                }" +
+            "                } else {\n" +
+            "                    $(otherAttributeSelection).empty();\n" +
+            "                    $(otherTablePkSelection).empty();\n" +
+            "                }\n" +
             "                for (const index in response.Attributes) {\n" +
             "                    if (target === \"entity\") {\n" +
             "                        $(fkSelect).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
-            "                        $(pkSelect).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
             "                    } else {\n" +
             "                        $(otherAttributeSelection).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
+            "                        $(otherTablePkSelection).append($(\"<option>\", {value: index + ' - ' + response.Attributes[index], text: index}));\n" +
             "                    }\n" +
             "                }\n" +
             "                return \"ok\";\n" +
             "            }\n" +
             "        }).then(response => {\n" +
             "        if (response === \"ok\") {\n" +
-            "            $(firstRowFirstCol).append(pkLabel, pkSelect);\n" +
-            "            $(firstRowSecondCol).append(fkLabel, fkSelect);\n" +
-            "            $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowFirstCol, firstRowSecondCol);\n" +
+            "            $(firstRowFirstCol).append(fkLabel, fkSelect);\n" +
+            "            $(secondRowFirstCol).append(otherTablePkLabel, otherTablePkSelection);\n" +
+            "            $(secondRow).append(secondRowFirstCol, secondRowSecondCol);\n" +
+            "            $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowFirstCol);\n" +
+            "            $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);\n" +
             "        }\n" +
             "    });\n" +
             "}\n" +
@@ -112,9 +114,10 @@ var Types = {
             "        }\n" +
             "    }).then(response => {\n" +
             "    if (response === \"ok\") {\n" +
-            "        $(secondRowFirstCol).append(otherTableLabel, otherTableSelection);\n" +
+            "        $(firstRowSecondCol).append(otherTableLabel, otherTableSelection);\n" +
             "        $(secondRowSecondCol).append(otherAttributeLabel, otherAttributeSelection);\n" +
-            "        $(secondRow).append(secondRowFirstCol, secondRowSecondCol);\n" +
+            "        $(secondRow).append(secondRowSecondCol);\n" +
+            "        $(\".new-rule-wrapper\").find(\".comparator-step\").append(firstRowSecondCol);\n" +
             "        $(\".new-rule-wrapper\").find(\".form-step-comparator\").append(secondRow);\n" +
             "\n" +
             "        $(\".other-table-selection\").change(() => {\n" +
