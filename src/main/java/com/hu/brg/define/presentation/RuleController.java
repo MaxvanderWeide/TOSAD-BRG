@@ -5,6 +5,7 @@ import com.hu.brg.define.application.save.SaveService;
 import com.hu.brg.define.application.select.RuleSelectService;
 import com.hu.brg.define.application.select.SelectService;
 import com.hu.brg.define.domain.Attribute;
+import com.hu.brg.define.domain.AttributeValue;
 import com.hu.brg.define.domain.Column;
 import com.hu.brg.define.domain.Operator;
 import com.hu.brg.define.domain.Rule;
@@ -256,13 +257,55 @@ public class RuleController {
         }
 
         Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> attributesList = new ArrayList<>();
         map.put("name", rule.getName());
         map.put("id", rule.getId());
         map.put("type", rule.getRuleType());
         map.put("description", rule.getDescription());
         map.put("table", rule.getTargetTable().getName());
-        map.put("attributes", rule.getAttributesList());
         map.put("errorMessages", rule.getErrorMessage());
+
+        for (Attribute attribute : rule.getAttributesList()) {
+            Map<String, Object> attributesMap = new HashMap<>();
+            List<Map<String, Object>> attributeValuesList = new ArrayList<>();
+
+            attributesMap.put("id", attribute.getId());
+            attributesMap.put("column", attribute.getColumn().getName());
+            attributesMap.put("operatorName", attribute.getOperator().getName());
+            attributesMap.put("order", attribute.getOrder());
+
+            if (attribute.getTargetTableFK() != null) {
+                attributesMap.put("targetTableFK", attribute.getTargetTableFK().getName());
+            }
+
+            if (attribute.getOtherTablePk() != null) {
+                attributesMap.put("otherTablePk", attribute.getOtherTablePk().getName());
+            }
+
+            if (attribute.getOtherTable() != null) {
+                attributesMap.put("otherTable", attribute.getOtherTable().getName());
+            }
+
+            if (attribute.getOtherColumn() != null) {
+                attributesMap.put("otherColumn", attribute.getOtherColumn().getName());
+            }
+
+            for (AttributeValue attributeValue : attribute.getAttributeValues()) {
+                Map<String, Object> attributeValuesMap = new HashMap<>();
+                attributeValuesMap.put("id", attributeValue.getId());
+                attributeValuesMap.put("value", attributeValue.getValue());
+                attributeValuesMap.put("valueType", attributeValue.getValueType());
+                attributeValuesMap.put("order", attributeValue.getOrder());
+                attributeValuesMap.put("isLiteral", attributeValue.isLiteral());
+
+                attributeValuesList.add(attributeValuesMap);
+            }
+
+            attributesMap.put("attributeValues", attributeValuesList);
+            attributesList.add(attributesMap);
+        }
+
+        map.put("attributes", attributesList);
 
         context.json(map).status(200);
     }
