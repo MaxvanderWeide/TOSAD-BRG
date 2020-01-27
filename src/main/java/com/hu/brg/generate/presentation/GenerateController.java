@@ -2,6 +2,8 @@ package com.hu.brg.generate.presentation;
 
 import com.hu.brg.generate.application.select.RuleSelectService;
 import com.hu.brg.generate.application.select.SelectService;
+import com.hu.brg.generate.domain.Attribute;
+import com.hu.brg.generate.domain.AttributeValue;
 import com.hu.brg.generate.domain.Rule;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.*;
@@ -46,29 +48,14 @@ public class GenerateController {
             return;
         }
 
-        Map<String, Map<String, String>> definitions = new HashMap<>();
+        Map<String, Map<String, Object>> rules = new HashMap<>();
         try {
             for (Rule rule : getSelectService().getRulesWithProjectId(Integer.parseInt(claims.get("projectId").toString()))) {
-                Map<String, String> definitionMap = new HashMap<>();
-                definitionMap.put("Type", rule.getRuleType().getType());
-                definitionMap.put("Description", rule.getDescription());
-                definitionMap.put("TypeCode", rule.getRuleType().getTypeCode());
-                definitionMap.put("Table", rule.getTargetTable().getName());
-                definitionMap.put("ErrorMessage", rule.getErrorMessage());
-                definitionMap.put("Attribute", rule.getAttributesList().toString());
-                definitionMap.put("ID", String.valueOf(rule.getId()));
-
-                List<String> operators = new ArrayList<>();
-                rule.getAttributesList().forEach(attribute -> operators.add(attribute.getOperator().getName()));
-                definitionMap.put("Operator", String.join(" - ", operators));
-
-                List<String> values = new ArrayList<>();
-                rule.getAttributesList().forEach(attribute -> attribute.getAttributeValues().forEach(attributeValue -> values.add(attributeValue.getValue())));
-                definitionMap.put("Values", String.join(" - ", values));
-                definitions.put(rule.getName(), definitionMap);
+                Map<String, Object> map = serializeRuleToJson(rule);
+                rules.put(rule.getName(), map);
             }
-            context.json(definitions).status(200);
-            if (definitions.isEmpty()) {
+            context.json(rules).status(200);
+            if (rules.isEmpty()) {
                 context.status(404).result("No rules found");
             }
         } catch (Exception e) {
@@ -92,5 +79,59 @@ public class GenerateController {
     public static void generateCode(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
 
+    }
+
+    private static Map<String, Object> serializeRuleToJson(Rule rule) {
+        Map<String, Object> map = new HashMap<>();
+        List<Map<String, Object>> attributesList = new ArrayList<>();
+        map.put("name", rule.getName());
+        map.put("id", rule.getId());
+        map.put("type", rule.getRuleType());
+        map.put("description", rule.getDescription());
+        map.put("table", rule.getTargetTable().getName());
+        map.put("errorMessages", rule.getErrorMessage());
+
+        for (Attribute attribute : rule.getAttributesList()) {
+            Map<String, Object> attributesMap = new HashMap<>();
+            List<Map<String, Object>> attributeValuesList = new ArrayList<>();
+
+            attributesMap.put("id", attribute.getId());
+            attributesMap.put("column", attribute.getColumn().getName());
+            attributesMap.put("operatorName", attribute.getOperator().getName());
+            attributesMap.put("order", attribute.getOrder());
+
+            if (attribute.getTargetTableFK() != null) {
+                attributesMap.put("targetTableFK", attribute.getTargetTableFK().getName());
+            }
+
+            if (attribute.getOtherTablePK() != null) {
+                attributesMap.put("otherTablePK", attribute.getOtherTablePK().getName());
+            }
+
+            if (attribute.getOtherTable() != null) {
+                attributesMap.put("otherTable", attribute.getOtherTable().getName());
+            }
+
+            if (attribute.getOtherColumn() != null) {
+                attributesMap.put("otherColumn", attribute.getOtherColumn().getName());
+            }
+
+            for (AttributeValue attributeValue : attribute.getAttributeValues()) {
+                Map<String, Object> attributeValuesMap = new HashMap<>();
+                attributeValuesMap.put("id", attributeValue.getId());
+                attributeValuesMap.put("value", attributeValue.getValue());
+                attributeValuesMap.put("valueType", attributeValue.getValueType());
+                attributeValuesMap.put("order", attributeValue.getOrder());
+                attributeValuesMap.put("isLiteral", attributeValue.isLiteral());
+
+                attributeValuesList.add(attributeValuesMap);
+            }
+
+            attributesMap.put("attributeValues", attributeValuesList);
+            attributesList.add(attributesMap);
+        }
+
+        map.put("attributes", attributesList);
+        return map;
     }
 }

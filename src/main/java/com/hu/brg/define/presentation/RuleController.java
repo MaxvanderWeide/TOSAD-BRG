@@ -261,6 +261,39 @@ public class RuleController {
         context.json(map).status(200);
     }
 
+    @OpenApi(
+            summary = "deletes rule of provided id",
+            operationId = "deleteRule",
+            path = "/maintain/rules/delete/:id",
+            method = HttpMethod.DELETE,
+            pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},
+            tags = {"Define", "rules", "rule", "delete"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void deleteRule(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+        Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
+
+        if (rule == null) {
+            context.status(404).result("No rule was found");
+            return;
+        }
+
+        if (getSaveService().deleteRule(context.pathParam("id", Integer.class).get())) {
+            context.result("OK").status(200);
+        } else {
+            context.result("FAIL").status(501);
+        }
+    }
+
     private static Map<String, Object> serializeRuleToJson(Rule rule) {
         Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> attributesList = new ArrayList<>();
@@ -313,38 +346,5 @@ public class RuleController {
 
         map.put("attributes", attributesList);
         return map;
-    }
-
-    @OpenApi(
-            summary = "deletes rule of provided id",
-            operationId = "deleteRule",
-            path = "/maintain/rules/delete/:id",
-            method = HttpMethod.DELETE,
-            pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},
-            tags = {"Define", "rules", "rule", "delete"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
-            }
-    )
-    public static void deleteRule(io.javalin.http.Context context) {
-        Claims claims = decodeJWT(context.req.getHeader("authorization"));
-        if (claims == null) {
-            context.status(403);
-            return;
-        }
-        Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
-
-        if (rule == null) {
-            context.status(404).result("No rule was found");
-            return;
-        }
-
-        if (getSaveService().deleteRule(context.pathParam("id", Integer.class).get())) {
-            context.result("OK").status(200);
-        } else {
-            context.result("FAIL").status(501);
-        }
     }
 }
