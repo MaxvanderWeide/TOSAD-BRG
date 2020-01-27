@@ -1,4 +1,4 @@
-package com.hu.brg.generate.businesslogic;
+package com.hu.brg.generate.application.generator;
 
 import com.hu.brg.generate.domain.Project;
 import com.hu.brg.generate.domain.Rule;

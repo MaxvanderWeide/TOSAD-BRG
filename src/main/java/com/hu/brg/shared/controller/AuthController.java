@@ -79,7 +79,6 @@ public class AuthController {
                 return;
             }
 
-            //TODO: Bart: this can be removed I think
 //            project.setUsername(jsonObject.getString("username"));
 //            project.setPassword(jsonObject.getString("password"));
 //            int projectId = projects.getProjectById(project);

@@ -1,7 +1,7 @@
 package com.hu.brg.generate;
 
-import com.hu.brg.generate.businesslogic.Generator;
-import com.hu.brg.generate.businesslogic.GeneratorFactory;
+import com.hu.brg.generate.application.generator.Generator;
+import com.hu.brg.generate.application.generator.GeneratorFactory;
 import com.hu.brg.generate.domain.Attribute;
 import com.hu.brg.generate.domain.AttributeValue;
 import com.hu.brg.generate.domain.Column;

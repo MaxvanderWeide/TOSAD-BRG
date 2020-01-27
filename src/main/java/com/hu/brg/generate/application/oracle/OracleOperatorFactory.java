@@ -1,4 +1,4 @@
-package com.hu.brg.generate.businesslogic.oracle;
+package com.hu.brg.generate.application.oracle;
 
 import com.hu.brg.generate.domain.Operator;
 

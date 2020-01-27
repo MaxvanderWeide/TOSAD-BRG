@@ -157,7 +157,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                         "WHERE ID = ?";
                 PreparedStatement attributeStatement = conn.prepareStatement(query);
                 setAttributeStatement(attributeStatement, attribute);
-                attributeStatement.setInt(9, attribute.getId());
+                attributeStatement.setInt(7, attribute.getId());
                 attributeStatement.executeUpdate();
 
                 attributeStatement.close();

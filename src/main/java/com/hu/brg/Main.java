@@ -1,6 +1,7 @@
 package com.hu.brg;
 
 import com.hu.brg.define.presentation.RuleController;
+import com.hu.brg.generate.presentation.GenerateController;
 import com.hu.brg.shared.controller.AuthController;
 import com.hu.brg.shared.model.web.ErrorResponse;
 import io.javalin.Javalin;
@@ -20,10 +21,10 @@ public class Main {
             config.registerPlugin(getConfiguredOpenApiPlugin());
             config.defaultContentType = "application/json";
         }).routes(() -> {
-//            path("generate", () -> path("rules", () -> {
-//                get(GenerateController::getRuleDefinitions);
-//                post(GenerateController::generateCode);
-//            }));
+            path("generate", () -> {
+                post(GenerateController::generateCode);
+                path("rules", () -> get(GenerateController::getRuleDefinitions));
+            });
             path("auth", () -> path("connection", () -> post(AuthController::createConnection)));
             path("define", () -> {
 
@@ -37,25 +38,17 @@ public class Main {
                     path(":typeName", () -> path("operators", () -> get(RuleController::getOperatorsWithType)));
                 });
 
-                path("rules", () -> {
-                    post(RuleController::saveRuleDefinition);
-                });
+                path("rules", () -> post(RuleController::saveRuleDefinition));
             });
-            path("maintain", () -> {
-                path("rules", () -> {
+            path("maintain", () -> path("rules", () -> {
+                get(RuleController::getMaintainRulesData);
+                path(":id", () -> get(RuleController::getRuleById));
+                path("delete", () -> {
                     get(RuleController::getMaintainRulesData);
-                    path(":id", () -> {
-                        get(RuleController::getRuleById);
-                    });
-                    path("delete", () -> {
-                        get(RuleController::getMaintainRulesData);
-                        path(":id", () -> {
-                            delete(RuleController::deleteRule);
-                        });
+                    path(":id", () -> delete(RuleController::deleteRule));
 
-                    });
                 });
-            });
+            }));
         }).start(4201);
     }
 

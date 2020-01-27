@@ -1,8 +1,8 @@
-package com.hu.brg.generate.businesslogic.oracle;
+package com.hu.brg.generate.application.oracle;
 
-import com.hu.brg.generate.businesslogic.Generator;
-import com.hu.brg.generate.businesslogic.oracle.types.TypeGenerator;
-import com.hu.brg.generate.businesslogic.oracle.types.TypeGeneratorFactory;
+import com.hu.brg.generate.application.generator.Generator;
+import com.hu.brg.generate.application.oracle.types.TypeGenerator;
+import com.hu.brg.generate.application.oracle.types.TypeGeneratorFactory;
 import com.hu.brg.generate.domain.Project;
 import com.hu.brg.generate.domain.Rule;
 import com.hu.brg.generate.domain.Table;
