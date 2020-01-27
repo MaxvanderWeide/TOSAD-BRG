@@ -227,7 +227,7 @@ function setAttributeValues(value, type, index, doIndex = false) {
 
     attributeValues["value"] = value;
     attributeValues["valueType"] = type;
-    if(doIndex) {
+    if (doIndex) {
         attributeValues["order"] = index;
     }
 
@@ -291,6 +291,7 @@ function saveRule(element) {
         attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
         attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
+        attributeItem["operatorName"] = $(target).find(".operator-selection").val();
         attributeItems.push(attributeItem);
     }
 
@@ -417,7 +418,6 @@ function getRuleById(target) {
         })
         .then(response => {
             if (response !== undefined) {
-                console.log(response);
                 fillFormFields(response)
             }
         });
@@ -435,6 +435,7 @@ function fillFormFields(rule) {
     fillTargetAttributes(table, false);
     fillOperators(type);
     displayBlock(type);
+    fillFormValues(rule.attributes);
     $(".rule-values-wrapper").show();
     $(".attribute-selection").val(rule.attributes.column);
     $(".operator-selection").val(rule.attributes.operatorName);
@@ -454,4 +455,12 @@ function clearFormFields() {
     $(".error-message").val('');
     $(".custInput1").val('');
     $(".custInput2").val('');
+}
+
+function fillFormValues(attributes) {
+    for (const attribute of attributes) {
+        for (const value of attribute.attributeValues) {
+            $(".attributes-list").append($("<li>", {text: value.value}));
+        }
+    }
 }
