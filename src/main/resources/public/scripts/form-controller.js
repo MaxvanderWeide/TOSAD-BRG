@@ -171,24 +171,20 @@ function fillTargetAttributes(tableSelection, interEntityRuleType = false, targe
             }
         })
         .then(response => {
-                if (response !== undefined) {
-                    let selectionTarget = "";
-                    if (interEntityRuleType) {
-                        selectionTarget = target === "define" ? $(".new-rule-wrapper #custInput2") : $(".update-rule-wrapper #custInput2");
-                    } else {
-                        selectionTarget = target === "define" ? $(".new-rule-wrapper .attribute-selection") : $(".update-rule-wrapper .attributeselection");
-                    }
+            if (response !== undefined) {
+                let selectionTarget = "";
+                if (interEntityRuleType) {
+                    selectionTarget = target === "define" ? $(".new-rule-wrapper #custInput2") : $(".update-rule-wrapper #custInput2");
+                } else {
+                    selectionTarget = target === "define" ? $(".new-rule-wrapper .attribute-selection") : $(".update-rule-wrapper .attributeselection");
+                }
 
-                    console.log(selectionTarget);
-
-                    $(selectionTarget).empty();
-                    for (const index in response.Attributes) {
-                        $(selectionTarget).append("<option value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
-                    }
+                $(selectionTarget).empty();
+                for (const index in response.Attributes) {
+                    $(selectionTarget).append("<option value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
                 }
             }
-        )
-    ;
+        });
 }
 
 function fillOperators(type, target) {
