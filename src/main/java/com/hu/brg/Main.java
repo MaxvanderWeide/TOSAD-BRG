@@ -10,9 +10,7 @@ import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 
-import static io.javalin.apibuilder.ApiBuilder.get;
-import static io.javalin.apibuilder.ApiBuilder.path;
-import static io.javalin.apibuilder.ApiBuilder.post;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -52,7 +50,7 @@ public class Main {
                     path("delete", () -> {
                         get(RuleController::getMaintainRulesData);
                         path(":id", () -> {
-                            get(RuleController::deleteRule);
+                            delete(RuleController::deleteRule);
                         });
 
                     });
