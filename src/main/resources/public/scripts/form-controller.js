@@ -289,7 +289,7 @@ function saveRule(element) {
         const attributeItem = {};
         attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
         attributeItem["otherTablePK"] = $(".other-table-pk-selection").val().split("-")[0].trim();
-        attributeItem["column"] = $(".attribute-selection").html().split("|")[1].split("-")[0].trim();
+        attributeItem["column"] = $(".attribute-selection").val();
         attributeItem["otherTable"] = $(".other-table-selection").val().split("-")[0].trim();
         attributeItem["otherColumn"] = $(".other-attribute-selection ").val().split("-")[0].trim();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
