@@ -217,7 +217,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
         try (Connection conn = getConnection()) {
             String query = "SELECT ID, PROJECTID, NAME, DESCRIPTION, TARGETTABLE, TYPEID, ERRORMESSAGE " +
                     "FROM RULES " +
-                    "WHERE PROJECTID = ?";
+                    "WHERE PROJECTID = ?" +
+                    "ORDER BY ID DESC";
             PreparedStatement ruleStatement = conn.prepareStatement(query);
             ruleStatement.setInt(1, project.getId());
 
@@ -243,7 +244,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
         try (Connection conn = getConnection()) {
             String query = "SELECT ID, PROJECTID, NAME, DESCRIPTION, TARGETTABLE, TYPEID, ERRORMESSAGE " +
                     "FROM RULES " +
-                    "WHERE PROJECTID = ?";
+                    "WHERE PROJECTID = ?" +
+                    "ORDER BY ID DESC";
             PreparedStatement ruleStatement = conn.prepareStatement(query);
             ruleStatement.setInt(1, projectId);
 
