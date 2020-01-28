@@ -199,3 +199,8 @@ li {
 .alert-success, .alert-danger {
     display: none;
 }
+
+.field-error {
+    color: red;
+    display: none;
+}

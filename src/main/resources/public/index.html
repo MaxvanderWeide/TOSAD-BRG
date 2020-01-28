@@ -101,48 +101,51 @@
                 <input hidden class="rule-id" id="rule-id">
                 <div class="mb-3">
                     <label>Rule name:</label>
-                    <input type="text" class="form-input rule-name" placeholder="My new Rule">
+                    <input type="text" class="form-input rule-name rule-field" placeholder="My new Rule">
+                    <div class="field-error rule-name-error">Enter a name.</div>
                 </div>
                 <div class="mb-3">
                     <label>Description:</label>
-                    <textarea class="form-input rule-description" placeholder="New rule description"></textarea>
+                    <textarea class="form-input rule-description rule-field" placeholder="New rule description"></textarea>
+                    <div class="field-error description-error">Enter a description.</div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Select table:</label>
-                        <select class="table-selection form-input">
+                        <select class="table-selection form-input rule-field">
                             <option disabled selected>Select a table</option>
                         </select>
+                        <div class="field-error target-table-error">Select a table.</div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Select rule type:</label>
-                        <select class="type-selection form-input">
+                        <select class="type-selection form-input rule-field">
                             <option disabled selected>Select a type</option>
                         </select>
+                        <div class="field-error rule-type-error">Select a rule type.</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Select the target attribute:</label>
-                        <select class="attribute-selection form-input">
+                        <select class="attribute-selection form-input rule-field">
                             <option disabled selected>Select an attribute</option>
                         </select>
+                        <div class="field-error target-attribute-error">Select an attribute.</div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label>Select an operator:</label>
-                        <select class="operator-selection form-input">
+                        <select class="operator-selection form-input rule-field">
                             <option disabled selected>Select an operator</option>
                         </select>
+                        <div class="field-error operator-error">Select an operator.</div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Define the error message:</label>
-                        <textarea class="error-message form-input"></textarea>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label>Error code:</label>
-                        <input type="number" class="form-input error-code" placeholder="-20000">
+                        <textarea class="error-message form-input rule-field"></textarea>
+                        <div class="field-error rule-name-error">Enter an error message.</div>
                     </div>
                 </div>
                 <div class="mb-3 rule-values-wrapper">
@@ -151,7 +154,11 @@
                         <div class="row comparator-step"></div>
                     </div>
                 </div>
-
+                <div class="row">
+                    <div class="col-md-12 mb-3 field-error rule-values-error">
+                        Select / enter all values.
+                    </div>
+                </div>
                 <div class="text-center row">
                     <button class="save-rule btn btn-primary btn-lg btn-save">Save Rule</button>
                     <button class="save-rule btn btn-primary btn-lg btn-update">Save Rule</button>

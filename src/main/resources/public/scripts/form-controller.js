@@ -51,7 +51,6 @@ function startupEventListeners() {
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
-        console.log($._data($('.table-selection').get(0), 'events').change.length);
         fillOperators(item.target.value);
         displayBlock(item.target.value);
         if ($._data($('.table-selection').get(0), "events").change.length < 3) {
@@ -61,7 +60,9 @@ function startupEventListeners() {
     });
 
     $(".btn-save").click((item) => {
-        saveRule(item);
+       if (!checkFieldsError()) {
+           saveRule(item);
+       }
     });
 
     $(".btn-delete").click((item) => {
@@ -71,6 +72,47 @@ function startupEventListeners() {
     $(".btn-update").click((item) => {
         updateRule(item);
     });
+
+
+}
+
+function checkFieldsError() {
+        const type = $(".type-selection").val();
+        $(".field-error").hide();
+        $(".rule-values-error").text("Select / enter all values.");
+        let error = false;
+        let valuesError = false;
+        $(".rule-field").each((index, item) => {
+            if ($(item).val() === null) {
+                $(item).parent().find(".field-error").show();
+                error = true;
+                return false;
+            } else if ($(item).val().trim() === "") {
+                $(item).parent().find(".field-error").show();
+                error = true;
+                return false;
+            }
+        });
+
+        switch (type) {
+            case "Attribute_Range":
+                if (isNaN($("#custInput1").val()) || isNaN($("#custInput2").val())) {
+                    $(".rule-values-error").text("The values have to be a number");
+                    valuesError = true;
+                } else if ($("#custInput1").val() > $("#custInput2").val()) {
+                    $(".rule-values-error").text("Minimum value is higher than maximum value");
+                    valuesError = true;
+                }
+            default:
+                break;
+        }
+
+        if (valuesError) {
+            error = true;
+            $(".rule-values-error").show();
+        }
+
+        return error;
 }
 
 function showMenu() {
@@ -367,6 +409,12 @@ function updateRule() {
 function displayBlock(type) {
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     eval(Types[type].block);
+    $(".btn-save").unbind("click");
+    $(".btn-save").click((item) => {
+        if (!checkFieldsError()) {
+            saveRule(item);
+        }
+    });
 }
 
 function fillValuesTargetAttributes(element) {
