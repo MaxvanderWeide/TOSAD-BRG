@@ -1,13 +1,13 @@
 var Types = {
     Attribute_Range: {
         block:
-            "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3\"});" +
-            "const custInput2 = $(\"<input>\", {type: \"text\", id: \"custInput2\", class:\"form-input col-md-5 mb-3\"});" +
+            "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3 rule-field value-input\"});" +
+            "const custInput2 = $(\"<input>\", {type: \"text\", id: \"custInput2\", class:\"form-input col-md-5 mb-3 rule-field value-input\"});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1, custInput2);",
     },
     Attribute_Compare: {
         block:
-            "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3\"});" +
+            "const custInput1 = $(\"<input>\", {type: \"text\", id: \"custInput1\", class:\"form-input col-md-5 mb-3 rule-field value-input\"});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(custInput1);",
     },
     Attribute_List: {
@@ -30,8 +30,10 @@ var Types = {
             "const br = $(\"<br>\");" +
             "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list col-md-12 mb-3\"});" +
             "$(addAttribute).click(() => {" +
-            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \"|\" + $(\".attribute-selection\").val() + \"|\" + $(\".operator-selection\").val() + \"|\" +  $(attributeInput).val()});" +
+            "if ($(\".table-selection\").val() !== null && $(\".attribute-selection\").val() !== null && $(\".operator-selection\").val() !== null && $(attributeInput).val().trim() !== \"\" ) {" +
+            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \" | \" + $(\".attribute-selection\").val() + \" | \" + $(\".operator-selection\").val() + \" | \" +  $(attributeInput).val()});" +
             "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "}" +
             "});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"
     },

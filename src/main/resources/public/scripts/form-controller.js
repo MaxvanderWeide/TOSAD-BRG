@@ -59,12 +59,13 @@ function startupEventListeners() {
             fillValuesTargetAttributes(item.target);
         }
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
+        $(".rule-values-error").hide();
     });
 
     $(".btn-save").click((item) => {
-       if (!checkFieldsError()) {
-           saveRule(item);
-       }
+        if (!checkFieldsError()) {
+            saveRule(item);
+        }
     });
 
     $(".btn-delete").click((item) => {
@@ -72,49 +73,63 @@ function startupEventListeners() {
     });
 
     $(".btn-update").click((item) => {
-        updateRule(item);
+        if (!checkFieldsError()) {
+            updateRule(item);
+        }
     });
 
 
 }
 
 function checkFieldsError() {
-        const type = $(".type-selection").val();
-        $(".field-error").hide();
-        $(".rule-values-error").text("Select / enter all values.");
-        let error = false;
-        let valuesError = false;
-        $(".rule-field").each((index, item) => {
-            if ($(item).val() === null) {
+    const type = $(".type-selection").val();
+    $(".field-error").hide();
+    $(".rule-values-error").text("Select / enter all values.");
+    let error = false;
+    let valuesError = false;
+    $(".rule-field").each((index, item) => {
+        if ($(item).val() === null || $(item).val().trim() === "") {
+            if ($(item).hasClass("value-input")) {
+                $(".rule-values-error").show();
+            } else {
                 $(item).parent().find(".field-error").show();
-                error = true;
-                return false;
-            } else if ($(item).val().trim() === "") {
-                $(item).parent().find(".field-error").show();
-                error = true;
-                return false;
             }
-        });
-
-        switch (type) {
-            case "Attribute_Range":
-                if (isNaN($("#custInput1").val()) || isNaN($("#custInput2").val())) {
-                    $(".rule-values-error").text("The values have to be a number");
-                    valuesError = true;
-                } else if ($("#custInput1").val() > $("#custInput2").val()) {
-                    $(".rule-values-error").text("Minimum value is higher than maximum value");
-                    valuesError = true;
-                }
-            default:
-                break;
-        }
-
-        if (valuesError) {
             error = true;
-            $(".rule-values-error").show();
         }
+    });
 
-        return error;
+    switch (type) {
+        case "Attribute_Range":
+            if (isNaN($("#custInput1").val()) || isNaN($("#custInput2").val())) {
+                $(".rule-values-error").text("The values have to be a number");
+                valuesError = true;
+            } else if ($("#custInput1").val() > $("#custInput2").val()) {
+                $(".rule-values-error").text("Minimum value is higher than maximum value");
+                valuesError = true;
+            }
+        case "Tuple_Compare", "Attribute_List":
+            if ($(".attributes-list").html() === "") {
+                $(".rule-values-error").text("Enter a value to the list");
+                valuesError = true;
+            }
+        case "InterEntity_Compare":
+            if ($(".target-foreign-key").val() === null || $(".target-foreign-key").val().trim() === "" ||
+                $(".other-table-selection").val() === null || $(".other-table-selection").val().trim() === "" ||
+                $(".other-table-pk-selection").val() === null || $(".other-table-pk-selection").val().trim() === "" ||
+                $(".other-attribute-selection").val() === null || $(".other-attribute-selection").val().trim() === ""
+            ) {
+                $(".rule-values-error").show();
+            }
+        default:
+            break;
+    }
+
+    if (valuesError) {
+        error = true;
+        $(".rule-values-error").show();
+    }
+
+    return error;
 }
 
 function showMenu() {
@@ -290,7 +305,7 @@ function setAttributeValues(value, type, index, doIndex = false) {
     return attributeValues;
 }
 
-function saveRule(element, method="insert") {
+function saveRule(element, method = "insert") {
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
@@ -301,7 +316,7 @@ function saveRule(element, method="insert") {
 
     if (checkTypeSelected(["Tuple_Other", "Entity_Other"], selectedType)) {
         $(target).find("ul.attributes-list li").each((index, item) => {
-            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3], $(item).html().split("|")[1].split("-")[1].trim()));
+            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3].trim(), $(item).html().split("|")[1].split("-")[1].trim()));
         });
     } else if (checkTypeSelected(["Attribute_Range"], selectedType)) {
         const attributeItem = {};
@@ -336,9 +351,10 @@ function saveRule(element, method="insert") {
         $(target).find("ul.attributes-list li").each((index, item) => {
             const attributeItem = {};
             const type = $(item).html().split("|")[1].split("-")[1].trim();
+            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3].trim(), type));
             attributeItem["column"] = $(item).html().split("|")[1].split("-")[0].trim();
-            attributeItem["operatorName"] = $(item).html().split("|")[2];
-            attributeItem["attributeValues"] = setAttributeValues($(item).html().split("|")[3], type);
+            attributeItem["operatorName"] = $(item).html().split("|")[2].trim();
+            attributeItem["attributeValues"] = attributeValuesArray;
             attributeItems.push(attributeItem);
         });
     } else if (checkTypeSelected["InterEntity_Compare"], selectedType) {
@@ -363,7 +379,7 @@ function saveRule(element, method="insert") {
     values["attributes"] = attributes;
     values = JSON.stringify(values);
 
-    if(method === "insert") {
+    if (method === "insert") {
         fetch("define/rules", {
             method: "POST",
             headers: {"Authorization": sessionStorage.getItem("access_token")},
@@ -382,9 +398,9 @@ function saveRule(element, method="insert") {
                     alertDanger.show();
                 }
             });
-    } else if(method === "update") {
+    } else if (method === "update") {
         let id = $('.rule-id').val();
-        fetch("maintain/rules/"+id, {
+        fetch("maintain/rules/" + id, {
             method: "PUT",
             headers: {"Authorization": sessionStorage.getItem("access_token")},
             body: values
