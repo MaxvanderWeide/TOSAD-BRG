@@ -46,6 +46,7 @@ public class Main {
                 path(":id", () -> {
                     get(RuleController::getRuleById);
                     delete(RuleController::deleteRule);
+                    put(RuleController::updateRule);
                 });
             }));
         }).start(4201);

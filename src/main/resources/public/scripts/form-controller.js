@@ -288,7 +288,7 @@ function setAttributeValues(value, type, index, doIndex = false) {
     return attributeValues;
 }
 
-function saveRule(element) {
+function saveRule(element, method="insert") {
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
@@ -361,24 +361,46 @@ function saveRule(element) {
     values["attributes"] = attributes;
     values = JSON.stringify(values);
 
-    fetch("define/rules", {
-        method: "POST",
-        headers: {"Authorization": sessionStorage.getItem("access_token")},
-        body: values
-    })
-        .then(response => {
-            if (response.status === 201) {
-                let alertSuccess = $('.alert-success');
-                alertSuccess.val();
-                alertSuccess.append("Your new BusinessRule was created!");
-                alertSuccess.show();
-            } else if (response.status === 400) {
-                let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("Your Business Rule was not created! You may want to recheck your input...");
-                alertDanger.show();
-            }
-        });
+    if(method === "insert") {
+        fetch("define/rules", {
+            method: "POST",
+            headers: {"Authorization": sessionStorage.getItem("access_token")},
+            body: values
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    let alertSuccess = $('.alert-success');
+                    alertSuccess.val();
+                    alertSuccess.append("Your new BusinessRule was created!");
+                    alertSuccess.show();
+                } else if (response.status === 400) {
+                    let alertDanger = $('.alert-danger');
+                    alertDanger.val();
+                    alertDanger.append("Your Business Rule was not created! You may want to recheck your input...");
+                    alertDanger.show();
+                }
+            });
+    } else if(method === "update") {
+        let id = $('.rule-id').val();
+        fetch("maintain/rules/"+id, {
+            method: "PUT",
+            headers: {"Authorization": sessionStorage.getItem("access_token")},
+            body: values
+        })
+            .then(response => {
+                if (response.status === 201) {
+                    let alertSuccess = $('.alert-success');
+                    alertSuccess.val();
+                    alertSuccess.append("The rule was updated!");
+                    alertSuccess.show();
+                } else if (response.status === 400) {
+                    let alertDanger = $('.alert-danger');
+                    alertDanger.val();
+                    alertDanger.append("Your Business Rule was not updated! You may want to recheck your input...");
+                    alertDanger.show();
+                }
+            });
+    }
 }
 
 function deleteRule(element) {
@@ -402,8 +424,9 @@ function deleteRule(element) {
         });
 }
 
-function updateRule() {
-    alert("Not implemented yet...")
+function updateRule(element) {
+    // alert("Not implemented yet...")
+    saveRule(element, "update");
 }
 
 function displayBlock(type) {

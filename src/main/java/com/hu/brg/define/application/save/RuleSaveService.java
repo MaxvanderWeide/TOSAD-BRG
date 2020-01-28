@@ -123,4 +123,9 @@ public class RuleSaveService implements SaveService {
     public boolean deleteRule(int id) {
         return this.rulesDAO.deleteRule(id);
     }
+
+    @Override
+    public Rule updateRule(Rule rule) {
+        return this.rulesDAO.updateRule(rule);
+    }
 }

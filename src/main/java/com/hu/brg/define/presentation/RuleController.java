@@ -262,8 +262,40 @@ public class RuleController {
     }
 
     @OpenApi(
+            summary = "Update the rule model",
+            operationId = "updateRule",
+            path = "/maintain/rules/:id",
+            method = HttpMethod.PUT,
+            pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},
+            tags = {"maintain", "Rule"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void updateRule(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+
+        Rule rule = getSaveService().buildRuleComplete(new JSONObject(context.body()), claims, getSelectService());
+        rule.setId(context.pathParam("id", Integer.class).get());
+        rule = getSaveService().updateRule(rule);
+
+        if (rule == null) {
+            context.status(400).result("Rule not created");
+            return;
+        }
+
+        context.result(String.valueOf(rule.getId())).status(201);
+    }
+
+    @OpenApi(
             summary = "deletes rule of provided id",
-            operationId = "deleteRule",
+            operationId = "updateRule",
             path = "/maintain/rules/:id",
             method = HttpMethod.DELETE,
             pathParams = {@OpenApiParam(name = "id", description = "Rule ID")},

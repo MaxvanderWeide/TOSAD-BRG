@@ -24,4 +24,5 @@ public interface SaveService {
     Rule saveRule(Rule ruleDefinition);
 
     boolean deleteRule(int id);
+    Rule updateRule(Rule rule);
 }
