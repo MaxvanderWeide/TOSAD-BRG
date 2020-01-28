@@ -13,8 +13,10 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class OracleGenerator implements Generator {
@@ -40,19 +42,36 @@ public class OracleGenerator implements Generator {
             smallTableName = smallTableName.replaceAll("[AEIOU]", "");
             smallTableName = smallTableName.substring(0, Math.min(smallTableName.length(), 10));
 
-            baseStringTemplate.add("trigger_name", String.format("%s_%s_%s_TRIGGER", ConfigSelector.APPLICATION_NAME, project.getName(), smallTableName));
+            String baseTriggerName = String.format("%s_%s_%s", ConfigSelector.APPLICATION_NAME, project.getName(), smallTableName);
+
+            baseStringTemplate.add("trigger_name", String.format("%s_TRIGGER", baseTriggerName));
             baseStringTemplate.add("trigger_table", table.getName());
             baseStringTemplate.add("trigger_error_code", -20000);
 
             StringBuilder rules = new StringBuilder();
+            Map<String, Integer> ruleNameTracker = new HashMap<>();
 
             for (Rule rule : ruleList.stream()
                     .filter(rule -> rule.getTargetTable().equals(table))
                     .collect(Collectors.toList())) {
+                // The nameTracker map keeps track of the rule number seen at the end
+                String ruleName = String.format("%s_%s", baseTriggerName, rule.getRuleType().getTypeCode());
+                if (ruleNameTracker.containsKey(ruleName)) {
+                    int index = ruleNameTracker.get(ruleName);
+                    index++;
+                    ruleNameTracker.put(ruleName, index);
+
+                    // Pads 0 on the left so it always have at least 2 chars; makes 5 -> 05 & leaves 10 -> 10
+                    ruleName = ruleName + "_" + String.format("%1$2s", index).replace(' ', '0');
+                } else {
+                    ruleNameTracker.put(ruleName, 1);
+                    ruleName = ruleName + "_01";
+                }
+
                 String groupPath = String.format("generator/oracle/%s.stg", rule.getRuleType().getTypeCode());
                 STGroup group = new STGroupFile(groupPath);
                 ST stringTemplate = group.getInstanceOf("template");
-                stringTemplate.add("name", rule.getName());
+                stringTemplate.add("name", ruleName);
                 stringTemplate.add("description", rule.getDescription());
                 stringTemplate.add("error_message", rule.getErrorMessage());
 

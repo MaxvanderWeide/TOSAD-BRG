@@ -18,6 +18,10 @@ public class OracleOperatorFactory {
                 return "<=";
             case "GREATEROREQUALTO":
                 return ">=";
+            case "IN":
+                return "IN";
+            case "NOTIN":
+                return "NOT IN";
             default:
                 return null;
         }
