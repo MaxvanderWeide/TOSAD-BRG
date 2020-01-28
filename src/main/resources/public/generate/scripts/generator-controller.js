@@ -52,10 +52,8 @@ function getAllRules() {
                 $("#table-body").html("No rules found")
             }
         }).then(response => {
-        $(".spinner-holder.maintain-spinner").hide();
-
+        $(".spinner-holder.initial-spinner").hide();
         $("table.existing-rules-wrapper").show();
-
     });
 }
 
@@ -86,13 +84,15 @@ function generate() {
             ids.push($(this).val());
         }
     });
-    console.log(ids);
+
+    const rules = {};
+    rules["rules"] = ids;
 
     //generate the rules
         fetch("/generate/rules", {
             method: "POST",
             headers: {"Authorization": sessionStorage.getItem("access_token")},
-            body: ids
+            body: JSON.stringify(rules)
         })
             .then(response => {
                 if (response.status === 200) {
