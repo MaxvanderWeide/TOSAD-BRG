@@ -16,25 +16,54 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="bg">
 <div class="container">
-    <div class="spinner-holder">
+    <div class="pi-5 text-center">
+        <h1><i>Business Rule Generator</i></h1>
+        <p class="lead"><i>Best rule generator in the business!</i></p>
+    </div>
+
+    <div class="alert alert-success text-center" role="alert"></div>
+    <div class="alert alert-danger text-center" role="alert"></div>
+    <div class="spinner-holder initial-spinner">
         <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
     </div>
-    <div class="rule-items-wrapper"></div>
-    <table class="table table-striped" id="ruleTable">
-        <thead class="thead-dark">
-        <tr>
-            <th>Name</th>
-            <th>Table</th>
-            <th>Type</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+
+    <div class="rule-preview"></div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="search-rule-wrapper">
+                <div class="pi-5 text-center">
+                    <h2>Search Business rule</h2>
+                    <p class="lead">Search for the desired Rule below.</p>
+                    <input id="search-rule" class="form-input">
+                    <br>
+                    <h3>Existing Rules</h3>
+                    <p class="lead">Select a Rule below to (re)generate.</p>
+                        <table class="table table-striped" id="ruleTable">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th>RuleName</th>
+                                <th>Applied Table</th>
+                                <th>Rule Type</th>
+                                <th>Selected</th>
+                            </tr>
+                            </thead>
+                            <tbody id="table-body" class="">
+                            </tbody>
+                        </table>
+
+                    <div class="back-button-box">
+                        <button class="btn btn-primary generate">Generate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <script src="scripts/generator-controller.js"></script>
 </body>

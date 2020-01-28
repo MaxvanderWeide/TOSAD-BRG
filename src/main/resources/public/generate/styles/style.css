@@ -1,6 +1,22 @@
-div.container {
-    width: 1300px;
-    margin: 50px auto;
+:root {
+    /*Theme: racing green:*/
+    /*--background-color: #004225!important;*/
+    /*--text-color: white;*/
+    /*--input-color: #1a3640;*/
+    /*--input-border-color: black;*/
+    /*--button-color: var(--input-color);*/
+
+    /*Theme: normal (white)*/
+    --background-color: #f8f9fa!important;
+    --text-color: black;
+    --input-color: #fff;
+    --input-border-color: #ced4da;
+    --button-color: #007bff;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
 }
 
 .spinner-holder {
@@ -14,6 +30,7 @@ div.container {
     z-index: 9999999999;
     overflow: hidden;
     background: transparent;
+    display: none; /*TODO: weghalen...*/
 }
 
 .text-primary {
@@ -36,4 +53,57 @@ table {
 tbody tr:hover {
     opacity: .8;
     cursor: pointer;
+}
+
+.alert-success, .alert-danger {
+    display: none;
+}
+
+.form-input {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-clip: padding-box;
+    border: 1px solid var(--input-border-color);
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    background: var(--input-color);
+    margin: auto;
+}
+
+.pi-5 {
+    padding-bottom: 1rem!important;
+    padding-top: 1.5rem!important;
+}
+
+.text-center {
+    text-align: center!important;
+}
+
+.lead {
+    font-size: 1.25rem;
+}
+
+.bg {
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+.trigger-example {
+    background-color: white;
+}
+
+.col {
+    /*padding: 0!important;*/
+}
+
+.inner {
+    border: 1px solid black;
+    min-width: 100%;
+    padding: 10px!important;
 }
