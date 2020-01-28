@@ -282,8 +282,6 @@ function fillTargetAttributes(table, interEntityRuleType = false, operation, col
 
                 $(selectionTarget).empty();
                 for (const index in response.Attributes) {
-                    console.log(column);
-                    console.log(index);
                     const selected = operation === "maintain" && column === index ? "selected" : "";
                     $(selectionTarget).append("<option " + selected + " value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
                 }
@@ -338,7 +336,6 @@ function setAttributeValues(value, type, index, doIndex = false, operation = "in
 }
 
 function saveRule(element, method = "insert") {
-    console.log($(".attribute-id").val());
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
@@ -354,17 +351,27 @@ function saveRule(element, method = "insert") {
     } else if (checkTypeSelected(["Attribute_Range"], selectedType)) {
         const attributeItem = {};
         $("[id^=custInput]").each((index, item) => {
-            attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", index, true, "update", $(item).data("value-id")));
+            if (method === "insert") {
+                attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", index, true));
+            } else if (method === "update") {
+                attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", index, true, "update", $(item).data("value-id")));
+                attributeItem["id"] = $(".attribute-id").val();
+            }
         });
         attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
-        attributeItem["id"] = $(".attribute-id").val();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
         attributeItem["attributeValues"] = attributeValuesArray;
         attributeItems.push(attributeItem);
     } else if (checkTypeSelected(["Attribute_Compare", "Attribute_Other"], selectedType)) {
         const attributeItem = {};
 
-        attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "VARCHAR2"));
+        if (method === "insert") {
+            attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "VARCHAR2"));
+        } else if (method === "update") {
+            attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "VARCHAR2", 0, false, "update", $("#custInput1").data("value-id")));
+            attributeItem["id"] = $(".attribute-id").val();
+        }
+
         attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
         attributeItem["attributeValues"] = attributeValuesArray;
@@ -374,7 +381,12 @@ function saveRule(element, method = "insert") {
 
         $(target).find("ul.attributes-list li").each((index, item) => {
             const type = isNaN($(item).html().trim()) ? "VARCHAR2" : "NUMBER";
-            attributeValuesArray.push(setAttributeValues($(item).html().trim(), type));
+            if (method === "insert") {
+                attributeValuesArray.push(setAttributeValues($(item).html().trim(), type));
+            } else if (method === "update") {
+                attributeValuesArray.push(setAttributeValues($(item).html().trim(), type, 0, false, "update", $(item).data("value-id")));
+                attributeItem["id"] = $(".attribute-id").val();
+            }
         });
 
         attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
@@ -382,15 +394,21 @@ function saveRule(element, method = "insert") {
         attributeItem["attributeValues"] = attributeValuesArray;
         attributeItems.push(attributeItem);
     } else if (checkTypeSelected(["Tuple_Compare"], selectedType)) {
+        const attributeItem = {};
         $(target).find("ul.attributes-list li").each((index, item) => {
-            const attributeItem = {};
             const type = $(item).html().split("|")[1].split("-")[1].trim();
-            attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3].trim(), type));
+            if (method === "insert") {
+                attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3].trim(), type));
+            } else if (method === "update") {
+                attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3].trim(), type, 0, false, "update", $(item).data("value-id")));
+                attributeItem["id"] = $(".attribute-id").val();
+            }
+
             attributeItem["column"] = $(item).html().split("|")[1].split("-")[0].trim();
             attributeItem["operatorName"] = $(item).html().split("|")[2].trim();
-            attributeItem["attributeValues"] = attributeValuesArray;
-            attributeItems.push(attributeItem);
         });
+        attributeItem["attributeValues"] = attributeValuesArray;
+        attributeItems.push(attributeItem);
     } else if (checkTypeSelected["InterEntity_Compare"], selectedType) {
         const attributeItem = {};
         attributeItem["targetTableFK"] = $(".target-foreign-key").val().split("-")[0].trim();
@@ -401,7 +419,6 @@ function saveRule(element, method = "insert") {
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
         attributeItems.push(attributeItem);
     }
-
     attributes = attributeItems;
 
     let values = {};
@@ -594,8 +611,6 @@ function getRuleById(target) {
 }
 
 function fillFormFields(rule) {
-    console.log(rule.attributes[0].column);
-    console.log(rule.attributes[0].operatorName);
     let table = rule.table;
     let type = rule.type.type;
     $(".rule-id").val(rule.id);
@@ -611,7 +626,6 @@ function fillFormFields(rule) {
     fillFormValues(rule);
     $(".rule-values-wrapper").show();
     $(".error-message").val(rule.errorMessages);
-    console.log($(".operator-selection").val());
 }
 
 function clearFormFields() {
@@ -632,16 +646,34 @@ function fillFormValues(ruleData) {
         switch (ruleData.type.type) {
             case "Attribute_List":
                 for (const value of attribute.attributeValues) {
-                    $(".attributes-list").append($("<li>", {text: value.value}));
+                    const li = $("<li>", {text: value.value});
+                    $(li).attr("data-value-id", value.id);
+                    $(li).click((item) => {
+                       $(item.target).remove();
+                    });
+                    $(".attributes-list").append(li);
                 }
                 break;
             case "Attribute_Range":
-                $("#custInput1").val(attribute.attributeValues[0].value).data("value-id", attribute.attributeValues[0].id);
+                $("#custInput1").val(attribute.attributeValues[0].value);
                 $("#custInput1").attr("data-value-id", attribute.attributeValues[0].id);
-                $("#custInput2").val(attribute.attributeValues[1].value).data("value-id", attribute.attributeValues[1].id);
+                $("#custInput2").val(attribute.attributeValues[1].value);
                 $("#custInput2").attr("data-value-id", attribute.attributeValues[1].id);
+                break;
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
+                $("#custInput1").val(attribute.attributeValues[0].value).attr("data-value-id", attribute.attributeValues[0].id);
+                break;
+            case "Tuple_Compare":
+                for (const value of attribute.attributeValues) {
+                    const li = $("<li>", {text: ruleData.table + " | " + attribute.column + " - " + value.valueType + " | " + attribute.operatorName + " | "  +value.value});
+                    $(li).attr("data-value-id", value.id);
+                    $(li).click((item) => {
+                        $(item.target).remove();
+                    });
+                    $(".attributes-list").append(li);
+                }
+                break;
             case "InterEntity_Compare":
             //TODO - select correct values
             default:

@@ -17,8 +17,14 @@ var Types = {
             "const br = $(\"<br>\");" +
             "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list col-md-12 mb-3\"});" +
             "$(addAttribute).click(() => {" +
-            "   const li = $(\"<li>\", {text: $(attributeInput).val()});" +
+            "    const li = $(\"<li>\", {text: $(attributeInput).val()});" +
             "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "    $(li).click((item) => {" +
+            "        $(item.target).remove(); " +
+            "    });" +
+            "});" +
+            "$(\".attributes-list li\").click((item) => {" +
+            "    $(item.target).remove(); " +
             "});" +
             "" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);",
@@ -30,10 +36,16 @@ var Types = {
             "const br = $(\"<br>\");" +
             "const custInput1 = $(\"<ul>\", {id: \"custInput1\", class: \"attributes-list col-md-12 mb-3\"});" +
             "$(addAttribute).click(() => {" +
-            "if ($(\".table-selection\").val() !== null && $(\".attribute-selection\").val() !== null && $(\".operator-selection\").val() !== null && $(attributeInput).val().trim() !== \"\" ) {" +
-            "   const li = $(\"<li>\", {text: $(\".table-selection\").val() + \" | \" + $(\".attribute-selection\").val() + \" | \" + $(\".operator-selection\").val() + \" | \" +  $(attributeInput).val()});" +
-            "    $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
-            "}" +
+            "    if ($(\".table-selection\").val() !== null && $(\".attribute-selection\").val() !== null && $(\".operator-selection\").val() !== null && $(attributeInput).val().trim() !== \"\" ) {" +
+            "        const li = $(\"<li>\", {text: $(\".table-selection\").val() + \" | \" + $(\".attribute-selection\").val() + \" | \" + $(\".operator-selection\").val() + \" | \" +  $(attributeInput).val()});" +
+            "        $(\".new-rule-wrapper\").find(\".attributes-list\").append(li);" +
+            "        $(li).click((item) => {" +
+            "            $(item.target).remove(); " +
+            "        });" +
+            "    }" +
+            "});" +
+            "$(\".attributes-list li\").click((item) => {" +
+            "    $(item.target).remove(); " +
             "});" +
             "$(\".new-rule-wrapper\").find(\".comparator-step\").append(attributeInput, addAttribute, br, custInput1);"
     },
