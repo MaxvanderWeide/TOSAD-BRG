@@ -16,12 +16,14 @@ import io.javalin.plugin.openapi.annotations.OpenApiContent;
 import io.javalin.plugin.openapi.annotations.OpenApiParam;
 import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.jsonwebtoken.Claims;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.hu.brg.service.controller.AuthController.decodeJWT;
 
@@ -91,6 +93,12 @@ public class GenerateController {
             return;
         }
 
+        JSONObject jsonObject = new JSONObject(context.body());
+        if (!jsonObject.has("rules")) {
+            context.status(400);
+            return;
+        }
+
         Project project = DAOServiceProvider.getProjectDAO().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
         Generator generator = GeneratorFactory.getGenerator(project.getDbEngine());
         if (generator == null) {
@@ -98,8 +106,19 @@ public class GenerateController {
             return;
         }
 
-        String rules = generator.generateTriggers(project, DAOServiceProvider.getRuleDAO().getRulesByProject(project));
-        context.json(Collections.singletonMap("rules", rules));
+        List<Integer> ruleIdList = jsonObject.getJSONArray("rules").toList()
+                .stream()
+                .map(o -> Integer.parseInt(o.toString()))
+                .collect(Collectors.toList());
+
+        List<Rule> ruleList = project.getRuleList();
+        ruleList = ruleList
+                .stream()
+                .filter(rule -> ruleIdList.contains(rule.getId()))
+                .collect(Collectors.toList());
+
+        String rules = generator.generateTriggers(project, ruleList);
+        context.json(Collections.singletonMap("triggers", rules));
     }
 
     @OpenApi(
