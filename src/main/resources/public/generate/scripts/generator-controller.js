@@ -120,36 +120,27 @@ function generate() {
 }
 
 function showRuleOnClick(id) {
-    $('#checkbox').change(function() {
-        if($(this).is(":checked")) {
-            let ruleIds = [];
-
-            let returnVal = confirm("Are you sure?");
-            $(this).attr("checked", returnVal);
-
-            $('.rule-preview').append(
-                "<div class=\"container trigger-example\">" +
-                "        <div class=\"row\">" +
-                "            <div class=\"col row\" style=\"padding-right: 0!important\">" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "            </div>" +
-                "            <div class=\"col\" style=\"padding-right: 0!important\">" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "            </div>" +
-                "            <div class=\"col\" style=\"padding-right: 0!important; padding-left: 0!important;\">" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "                <div class=\"col inner\">col</div>" +
-                "            </div>" +
-                "            <div class=\"col text-center\">col</div>" +
-                "        </div>" +
-                "    </div>"
-            );
-        }
-    });
+    $('.rule-preview').append(
+        "<div class=\"container trigger-example\">" +
+        "        <div class=\"row\">" +
+        "            <div class=\"col row\" style=\"padding-right: 0!important\">" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "            </div>" +
+        "            <div class=\"col\" style=\"padding-right: 0!important\">" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "            </div>" +
+        "            <div class=\"col\" style=\"padding-right: 0!important; padding-left: 0!important;\">" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "                <div class=\"col inner\">col</div>" +
+        "            </div>" +
+        "            <div class=\"col text-center\">col</div>" +
+        "        </div>" +
+        "    </div>"
+    );
 }

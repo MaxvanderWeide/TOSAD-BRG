@@ -481,7 +481,7 @@ function deleteRule(element) {
         headers: {"Authorization": sessionStorage.getItem("access_token")},
     })
         .then(response => {
-            if (response.status === 201) {
+            if (response.status === 200) {
                 let alertSuccess = $('.alert-success');
                 alertSuccess.val();
                 alertSuccess.append("The BusinessRule was deleted!");
