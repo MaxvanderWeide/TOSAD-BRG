@@ -111,7 +111,7 @@ public class GenerateController {
                 .map(o -> Integer.parseInt(o.toString()))
                 .collect(Collectors.toList());
 
-        List<Rule> ruleList = project.getRuleList();
+        List<Rule> ruleList = DAOServiceProvider.getRuleDAO().getRulesByProject(project);
         ruleList = ruleList
                 .stream()
                 .filter(rule -> ruleIdList.contains(rule.getId()))
