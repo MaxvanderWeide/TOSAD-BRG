@@ -30,6 +30,7 @@ public class RuleSaveService implements SaveService {
     public AttributeValue buildAttributeValue(JSONObject object, Claims claims) {
         AttributeValueSaveBuilder builder = new AttributeValueSaveBuilder();
         return builder
+                .setId(object.has("id") ? object.getInt("id") : 0)
                 .setAttribute(null) // This can be null as long buildAttribute is called
                 .setValue(object.getString("value"))
                 .setValueType(object.getString("valueType"))
@@ -42,6 +43,7 @@ public class RuleSaveService implements SaveService {
     public Attribute buildAttribute(JSONObject object, Claims claims, Operator operator, List<AttributeValue> attributeValueList) {
         AttributeSaveBuilder builder = new AttributeSaveBuilder();
         builder = builder
+                .setId(object.has("id") ? object.getInt("id") : 0)
                 .setRule(null) // This can be null as long buildRule is called
                 .setColumn(new Column(object.getString("column"), null))
                 .setOperator(operator)
@@ -74,6 +76,7 @@ public class RuleSaveService implements SaveService {
     public Rule buildRule(JSONObject object, Claims claims, RuleType type, List<Attribute> attributeList) {
         RuleSaveBuilder builder = new RuleSaveBuilder();
         Rule rule = builder
+                .setId(object.has("id") ? object.getInt("id") : 0)
                 .setName(object.get("ruleName").toString())
                 .setDescription(object.get("description").toString())
                 .setTargetTable(new Table(object.getString("tableName"), Collections.emptyList()))
