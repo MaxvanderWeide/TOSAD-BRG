@@ -38,6 +38,7 @@ public class AuthController {
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String.class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "500", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
@@ -47,8 +48,17 @@ public class AuthController {
             ProjectDAO projectDAO = new ProjectDAOImpl();
 
             JSONObject jsonObject = new JSONObject(context.body());
-            if (jsonObject.length() != 7) {
-                context.result("Can't create connection due to unfulfilled data requirements").status(400);
+            if (jsonObject.getString("host").equalsIgnoreCase("") ||
+                    jsonObject.getString("port").equalsIgnoreCase("") ||
+                    jsonObject.getString("service").equalsIgnoreCase("") ||
+                    jsonObject.getString("engine").equalsIgnoreCase("") ||
+                    jsonObject.getString("dbName").equalsIgnoreCase("") ||
+                    jsonObject.getString("username").equalsIgnoreCase("") ||
+                    jsonObject.getString("password").equalsIgnoreCase("")) {
+                context.status(400).json(new ErrorResponse()
+                        .title("Can't create connection due to unfulfilled data requirements")
+                        .sType("Bad Request")
+                        .status(400));
                 return;
             }
 
@@ -75,7 +85,7 @@ public class AuthController {
             }
 
             if (!new TargetDatabaseDAOImpl().testConnection(jsonObject.getString("username"), jsonObject.getString("password"), project)) {
-                context.status(403);
+                context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
                 return;
             }
 

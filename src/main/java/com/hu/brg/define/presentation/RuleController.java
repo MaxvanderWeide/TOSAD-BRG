@@ -65,7 +65,7 @@ public class RuleController {
         context.json(types).status(200);
 
         if (tempTypes.isEmpty()) {
-            context.status(404).result("No Types Found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Types Were Found"));
         }
     }
 

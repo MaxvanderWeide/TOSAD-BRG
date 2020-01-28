@@ -178,11 +178,21 @@ function createConnection() {
         body: values
     })
         .then(response => {
-            if (response.status !== 200) {
-                alert('Could not authenticate and make a connection')
-            } else {
+            if (response.status === 200) {
                 showMenu();
                 return response.text();
+            } else if (response.status === 500) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("Something went wrong on our end. Please try again later.");
+                alertDanger.show();
+            } else if (response.status === 400) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("Can't create connection due to unfulfilled data requirements.");
+                alertDanger.show();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Contact your technical administrator.");
             }
         })
         .then(response => {
@@ -229,6 +239,11 @@ function fillTypes() {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("No types were found. Contact your technical administrator.");
+                alertDanger.show();
             }
         })
         .then(response => {
