@@ -10,6 +10,8 @@ function startupEventListeners() {
     });
 
     $(".maintain-rule").click(() => {
+        $(".existing-rules-wrapper").hide();
+        $(".maintain-spinner").show();
         $(".search-rule-wrapper").show();
         $(".action-button-box").hide();
         $(".back-maintain").show();
@@ -546,6 +548,7 @@ function clearFormFields() {
     $(".error-message").val('');
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     $(".rule-values-wrapper").hide();
+    $(".field-error").hide();
 }
 
 function fillFormValues(ruleData) {
