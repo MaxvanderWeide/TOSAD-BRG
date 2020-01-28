@@ -181,11 +181,6 @@ function createConnection() {
             if (response.status === 200) {
                 showMenu();
                 return response.text();
-            } else if (response.status === 500) {
-                let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("Something went wrong on our end. Please try again later.");
-                alertDanger.show();
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
                 alertDanger.val();
@@ -208,28 +203,6 @@ function createConnection() {
             $(".spinner-holder.initial-spinner").hide();
         });
 }
-
-function fillTargetTables() {
-    fetch("define/tables", {
-        method: "GET",
-        headers: {"Authorization": sessionStorage.getItem("access_token")}
-    })
-        .then(response => {
-            if (response.status === 200) {
-                return response.json();
-            }
-        })
-        .then(response => {
-            if (response !== undefined) {
-                $(".table-selection").empty();
-                for (const index in response.Tables) {
-                    const value = response.Tables[index];
-                    $(".table-selection").append("<option value='" + value + "'>" + value + "</option>");
-                }
-            }
-        });
-}
-
 
 function fillTypes() {
     fetch("define/types", {
@@ -255,6 +228,34 @@ function fillTypes() {
         });
 }
 
+function fillTargetTables() {
+    fetch("define/tables", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("No tables were found. Contact your technical administrator.");
+                alertDanger.show();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Please authenticate again.");
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                $(".table-selection").empty();
+                for (const index in response.Tables) {
+                    const value = response.Tables[index];
+                    $(".table-selection").append("<option value='" + value + "'>" + value + "</option>");
+                }
+            }
+        });
+}
+
 function fillTargetAttributes(table, interEntityRuleType = false) {
     fetch("define/tables/" + table + "/attributes ", {
         method: "GET",
@@ -263,6 +264,13 @@ function fillTargetAttributes(table, interEntityRuleType = false) {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("No attributes were found. Contact your technical administrator.");
+                alertDanger.show();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Please authenticate again.");
             }
         })
         .then(response => {
@@ -286,19 +294,18 @@ function fillOperators(type) {
             if (response.status === 200) {
                 return response.json();
             } else if (response.status === 404) {
-                return response.text();
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("No operators were found. Contact your technical administrator.");
+                alertDanger.show();
             }
         })
         .then(response => {
             if (response !== undefined) {
                 const operatorSelection = $(".new-rule-wrapper .operator-selection");
                 operatorSelection.empty();
-                if (typeof response == 'string' || response instanceof String) {
-                    $(operatorSelection).append("<option value='null'>No operators associated to rule type</option>");
-                } else {
-                    for (const index in response.Operators) {
-                        $(operatorSelection).append("<option value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
-                    }
+                for (const index in response.Operators) {
+                    $(operatorSelection).append("<option value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
                 }
             }
         });
@@ -409,8 +416,10 @@ function saveRule(element, method = "insert") {
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
                     alertDanger.val();
-                    alertDanger.append("Your Business Rule was not created! You may want to recheck your input...");
+                    alertDanger.append("Your Business Rule was not created. You may want to check the input again.");
                     alertDanger.show();
+                } else if (response.status === 403) {
+                    alert("You can't be authenticated. Please authenticate again.");
                 }
             });
     } else if (method === "update") {
@@ -429,8 +438,10 @@ function saveRule(element, method = "insert") {
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
                     alertDanger.val();
-                    alertDanger.append("Your Business Rule was not updated! You may want to recheck your input...");
+                    alertDanger.append("Your Business Rule was not updated. You may want to check the input again.");
                     alertDanger.show();
+                } else if (response.status === 403) {
+                    alert("You can't be authenticated. Please authenticate again.");
                 }
             });
     }
@@ -451,7 +462,14 @@ function deleteRule(element) {
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
                 alertDanger.val();
-                alertDanger.append("The rule was not deleted...");
+                alertDanger.append("The rule was not deleted.");
+                alertDanger.show();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Please authenticate again.");
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("The rule was not found. Maybe it was already deleted?");
                 alertDanger.show();
             }
         });
@@ -495,6 +513,13 @@ function getAllRules() {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Please authenticate again.");
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("No Rules Were Found.");
+                alertDanger.show();
             }
         })
         .then(response => {
@@ -542,6 +567,13 @@ function getRuleById(target) {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Please authenticate again.");
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                alertDanger.val();
+                alertDanger.append("The specified rule was not found. Maybe it was deleted?");
+                alertDanger.show();
             }
         })
         .then(response => {

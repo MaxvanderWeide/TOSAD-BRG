@@ -51,7 +51,6 @@ public class RuleController {
             tags = {"Define", "Types"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = RuleType[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
@@ -77,14 +76,14 @@ public class RuleController {
             tags = {"Define", "Tables"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Table[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "403", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
     public static void getAllTables(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
         Map<String, List<String>> tables = new HashMap<>();
@@ -96,7 +95,7 @@ public class RuleController {
         context.json(tables).status(200);
 
         if (tableList.isEmpty()) {
-            context.status(404).result("No Tables Found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Tables Were Found"));
         }
     }
 
@@ -109,14 +108,14 @@ public class RuleController {
             tags = {"Define", "Tables", "Attributes"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Attribute[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "403", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
     public static void getAllAttributesByTable(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
 
@@ -129,7 +128,7 @@ public class RuleController {
         context.json(attributes).status(200);
 
         if (tempAttribute.isEmpty()) {
-            context.status(404).result("No Attributes Found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Attributes Were Found"));
         }
     }
 
@@ -142,7 +141,6 @@ public class RuleController {
             tags = {"Define", "Types", "Operators"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Operator[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
@@ -157,7 +155,7 @@ public class RuleController {
         context.json(operators).status(200);
 
         if (operatorNameList.isEmpty()) {
-            context.status(404).result("No Operators Found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Operators Were Found"));
         }
     }
 
@@ -170,13 +168,13 @@ public class RuleController {
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
                     @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
-                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+                    @OpenApiResponse(status = "403", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
     public static void saveRuleDefinition(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
 
@@ -184,7 +182,7 @@ public class RuleController {
         rule = getSaveService().saveRule(rule);
 
         if (rule == null) {
-            context.status(400).result("Rule not created");
+            context.status(400).json(new ErrorResponse().status(400).sType("Bad Request").title("Rule Not Created"));
             return;
         }
 
@@ -199,14 +197,14 @@ public class RuleController {
             tags = {"Define", "Rule", "Data"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "403", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
     public static void getMaintainRulesData(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
 
@@ -226,7 +224,7 @@ public class RuleController {
         context.json(rules).status(200);
 
         if (rules.isEmpty()) {
-            context.status(404).result("No rules found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Rules Found"));
         }
     }
 
@@ -239,20 +237,20 @@ public class RuleController {
             tags = {"Define", "rules", "rule"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = Rule[].class)}),
-                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "403", content = {@OpenApiContent(from = ErrorResponse.class)}),
                     @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
             }
     )
     public static void getRuleById(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
         Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
 
         if (rule == null) {
-            context.status(404).result("No rule was found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Rule Found"));
             return;
         }
 
@@ -277,7 +275,7 @@ public class RuleController {
     public static void updateRule(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
 
@@ -286,7 +284,7 @@ public class RuleController {
         rule = getSaveService().updateRule(rule);
 
         if (rule == null) {
-            context.status(400).result("Rule not created");
+            context.status(400).json(new ErrorResponse().status(400).sType("Bad Request").title("Rule Not Updated"));
             return;
         }
 
@@ -309,20 +307,20 @@ public class RuleController {
     public static void deleteRule(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
         if (claims == null) {
-            context.status(403);
+            context.status(403).json(new ErrorResponse().title("Could Not Authenticate User").status(403).sType("Forbidden"));
             return;
         }
         Rule rule = getSelectService().getRuleById(context.pathParam("id", Integer.class).get());
 
         if (rule == null) {
-            context.status(404).result("No rule was found");
+            context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("Rule Not Found"));
             return;
         }
 
         if (getSaveService().deleteRule(context.pathParam("id", Integer.class).get())) {
             context.result("OK").status(200);
         } else {
-            context.result("FAIL").status(501);
+            context.status(400).json(new ErrorResponse().status(400).sType("Bad Request").title("Rule Not Deleted"));
         }
     }
 
