@@ -50,6 +50,7 @@ function startupEventListeners() {
 
     $(".new-rule-wrapper .table-selection").change((item) => {
         fillTargetAttributes(item.target.value, false);
+        $(".type-selection").removeAttr("disabled");
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
@@ -639,10 +640,12 @@ function clearFormFields() {
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     $(".rule-values-wrapper").hide();
     $(".field-error").hide();
+    $(".type-selection").attr("disabled", "disabled");
 }
 
 function fillFormValues(ruleData) {
     for (const attribute of ruleData.attributes) {
+        $(".type-selection").removeAttr("disabled");
         switch (ruleData.type.type) {
             case "Attribute_List":
                 for (const value of attribute.attributeValues) {
