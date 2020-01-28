@@ -103,6 +103,28 @@ public class GenerateController {
     }
 
     @OpenApi(
+            summary = "Insert trigger Code",
+            operationId = "insertCode",
+            path = "/generate/rules/insert",
+            method = HttpMethod.POST,
+            tags = {"Generate", "Rules", "Insert"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = String[].class)}),
+                    @OpenApiResponse(status = "400", content = {@OpenApiContent(from = ErrorResponse.class)}),
+                    @OpenApiResponse(status = "404", content = {@OpenApiContent(from = ErrorResponse.class)})
+            }
+    )
+    public static void insertCode(io.javalin.http.Context context) {
+        Claims claims = decodeJWT(context.req.getHeader("authorization"));
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
+
+        // TODO - implement method...
+    }
+
+    @OpenApi(
             summary = "get Rule using the ruleId",
             operationId = "getRule",
             path = "/generate/rules/:id",

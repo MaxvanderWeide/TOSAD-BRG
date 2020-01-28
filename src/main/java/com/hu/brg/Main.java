@@ -25,6 +25,7 @@ public class Main {
                 get(GenerateController::getRuleDefinitions);
                 post(GenerateController::generateCode);
                 path(":id", () -> get(GenerateController::getRule));
+                path("insert", () -> post(GenerateController::insertCode));
             }));
             path("auth", () -> path("connection", () -> post(AuthController::createConnection)));
             path("define", () -> {

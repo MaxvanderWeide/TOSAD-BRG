@@ -449,10 +449,15 @@ function updateRule(element) {
 function displayBlock(type) {
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     eval(Types[type].block);
-    $(".btn-save").unbind("click");
+    $(".btn-save, .btn-update").unbind("click");
     $(".btn-save").click((item) => {
         if (!checkFieldsError()) {
             saveRule(item);
+        }
+    });
+    $(".btn-update").click((item) => {
+        if (!checkFieldsError()) {
+            updateRule(item);
         }
     });
 }
