@@ -427,7 +427,6 @@ function deleteRule(element) {
 }
 
 function updateRule(element) {
-    // alert("Not implemented yet...")
     saveRule(element, "update");
 }
 

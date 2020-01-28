@@ -123,7 +123,7 @@ label {
     min-width: 45%;
 }
 
-.rule-description {
+.rule-description, .error-message {
     height: 100px;
 }
 

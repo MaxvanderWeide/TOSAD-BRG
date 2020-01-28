@@ -104,10 +104,17 @@
                     <input type="text" class="form-input rule-name rule-field" placeholder="My new Rule">
                     <div class="field-error rule-name-error">Enter a name.</div>
                 </div>
-                <div class="mb-3">
-                    <label>Description:</label>
-                    <textarea class="form-input rule-description rule-field" placeholder="New rule description"></textarea>
-                    <div class="field-error description-error">Enter a description.</div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Description:</label>
+                        <textarea class="form-input rule-description rule-field" placeholder="New rule description"></textarea>
+                        <div class="field-error description-error">Enter a description.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Define the error message:</label>
+                        <textarea class="error-message form-input rule-field"></textarea>
+                        <div class="field-error rule-name-error">Enter an error message.</div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -139,13 +146,6 @@
                             <option disabled selected>Select an operator</option>
                         </select>
                         <div class="field-error operator-error">Select an operator.</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label>Define the error message:</label>
-                        <textarea class="error-message form-input rule-field"></textarea>
-                        <div class="field-error rule-name-error">Enter an error message.</div>
                     </div>
                 </div>
                 <div class="mb-3 rule-values-wrapper">
