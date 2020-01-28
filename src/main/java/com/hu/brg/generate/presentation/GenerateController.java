@@ -1,15 +1,24 @@
 package com.hu.brg.generate.presentation;
 
+import com.hu.brg.generate.application.generator.Generator;
+import com.hu.brg.generate.application.generator.GeneratorFactory;
 import com.hu.brg.generate.application.select.RuleSelectService;
 import com.hu.brg.generate.application.select.SelectService;
 import com.hu.brg.generate.domain.Attribute;
 import com.hu.brg.generate.domain.AttributeValue;
+import com.hu.brg.generate.domain.Project;
 import com.hu.brg.generate.domain.Rule;
+import com.hu.brg.generate.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.service.model.web.ErrorResponse;
-import io.javalin.plugin.openapi.annotations.*;
+import io.javalin.plugin.openapi.annotations.HttpMethod;
+import io.javalin.plugin.openapi.annotations.OpenApi;
+import io.javalin.plugin.openapi.annotations.OpenApiContent;
+import io.javalin.plugin.openapi.annotations.OpenApiParam;
+import io.javalin.plugin.openapi.annotations.OpenApiResponse;
 import io.jsonwebtoken.Claims;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,8 +86,20 @@ public class GenerateController {
     )
     public static void generateCode(io.javalin.http.Context context) {
         Claims claims = decodeJWT(context.req.getHeader("authorization"));
-        // TODO - Implement this!
+        if (claims == null) {
+            context.status(403);
+            return;
+        }
 
+        Project project = DAOServiceProvider.getProjectDAO().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
+        Generator generator = GeneratorFactory.getGenerator(project.getDbEngine());
+        if (generator == null) {
+            context.status(501);
+            return;
+        }
+
+        String rules = generator.generateTriggers(project, DAOServiceProvider.getRuleDAO().getRulesByProject(project));
+        context.json(Collections.singletonMap("rules", rules));
     }
 
     @OpenApi(
