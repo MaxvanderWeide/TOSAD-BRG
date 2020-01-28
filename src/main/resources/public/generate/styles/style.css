@@ -30,7 +30,6 @@
     z-index: 9999999999;
     overflow: hidden;
     background: transparent;
-    display: none; /*TODO: weghalen...*/
 }
 
 .text-primary {
