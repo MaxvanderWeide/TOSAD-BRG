@@ -140,7 +140,22 @@ public class GenerateController {
             return;
         }
 
-        // TODO - implement method...
+        JSONObject jsonObject = new JSONObject(context.body());
+        if (!jsonObject.has("triggers")) {
+            context.status(400);
+            return;
+        }
+
+        Project project = DAOServiceProvider.getProjectDAO().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
+        Generator generator = GeneratorFactory.getGenerator(project.getDbEngine());
+        if (generator == null) {
+            context.status(501);
+            return;
+        }
+
+        generator.pushTriggers(project, jsonObject.getString("triggers"), claims.get("username").toString(), claims.get("password").toString());
+
+        context.status(201);
     }
 
     @OpenApi(
