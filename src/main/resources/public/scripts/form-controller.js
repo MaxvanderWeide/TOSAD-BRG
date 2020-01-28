@@ -107,11 +107,13 @@ function checkFieldsError() {
                 $(".rule-values-error").text("Minimum value is higher than maximum value");
                 valuesError = true;
             }
+            break;
         case "Tuple_Compare", "Attribute_List":
             if ($(".attributes-list").html() === "") {
                 $(".rule-values-error").text("Enter a value to the list");
                 valuesError = true;
             }
+            break;
         case "InterEntity_Compare":
             if ($(".target-foreign-key").val() === null || $(".target-foreign-key").val().trim() === "" ||
                 $(".other-table-selection").val() === null || $(".other-table-selection").val().trim() === "" ||
@@ -120,6 +122,7 @@ function checkFieldsError() {
             ) {
                 $(".rule-values-error").show();
             }
+            break;
         default:
             break;
     }
@@ -255,7 +258,7 @@ function fillTypes() {
         });
 }
 
-function fillTargetAttributes(table, interEntityRuleType = false) {
+function fillTargetAttributes(table, interEntityRuleType = false, operation, column) {
     fetch("define/tables/" + table + "/attributes ", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
@@ -271,13 +274,16 @@ function fillTargetAttributes(table, interEntityRuleType = false) {
 
                 $(selectionTarget).empty();
                 for (const index in response.Attributes) {
-                    $(selectionTarget).append("<option value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
+                    console.log(column);
+                    console.log(index);
+                    const selected = operation === "maintain" && column === index ? "selected" : "";
+                    $(selectionTarget).append("<option " + selected + " value='" + index + ' - ' + response.Attributes[index] + "'>" + index + "</option>");
                 }
             }
         });
 }
 
-function fillOperators(type) {
+function fillOperators(type, operation = "define", operatorName) {
     fetch("define/types/" + type + "/operators", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
@@ -297,7 +303,8 @@ function fillOperators(type) {
                     $(operatorSelection).append("<option value='null'>No operators associated to rule type</option>");
                 } else {
                     for (const index in response.Operators) {
-                        $(operatorSelection).append("<option value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
+                        const selected = operation === "maintain" && operatorName === response.Operators[index] ? "selected" : "";
+                        $(operatorSelection).append("<option " + selected + " value='" + response.Operators[index] + "'>" + response.Operators[index] + "</option>");
                     }
                 }
             }
@@ -308,7 +315,7 @@ function checkTypeSelected(valuesArray, type) {
     return valuesArray.indexOf(type.trim()) > -1;
 }
 
-function setAttributeValues(value, type, index, doIndex = false) {
+function setAttributeValues(value, type, index, doIndex = false, operation = "insert", id) {
     const attributeValues = {};
 
     attributeValues["value"] = value;
@@ -316,11 +323,15 @@ function setAttributeValues(value, type, index, doIndex = false) {
     if (doIndex) {
         attributeValues["order"] = index;
     }
+    if (operation === "update") {
+        attributeValues["id"] = id;
+    }
 
     return attributeValues;
 }
 
 function saveRule(element, method = "insert") {
+    console.log($(".attribute-id").val());
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
@@ -336,9 +347,10 @@ function saveRule(element, method = "insert") {
     } else if (checkTypeSelected(["Attribute_Range"], selectedType)) {
         const attributeItem = {};
         $("[id^=custInput]").each((index, item) => {
-            attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", index, true));
+            attributeValuesArray.push(setAttributeValues($(item).val(), "NUMBER", index, true, "update", $(item).data("value-id")));
         });
         attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
+        attributeItem["id"] = $(".attribute-id").val();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
         attributeItem["attributeValues"] = attributeValuesArray;
         attributeItems.push(attributeItem);
@@ -403,13 +415,11 @@ function saveRule(element, method = "insert") {
             .then(response => {
                 if (response.status === 201) {
                     let alertSuccess = $('.alert-success');
-                    alertSuccess.val();
-                    alertSuccess.append("Your new BusinessRule was created!");
+                    $(alertSuccess).html("Your new BusinessRule was created!");
                     alertSuccess.show();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
-                    alertDanger.val();
-                    alertDanger.append("Your Business Rule was not created! You may want to recheck your input...");
+                    $(alertDanger).html("Your Business Rule was not created! You may want to recheck your input...");
                     alertDanger.show();
                 }
             });
@@ -423,13 +433,11 @@ function saveRule(element, method = "insert") {
             .then(response => {
                 if (response.status === 201) {
                     let alertSuccess = $('.alert-success');
-                    alertSuccess.val();
-                    alertSuccess.append("The rule was updated!");
+                    $(alertSuccess).html("The rule was updated!");
                     alertSuccess.show();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
-                    alertDanger.val();
-                    alertDanger.append("Your Business Rule was not updated! You may want to recheck your input...");
+                    $(alertDanger).html("Your Business Rule was not updated! You may want to recheck your input...");
                     alertDanger.show();
                 }
             });
@@ -552,25 +560,24 @@ function getRuleById(target) {
 }
 
 function fillFormFields(rule) {
+    console.log(rule.attributes[0].column);
+    console.log(rule.attributes[0].operatorName);
     let table = rule.table;
     let type = rule.type.type;
     $(".rule-id").val(rule.id);
+    $(".attribute-id").val(rule.attributes[0].id);
     $(".rule-name").val(rule.name);
     $(".rule-description").val(rule.description);
     $(".table-selection").val(table);
     $(".type-selection").val(type);
 
-    fillTargetAttributes(table, false);
-    fillOperators(type);
+    fillTargetAttributes(table, false, "maintain", rule.attributes[0].column);
+    fillOperators(type, "maintain", rule.attributes[0].operatorName);
     displayBlock(type);
     fillFormValues(rule);
     $(".rule-values-wrapper").show();
-    $(".attribute-selection").val(rule.attributes.column);
-    $(".operator-selection").val(rule.attributes.operatorName);
     $(".error-message").val(rule.errorMessages);
-    //TODO: Values tonen in define FE
-    // $(".custInput1").val();
-    // $(".custInput2").val();
+    console.log($(".operator-selection").val());
 }
 
 function clearFormFields() {
@@ -595,8 +602,10 @@ function fillFormValues(ruleData) {
                 }
                 break;
             case "Attribute_Range":
-                $("#custInput1").val(attribute.attributeValues[0].value);
-                $("#custInput2").val(attribute.attributeValues[1].value);
+                $("#custInput1").val(attribute.attributeValues[0].value).data("value-id", attribute.attributeValues[0].id);
+                $("#custInput1").attr("data-value-id", attribute.attributeValues[0].id);
+                $("#custInput2").val(attribute.attributeValues[1].value).data("value-id", attribute.attributeValues[1].id);
+                $("#custInput2").attr("data-value-id", attribute.attributeValues[1].id);
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
             case "InterEntity_Compare":
