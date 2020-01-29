@@ -14,7 +14,7 @@ public class InterEntityGenerator implements TypeGenerator {
     @Override
     public void fillStringTemplate(ST stringTemplate, List<Attribute> attributeList, String groupPath) {
         if (attributeList.isEmpty()) {
-            throw new IllegalStateException("AttributeList cannnot be empty");
+            throw new IllegalStateException("AttributeList cannot be empty");
         }
 
         Attribute attribute = attributeList.get(0);

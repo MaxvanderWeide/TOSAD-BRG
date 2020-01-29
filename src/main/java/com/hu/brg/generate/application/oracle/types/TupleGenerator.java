@@ -15,7 +15,7 @@ public class TupleGenerator implements TypeGenerator {
     @Override
     public void fillStringTemplate(ST stringTemplate, List<Attribute> attributeList, String groupPath) {
         if (attributeList.isEmpty()) {
-            throw new IllegalStateException("AttributeList cannnot be empty");
+            throw new IllegalStateException("AttributeList cannot be empty");
         }
 
         StringBuilder stringBuilder = new StringBuilder();

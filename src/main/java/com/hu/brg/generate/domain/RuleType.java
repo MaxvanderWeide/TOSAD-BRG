@@ -35,6 +35,10 @@ public class RuleType {
         return type.contains("InterEntity");
     }
 
+    public boolean isEntityType(){
+        return type.contains("Entity");
+    }
+
     public int getId() {
         return id;
     }

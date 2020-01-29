@@ -11,6 +11,8 @@ public class TypeGeneratorFactory {
             return new TupleGenerator();
         } else if (ruleType.isInterEntityType()) {
             return new InterEntityGenerator();
+        } else if (ruleType.isEntityType()) {
+            return new EntityGenerator();
         }
 
         return null;
