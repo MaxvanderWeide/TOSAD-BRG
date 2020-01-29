@@ -279,13 +279,13 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
     @Override
     public boolean deleteRule(int id) {
+        Rule rule = getRule(id);
+
+        if (rule == null) {
+            return true;
+        }
+
         try (Connection conn = getConnection()) {
-            Rule rule = getRule(id);
-
-            if (rule == null) {
-                return true;
-            }
-
             String query;
             for (Attribute attribute : rule.getAttributesList()) {
                 for (AttributeValue attributeValue : attribute.getAttributeValues()) {
