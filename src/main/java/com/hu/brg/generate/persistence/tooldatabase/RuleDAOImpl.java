@@ -122,6 +122,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 }
             }
 
+            conn.close();
+
             return rule;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -173,6 +175,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                     attributeValueStatement.close();
                 }
             }
+
+            conn.close();
 
             return rule;
         } catch (SQLException e) {

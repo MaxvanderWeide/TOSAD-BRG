@@ -82,6 +82,7 @@ public class ProjectDAOImpl extends BaseDAO implements ProjectDAO {
 
             projectCallable.close();
 
+            conn.close();
             return project;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -144,6 +145,7 @@ public class ProjectDAOImpl extends BaseDAO implements ProjectDAO {
                     DAOServiceProvider.getRuleDAO().getRulesByProject(project);
                 }
 
+                conn.close();
                 return project;
             }
 
@@ -176,6 +178,8 @@ public class ProjectDAOImpl extends BaseDAO implements ProjectDAO {
                 project = getProjectStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return project;
             }
 
