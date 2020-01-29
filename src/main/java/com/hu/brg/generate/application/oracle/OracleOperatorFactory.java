@@ -22,6 +22,10 @@ public class OracleOperatorFactory {
                 return "IN";
             case "NOTIN":
                 return "NOT IN";
+            case "BETWEEN":
+                return "BETWEEN";
+            case "NOTBETWEEN":
+                return "NOT BETWEEN";
             default:
                 return null;
         }
