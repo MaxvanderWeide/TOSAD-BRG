@@ -3,7 +3,7 @@ $(document).ready(function () {
     startupEventListeners();
     loadFromStorage();
 
-    setTimeout(function() {
+    setTimeout(function () {
         // alert("Your token has ");
         createConnection();
     }, 3600000);
@@ -21,7 +21,7 @@ function startupEventListeners() {
     $(".insert").click(() => {
         let triggers = sessionStorage.getItem("triggers");
 
-        if(triggers !== undefined) {
+        if (triggers !== undefined) {
             insertCode(triggers.replace(/(?:<br>)/g, "\n"));
         } else {
             let alertDanger = $('.alert-danger');
@@ -130,7 +130,7 @@ function getAllRules() {
                         "<td>" + index + "</td>" +
                         "<td>" + response[index]['table'] + "</td>" +
                         "<td>" + response[index]['type'] + "</td>" +
-                        "<td data-id='"+ id +"'><input class='form-check-input' value='"+ id +"' type='checkbox' id='checkbox'></td>" +
+                        "<td data-id='" + id + "'><input class='form-check-input' value='" + id + "' type='checkbox' id='checkbox'></td>" +
                         "</tr>"
                     );
                 }
@@ -181,7 +181,7 @@ function generate() {
         }
     });
 
-    if(typeof ids !== 'undefined' && ids.length > 0) {
+    if (typeof ids !== 'undefined' && ids.length > 0) {
         $(".sample-code-block").html("").hide();
         $('.alert-danger, .alert-success, button.insert').hide();
         $(".generate-spinner").show();
@@ -232,7 +232,7 @@ function showGeneratedRule(response) {
     $(".generate-spinner").hide();
 
     $(sample).html(
-        ("<samp>"+response+"</samp>").replace(/(?:\n)/g, "<br>")
+        ("<samp>" + response + "</samp>").replace(/(?:\n)/g, "<br>")
     );
 
     $(sample).show();
