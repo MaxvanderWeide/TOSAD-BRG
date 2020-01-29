@@ -31,7 +31,13 @@
         </div>
     </div>
 
-    <div class="rule-preview"></div>
+    <div class="rule-preview">
+        <div class="generate-spinner">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-md-12">
@@ -42,7 +48,7 @@
                     <input id="search-rule" class="form-input">
                     <br>
                     <h3>Existing Rules</h3>
-                    <p class="lead">Select a Rule below to (re)generate.</p>
+                    <p class="lead existing-lead">Select a Rule below to (re)generate.</p>
                         <table class="table table-striped" id="ruleTable">
                             <thead class="thead-dark">
                             <tr>

@@ -30,7 +30,6 @@ function getAllRules() {
             if (response !== undefined) {
                 // response = response[0];
                 const tableBody = $("#table-body").html("");
-                console.log(response);
 
                 for (const index in response) {
                     let id = response[index]['id'];
@@ -45,8 +44,9 @@ function getAllRules() {
                     );
                 }
 
-                showRuleOnClick();
+                // showRuleOnClick(); TODO - Weghalen??
                 $("table.existing-rules-wrapper").append(tableBody);
+                $("#ruleTable, .generate, .existing-lead").show();
                 return "ok";
             } else {
                 $("#table-body").html("No rules found")
@@ -75,6 +75,7 @@ function getRuleById(target) {
 }
 
 function generate() {
+    $(".generate-spinner").show();
     let ids = [];
     let boxes = $('input[type=checkbox]');
 
@@ -99,24 +100,28 @@ function generate() {
                     return response.json();
                 } else if (response.status === 404) {
                     let alertDanger = $('.alert-danger');
-                    alertDanger.val();
-                    alertDanger.append("Contact your technical administrator.");
-                    alertDanger.show();
+                    $(alertDanger).html("Contact your technical administrator.");
+                    $(alertDanger).show();
                 }
             })
             .then(response => {
                 if (response !== undefined) {
                     // show generated items...
-
-                    let alertDanger = $('.alert-success');
-                    alertDanger.val();
-                    alertDanger.append("the selected rules are generated! See the output below.");
-                    alertDanger.show();
+                    console.log(response);
+                    let alertSuccess = $('.alert-success');
+                    $(alertSuccess).html("The selected rules are generated! See the output below.");
+                    $(alertSuccess).show();
+                    $(".rule-preview").html((response.triggers).replace(/(?:\n)/g, "<br>"));
+                    $(".generate-spinner").show();
                 }
             });
 
     //refresh table
     getAllRules();
+}
+
+function showGeneratedRule(response) {
+
 }
 
 function showRuleOnClick(id) {

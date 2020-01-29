@@ -187,9 +187,8 @@ function createConnection() {
                 return response.text();
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("Can't create connection due to unfulfilled data requirements.");
-                alertDanger.show();
+                $(alertDanger).html("Can't create connection due to unfulfilled data requirements.");
+                $(alertDanger).show();
             } else if (response.status === 403) {
                 alert("You can't be authenticated. Contact your technical administrator.");
             }
@@ -218,9 +217,8 @@ function fillTypes() {
                 return response.json();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("No types were found. Contact your technical administrator.");
-                alertDanger.show();
+                $(alertDanger).html("No types were found. Contact your technical administrator.");
+                $(alertDanger).show();
             }
         })
         .then(response => {
@@ -242,9 +240,8 @@ function fillTargetTables() {
                 return response.json();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("No tables were found. Contact your technical administrator.");
-                alertDanger.show();
+                $(alertDanger).html("No tables were found. Contact your technical administrator.");
+                $(alertDanger).show();
             } else if (response.status === 403) {
                 alert("You can't be authenticated. Please authenticate again.");
             }
@@ -270,9 +267,8 @@ function fillTargetAttributes(table, interEntityRuleType = false, operation, col
                 return response.json();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("No attributes were found. Contact your technical administrator.");
-                alertDanger.show();
+                $(alertDanger).html("No attributes were found. Contact your technical administrator.");
+                $(alertDanger).show();
             } else if (response.status === 403) {
                 alert("You can't be authenticated. Please authenticate again.");
             }
@@ -300,9 +296,8 @@ function fillOperators(type, operation = "define", operatorName) {
                 return response.json();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("No operators were found. Contact your technical administrator.");
-                alertDanger.show();
+                $(alertDanger).html("No operators were found. Contact your technical administrator.");
+                $(alertDanger).show();
             }
         })
         .then(response => {
@@ -441,12 +436,11 @@ function saveRule(element, method = "insert") {
                 if (response.status === 201) {
                     let alertSuccess = $('.alert-success');
                     $(alertSuccess).html("Your new BusinessRule was created!");
-                    alertSuccess.show();
+                    $(alertSuccess).show();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
-                    alertDanger.val();
-                    alertDanger.append("Your Business Rule was not created. You may want to check the input again.");
-                    alertDanger.show();
+                    $(alertDanger).html("Your Business Rule was not created. You may want to check the input again.");
+                    $(alertDanger).show();
                 } else if (response.status === 403) {
                     alert("You can't be authenticated. Please authenticate again.");
                 }
@@ -462,12 +456,11 @@ function saveRule(element, method = "insert") {
                 if (response.status === 201) {
                     let alertSuccess = $('.alert-success');
                     $(alertSuccess).html("The rule was updated!");
-                    alertSuccess.show();
+                    $(alertSuccess).show();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
-                    alertDanger.val();
-                    alertDanger.append("Your Business Rule was not updated. You may want to check the input again.");
-                    alertDanger.show();
+                    $(alertDanger).html("Your Business Rule was not updated. You may want to check the input again.");
+                    $(alertDanger).show();
                 } else if (response.status === 403) {
                     alert("You can't be authenticated. Please authenticate again.");
                 }
@@ -484,21 +477,18 @@ function deleteRule(element) {
         .then(response => {
             if (response.status === 200) {
                 let alertSuccess = $('.alert-success');
-                alertSuccess.val();
-                alertSuccess.append("The BusinessRule was deleted!");
-                alertSuccess.show();
+                $(alertSuccess).html("The BusinessRule was deleted!");
+                $(alertSuccess).show();
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("The rule was not deleted.");
-                alertDanger.show();
+                $(alertDanger).html("The rule was not deleted.");
+                $(alertDanger).show();
             } else if (response.status === 403) {
                 alert("You can't be authenticated. Please authenticate again.");
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("The rule was not found. Maybe it was already deleted?");
-                alertDanger.show();
+                $(alertDanger).html("The rule was not found. Maybe it was already deleted?");
+                $(alertDanger).show();
             }
         });
 }
@@ -545,9 +535,8 @@ function getAllRules() {
                 alert("You can't be authenticated. Please authenticate again.");
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("No Rules Were Found.");
-                alertDanger.show();
+                $(alertDanger).html("No Rules Were Found.");
+                $(alertDanger).show();
             }
         })
         .then(response => {
@@ -599,9 +588,8 @@ function getRuleById(target) {
                 alert("You can't be authenticated. Please authenticate again.");
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                alertDanger.val();
-                alertDanger.append("The specified rule was not found. Maybe it was deleted?");
-                alertDanger.show();
+                $(alertDanger).html("The specified rule was not found. Maybe it was deleted?");
+                $(alertDanger).show();
             }
         })
         .then(response => {

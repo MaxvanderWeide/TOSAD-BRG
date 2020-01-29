@@ -106,3 +106,12 @@ tbody tr:hover {
     min-width: 100%;
     padding: 10px!important;
 }
+
+#ruleTable, .existing-lead, button.generate {
+    display: none;
+}
+
+.generate-spinner {
+    display: none;
+    text-align: center;
+}
