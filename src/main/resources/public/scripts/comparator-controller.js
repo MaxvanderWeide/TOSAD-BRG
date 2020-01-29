@@ -163,22 +163,19 @@ function InterEntity_Compare() {
 }
 
 function Entity_Other() {
-    const custInput1 = $("<textarea placeholder='declarations' name='inputlog'>", {
+    const custInput1 = $("<textarea placeholder='declarations' class='form-input col-md-5 mb-3 rule-field value-input' name='inputlog'>", {
         type: "text",
-        id: "custInput1",
-        class: "form-input col-md-5 mb-3 rule-field value-input"
+        id: "custInput1"
     });
     $(".new-rule-wrapper").find(".comparator-step").append(custInput1);
-    const custInput2 = $("<textarea placeholder='insertions' name='inputlog'>", {
+    const custInput2 = $("<textarea placeholder='insertions' class='form-input col-md-5 mb-3 rule-field value-input' name='inputlog'>", {
         type: "text",
-        id: "custInput2",
-        class: "form-input col-md-5 mb-3 rule-field value-input"
+        id: "custInput2"
     });
     $(".new-rule-wrapper").find(".comparator-step").append(custInput2);
-    const custInput3 = $("<input placeholder='statement' name='inputlog'>", {
+    const custInput3 = $("<input placeholder='statement' class='form-input col-md-5 mb-3 rule-field value-input' name='inputlog'>", {
         type: "text",
         id: "custInput3",
-        class: "form-input col-md-5 mb-3 rule-field value-input"
     });
     $(".new-rule-wrapper").find(".comparator-step").append(custInput3);
 }
