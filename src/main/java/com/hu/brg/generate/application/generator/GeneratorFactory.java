@@ -1,6 +1,6 @@
 package com.hu.brg.generate.application.generator;
 
-import com.hu.brg.generate.application.oracle.OracleGenerator;
+import com.hu.brg.generate.application.generator.oracle.OracleGenerator;
 import com.hu.brg.generate.domain.DBEngine;
 
 public class GeneratorFactory {

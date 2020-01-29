@@ -1,6 +1,6 @@
-package com.hu.brg.generate.application.oracle.types;
+package com.hu.brg.generate.application.generator.oracle.types;
 
-import com.hu.brg.generate.application.oracle.OracleOperatorFactory;
+import com.hu.brg.generate.application.generator.oracle.OracleOperatorFactory;
 import com.hu.brg.generate.domain.Attribute;
 import org.stringtemplate.v4.ST;
 

@@ -1,4 +1,4 @@
-package com.hu.brg.generate.application.oracle.types;
+package com.hu.brg.generate.application.generator.oracle.types;
 
 import com.hu.brg.generate.domain.RuleType;
 

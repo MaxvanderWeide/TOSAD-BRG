@@ -1,4 +1,4 @@
-package com.hu.brg.generate.application.oracle;
+package com.hu.brg.generate.application.generator.oracle;
 
 import com.hu.brg.generate.domain.Operator;
 
