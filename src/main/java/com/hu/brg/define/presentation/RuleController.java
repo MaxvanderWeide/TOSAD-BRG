@@ -223,7 +223,7 @@ public class RuleController {
 
         context.json(rules).status(200);
 
-        if (rules.isEmpty()) {
+        if (tempRules.isEmpty()) {
             context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Rules Found"));
         }
     }
