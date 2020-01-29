@@ -164,6 +164,12 @@ div.rule-values-wrapper, div.db-info-wrapper {
     background: transparent;
 }
 
+
+tbody tr:hover {
+    opacity: .6;
+    cursor: pointer;
+}
+
 .text-primary {
     font-size: xx-large;
     width: 100%;
