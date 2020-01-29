@@ -87,7 +87,7 @@ public class OracleGenerator implements Generator {
 
             baseStringTemplate.add("trigger_triggers", rules.toString());
 
-            allTriggers.append(baseStringTemplate.render()).append("/");
+            allTriggers.append(baseStringTemplate.render()).append("/").append("\n");
         }
 
         return allTriggers.toString();
