@@ -103,7 +103,7 @@ tbody tr:hover {
     padding: 10px!important;
 }
 
-#ruleTable, .existing-lead, button.generate {
+#ruleTable, .existing-lead, button.generate, .search-rule-wrapper, .existing-rules-title, .db-info-wrapper {
     display: none;
 }
 

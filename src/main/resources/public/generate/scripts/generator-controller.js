@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    getAllRules();
     searchTable();
     startupEventListeners();
     loadFromStorage();
@@ -72,7 +71,7 @@ function createConnection() {
                 sessionStorage.setItem("values", values);
                 $('.alert-danger').hide();
                 getAllRules();
-
+                $(".search-rule-wrapper, .existing-rules-title").show();
             } else {
                 $(".db-info-wrapper").show();
             }
@@ -93,12 +92,16 @@ function loadFromStorage() {
 
         createConnection();
     } else {
-        $(".db-info-wrapper").show();
         $(".spinner-holder.initial-spinner").hide();
+        $(".db-info-wrapper").show();
     }
 }
 
 function getAllRules() {
+    $(".alert-danger").html("").hide();
+    $(".alert-success").html("").hide();
+    $(".existing-lead, #ruleTable, button.generate").hide();
+    $(".existing-rules-spinner").show();
     fetch("rules", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
@@ -133,10 +136,11 @@ function getAllRules() {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("There are no rules defined yet! Go to Define & Maintain to define your first rule.");
                 $(alertDanger).show();
+                $(".existing-rules-spinner").hide();
             }
         }).then(response => {
-        $(".spinner-holder.initial-spinner").hide();
-        $("table.existing-rules-wrapper").show();
+        $(".spinner-holder.initial-spinner, .existing-rules-spinner").hide();
+        $("table.existing-rules-wrapper, button.generate").show();
     });
 }
 
@@ -205,13 +209,12 @@ function generate() {
                 }
             });
     } else {
-        let alertDanger = $('.alert-danger');
-        $(alertDanger).html("You haven't yet selected any rules to be created!");
-        $(alertDanger).show();
+        $(".alert-success").html("").hide();
+        $(".sample-code-block").html("").hide();
+        $("button.insert").hide();
+        $(".alert-danger").html("You haven't yet selected any rules to be created!").show();
+        return;
     }
-
-    //refresh table
-    getAllRules();
 }
 
 function showGeneratedRule(response) {

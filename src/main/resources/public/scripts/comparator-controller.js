@@ -103,7 +103,7 @@ function InterEntity_Compare() {
         });
     }
 
-    fillIEAttributes("entity");
+    fillTargetAttributes("entity");
 
     fetch("define/tables", {
         method: "GET",

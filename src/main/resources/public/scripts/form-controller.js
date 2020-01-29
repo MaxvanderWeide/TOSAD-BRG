@@ -341,6 +341,8 @@ function setAttributeValues(value, type, index, doIndex = false, operation = "in
 
 function saveRule(element, method = "insert") {
     $(".new-rule-spinner").show();
+    $(".alert-success").html("");
+    $(".alert-success").hide();
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
@@ -447,6 +449,7 @@ function saveRule(element, method = "insert") {
                     $(alertSuccess).html("Your new BusinessRule was created!");
                     $(alertSuccess).show();
                     $(".new-rule-spinner").hide();
+                    getAllRules();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
                     $(alertDanger).html("Your Business Rule was not created. You may want to check the input again.");
@@ -468,6 +471,7 @@ function saveRule(element, method = "insert") {
                     $(alertSuccess).html("The rule was updated!");
                     $(alertSuccess).show();
                     $(".new-rule-spinner").hide();
+                    getAllRules();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
                     $(alertDanger).html("Your Business Rule was not updated. You may want to check the input again.");
@@ -490,6 +494,9 @@ function deleteRule(element) {
                 let alertSuccess = $('.alert-success');
                 $(alertSuccess).html("The BusinessRule was deleted!");
                 $(alertSuccess).show();
+                clearFormFields();
+                $(".new-rule-wrapper").hide();
+                getAllRules();
             } else if (response.status === 400) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("The rule was not deleted.");
@@ -512,7 +519,7 @@ function displayBlock(type) {
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     $(".new-rule-wrapper .table-selection").unbind("change");
     bindTableSelection();
-    eval(Types[type].block);
+    console.log(type);
     $(".btn-save, .btn-update").unbind("click");
     $(".btn-save").click((item) => {
         if (!checkFieldsError()) {

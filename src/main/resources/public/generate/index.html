@@ -102,7 +102,12 @@
                     <p class="lead">Search for the desired Rule below.</p>
                     <input id="search-rule" class="form-input">
                     <br>
-                    <h3>Existing Rules</h3>
+                    <h3 class="existing-rules-title">Existing Rules</h3>
+                    <div class="existing-rules-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
                     <p class="lead existing-lead">Select a Rule below to (re)generate.</p>
                         <table class="table table-striped" id="ruleTable">
                             <thead class="thead-dark">
