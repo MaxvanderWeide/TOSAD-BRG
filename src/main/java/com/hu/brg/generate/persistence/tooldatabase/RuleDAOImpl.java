@@ -238,6 +238,11 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
     @Override
     public List<Rule> getRulesByProjectId(int projectId) {
+        return getRulesByProjectId(projectId, false);
+    }
+
+    @Override
+    public List<Rule> getRulesByProjectId(int projectId, boolean signatureOnly) {
         List<Rule> rules = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
@@ -249,7 +254,12 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             ResultSet ruleResult = ruleStatement.executeQuery();
             while (ruleResult.next()) {
-                Rule rule = processRuleResult(ruleResult, null);
+                Rule rule;
+                if (signatureOnly) {
+                    rule = getRuleStatement(ruleResult, null);
+                } else {
+                    rule = processRuleResult(ruleResult, null);
+                }
                 rules.add(rule);
             }
 

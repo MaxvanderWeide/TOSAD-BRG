@@ -8,6 +8,7 @@ import java.util.List;
 public interface SelectService {
 
     List<Rule> getRulesWithProjectId(int id);
+    List<Rule> getRulesWithProjectId(int id, boolean signatureOnly);
 
     Rule getRuleWithId(int id, int projectId);
 

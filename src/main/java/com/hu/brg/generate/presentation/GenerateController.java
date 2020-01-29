@@ -59,7 +59,7 @@ public class GenerateController {
 
         Map<String, Map<String, Object>> rules = new HashMap<>();
         try {
-            for (Rule rule : getSelectService().getRulesWithProjectId(Integer.parseInt(claims.get("projectId").toString()))) {
+            for (Rule rule : getSelectService().getRulesWithProjectId(Integer.parseInt(claims.get("projectId").toString()), true)) {
                 Map<String, Object> map = serializeRuleToJson(rule, false);
                 rules.put(rule.getName(), map);
             }

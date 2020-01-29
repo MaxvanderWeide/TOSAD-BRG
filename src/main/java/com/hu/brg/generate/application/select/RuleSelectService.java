@@ -14,7 +14,12 @@ public class RuleSelectService implements SelectService {
     private ProjectDAO projectDAO = DAOServiceProvider.getProjectDAO();
 
     public List<Rule> getRulesWithProjectId(int id) {
-        return ruleDAO.getRulesByProjectId(id);
+        return getRulesWithProjectId(id, false);
+    }
+
+    @Override
+    public List<Rule> getRulesWithProjectId(int id, boolean signatureOnly) {
+        return ruleDAO.getRulesByProjectId(id, signatureOnly);
     }
 
     public Rule getRuleWithId(int id, int projectId) {

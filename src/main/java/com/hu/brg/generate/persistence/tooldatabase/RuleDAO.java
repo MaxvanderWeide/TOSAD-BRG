@@ -24,6 +24,7 @@ public interface RuleDAO {
     List<Rule> getRulesByProject(Project project);
 
     List<Rule> getRulesByProjectId(int projectId);
+    List<Rule> getRulesByProjectId(int projectId, boolean signatureOnly);
 
     boolean deleteRule(int id);
 }
