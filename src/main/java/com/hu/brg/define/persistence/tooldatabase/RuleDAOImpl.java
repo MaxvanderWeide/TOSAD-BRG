@@ -122,8 +122,6 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             ruleStatement.close();
 
-            insertAttributes(rule, conn);
-
             for (Attribute attribute : rule.getAttributesList()
                     .stream()
                     .filter(attribute -> attribute.getId() != 0)
@@ -138,8 +136,6 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
                 attributeStatement.close();
 
-                insertAttributeValues(attribute, conn);
-
                 for (AttributeValue attributeValue : attribute.getAttributeValues()
                         .stream()
                         .filter(attributeValue -> attributeValue.getId() != 0)
@@ -153,6 +149,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
                     attributeValueStatement.close();
                 }
+
+                insertAttributeValues(attribute, conn);
 
                 // Delete danglingg AttributeValues
                 List<Integer> keepAttributeValueIds = attribute.getAttributeValues()
@@ -170,6 +168,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 deleteAttributeValueStatement.executeUpdate();
                 deleteAttributeValueStatement.close();
             }
+
+            insertAttributes(rule, conn);
 
             // Delete dangling Attributes
             List<Integer> keepAttributeIds = rule.getAttributesList()
