@@ -642,6 +642,7 @@ function fillFormFields(rule) {
     fillFormValues(rule);
     $(".rule-values-wrapper").show();
     $(".error-message").val(rule.errorMessages);
+    $(".type-selection").attr("disabled", "disabled");
 }
 
 function clearFormFields() {
