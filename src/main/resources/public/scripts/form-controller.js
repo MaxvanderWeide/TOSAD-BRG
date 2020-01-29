@@ -48,11 +48,6 @@ function startupEventListeners() {
         });
     });
 
-    $(".new-rule-wrapper .table-selection").change((item) => {
-        fillTargetAttributes(item.target.value, false);
-        $(".type-selection").removeAttr("disabled");
-    });
-
     $(".new-rule-wrapper .type-selection").change((item) => {
         fillOperators(item.target.value);
         displayBlock(item.target.value);
@@ -79,7 +74,14 @@ function startupEventListeners() {
         }
     });
 
+    bindTableSelection();
+}
 
+function bindTableSelection() {
+    $(".new-rule-wrapper .table-selection").change((item) => {
+        fillTargetAttributes(item.target.value, false);
+        $(".type-selection").removeAttr("disabled");
+    });
 }
 
 function checkFieldsError() {
@@ -499,6 +501,8 @@ function updateRule(element) {
 
 function displayBlock(type) {
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
+    $(".new-rule-wrapper .table-selection").unbind("change");
+    bindTableSelection();
     eval(Types[type].block);
     $(".btn-save, .btn-update").unbind("click");
     $(".btn-save").click((item) => {

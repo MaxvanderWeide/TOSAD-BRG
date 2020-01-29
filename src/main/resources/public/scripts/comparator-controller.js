@@ -139,11 +139,9 @@ var Types = {
             "    }" +
             "});" +
             "" +
-            "if ($._data( $('.table-selection').get(0), \"events\").change.length < 3) {" +
-            "    $(\".table-selection\").change(() => {" +
-            "        fillIEAttributes(\"entity\");" +
-            "    });" +
-            "}"
+            "$(\".table-selection\").change(() => {" +
+            "   fillIEAttributes(\"entity\");" +
+            "});"
     },
     Entity_Other: {
         block:
