@@ -232,7 +232,7 @@ function showGeneratedRule(response) {
 function insertCode(triggers) {
     const rules = {};
     rules["triggers"] = triggers;
-    
+
     fetch("/generate/rules/insert", {
         method: "POST",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
@@ -240,6 +240,9 @@ function insertCode(triggers) {
     })
         .then(response => {
             if (response.status === 200) {
+                let alertSuccess = $('.alert-success');
+                $(alertSuccess).html("The generated triggers are inserted in the selected target database! :)");
+                $(alertSuccess).show();
                 return response.json();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
@@ -247,11 +250,4 @@ function insertCode(triggers) {
                 $(alertDanger).show();
             }
         })
-        .then(response => {
-            if (response !== undefined) {
-                let alertSuccess = $('.alert-success');
-                $(alertSuccess).html("The generated triggers are inserted in the selected target database! :)");
-                $(alertSuccess).show();
-            }
-        });
 }

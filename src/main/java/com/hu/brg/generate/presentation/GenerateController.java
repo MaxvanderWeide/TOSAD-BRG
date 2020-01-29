@@ -155,7 +155,7 @@ public class GenerateController {
 
         generator.pushTriggers(project, jsonObject.getString("triggers"), claims.get("username").toString(), claims.get("password").toString());
 
-        context.status(201);
+        context.status(200);
     }
 
     @OpenApi(
