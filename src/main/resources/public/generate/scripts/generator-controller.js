@@ -189,9 +189,10 @@ function generate() {
             .then(response => {
                 if (response.status === 200) {
                     return response.json();
-                } else if (response.status === 404) {
+                } else if (response.status === 404 || response.status === 500) {
+                    $(".generate-spinner").hide();
                     let alertDanger = $('.alert-danger');
-                    $(alertDanger).html("Contact your technical administrator.");
+                    $(alertDanger).html("Some went wrong, contact your technical administrator.");
                     $(alertDanger).show();
                 }
             })
@@ -242,7 +243,7 @@ function insertCode(triggers) {
                 return response.json();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
-                $(alertDanger).html("Contact your technical administrator.");
+                $(alertDanger).html("Something went wrong, contact your technical administrator.");
                 $(alertDanger).show();
             }
         })
