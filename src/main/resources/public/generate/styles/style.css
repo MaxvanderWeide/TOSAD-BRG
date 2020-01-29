@@ -97,10 +97,6 @@ tbody tr:hover {
     background-color: white;
 }
 
-.col {
-    /*padding: 0!important;*/
-}
-
 .inner {
     border: 1px solid black;
     min-width: 100%;
@@ -114,4 +110,12 @@ tbody tr:hover {
 .generate-spinner {
     display: none;
     text-align: center;
+}
+
+.sample-code-block {
+    padding: 1.5rem;
+    margin-right: 0;
+    margin-left: 0;
+    position: relative;
+    border: .2rem solid white;
 }

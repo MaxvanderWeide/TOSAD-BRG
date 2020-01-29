@@ -5,6 +5,8 @@ $(document).ready(function () {
     $(".generate").click(() => {
         generate();
     });
+
+    $(".sample-code-block").hide();
 });
 
 function searchTable() {
@@ -28,13 +30,12 @@ function getAllRules() {
         })
         .then(response => {
             if (response !== undefined) {
-                // response = response[0];
                 const tableBody = $("#table-body").html("");
 
                 for (const index in response) {
                     let id = response[index]['id'];
                     $(tableBody).append("" +
-                        "<tr >" + /*onclick='clickTable(" + id + ")'*/
+                        "<tr>" +
                         "<td>" + id + "</td>" +
                         "<td>" + index + "</td>" +
                         "<td>" + response[index]['table'] + "</td>" +
@@ -44,7 +45,6 @@ function getAllRules() {
                     );
                 }
 
-                // showRuleOnClick(); TODO - Weghalen??
                 $("table.existing-rules-wrapper").append(tableBody);
                 $("#ruleTable, .generate, .existing-lead").show();
                 return "ok";
@@ -75,7 +75,7 @@ function getRuleById(target) {
 }
 
 function generate() {
-    $(".generate-spinner").show();
+    // $(".generate-spinner").show();
     let ids = [];
     let boxes = $('input[type=checkbox]');
 
@@ -86,10 +86,13 @@ function generate() {
         }
     });
 
-    const rules = {};
-    rules["rules"] = ids;
+    if(typeof ids !== 'undefined' && ids.length > 0) {
+        $('.alert-danger').hide();
+        $(".generate-spinner").show();
+        const rules = {};
+        rules["rules"] = ids;
 
-    //generate the rules
+        //generate the rules
         fetch("/generate/rules", {
             method: "POST",
             headers: {"Authorization": sessionStorage.getItem("access_token")},
@@ -107,45 +110,29 @@ function generate() {
             .then(response => {
                 if (response !== undefined) {
                     // show generated items...
-                    console.log(response);
                     let alertSuccess = $('.alert-success');
                     $(alertSuccess).html("The selected rules are generated! See the output below.");
                     $(alertSuccess).show();
-                    $(".rule-preview").html((response.triggers).replace(/(?:\n)/g, "<br>"));
-                    $(".generate-spinner").show();
+                    showGeneratedRule(response);
                 }
             });
+    } else {
+        let alertDanger = $('.alert-danger');
+        $(alertDanger).html("You haven't yet selected any rules to be created!");
+        $(alertDanger).show();
+    }
 
     //refresh table
     getAllRules();
 }
 
 function showGeneratedRule(response) {
+    let sample = $(".sample-code-block");
+    $(".generate-spinner").hide();
 
-}
-
-function showRuleOnClick(id) {
-    $('.rule-preview').append(
-        "<div class=\"container trigger-example\">" +
-        "        <div class=\"row\">" +
-        "            <div class=\"col row\" style=\"padding-right: 0!important\">" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "            </div>" +
-        "            <div class=\"col\" style=\"padding-right: 0!important\">" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "            </div>" +
-        "            <div class=\"col\" style=\"padding-right: 0!important; padding-left: 0!important;\">" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "                <div class=\"col inner\">col</div>" +
-        "            </div>" +
-        "            <div class=\"col text-center\">col</div>" +
-        "        </div>" +
-        "    </div>"
+    sample.html(
+        ("<samp>"+response.triggers+"</samp>").replace(/(?:\n)/g, "<br>")
     );
+
+    sample.show();
 }
