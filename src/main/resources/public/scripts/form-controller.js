@@ -198,7 +198,7 @@ function createConnection() {
                 $(alertDanger).html("Can't create connection due to unfulfilled data requirements.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Contact your technical administrator.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -206,6 +206,7 @@ function createConnection() {
                 showMenu();
                 $(".db-info-wrapper").hide();
                 sessionStorage.setItem("access_token", response);
+                // sessionStorage.setItem("expiration_time", response);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
             } else {
@@ -251,7 +252,7 @@ function fillTargetTables() {
                 $(alertDanger).html("No tables were found. Contact your technical administrator.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -278,7 +279,7 @@ function fillTargetAttributes(table, target = null, operation, column) {
                 $(alertDanger).html("No attributes were found. Contact your technical administrator.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -468,7 +469,7 @@ function saveRule(element, method = "insert") {
                     $(alertDanger).html("Your Business Rule was not created. You may want to check the input again.");
                     $(alertDanger).show();
                 } else if (response.status === 403) {
-                    alert("You can't be authenticated. Please authenticate again.");
+                    timoutAction();
                 }
             });
     } else if (method === "update") {
@@ -490,7 +491,7 @@ function saveRule(element, method = "insert") {
                     $(alertDanger).html("Your Business Rule was not updated. You may want to check the input again.");
                     $(alertDanger).show();
                 } else if (response.status === 403) {
-                    alert("You can't be authenticated. Please authenticate again.");
+                    timoutAction();
                 }
             });
     }
@@ -515,7 +516,7 @@ function deleteRule(element) {
                 $(alertDanger).html("The rule was not deleted.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("The rule was not found. Maybe it was already deleted?");
@@ -555,7 +556,7 @@ function getAllRules() {
             if (response.status === 200) {
                 return response.json();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("No Rules Were Found.");
@@ -610,7 +611,7 @@ function getRuleById(target) {
             if (response.status === 200) {
                 return response.json();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("The specified rule was not found. Maybe it was deleted?");
@@ -657,6 +658,12 @@ function clearFormFields() {
     $(".rule-values-wrapper").hide();
     $(".field-error").hide();
     $(".type-selection").attr("disabled", "disabled");
+}
+
+function timoutAction() {
+    alert("You can't be authenticated. The page will reload.");
+
+    location.reload();
 }
 
 function fillFormValues(ruleData) {
@@ -740,4 +747,5 @@ function fillFormValues(ruleData) {
         $(".maintain-rule-spinner").hide();
         $(".new-rule-wrapper").show();
     }
+
 }
