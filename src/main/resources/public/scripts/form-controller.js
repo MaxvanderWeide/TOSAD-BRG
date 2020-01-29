@@ -583,7 +583,11 @@ function getAllRules() {
                 $("table.existing-rules-wrapper").append(tableBody);
                 return "ok";
             } else {
-                $("#table-body").html("No rules found")
+                $("#table-body").html("No rules found");
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("There are no rules defined yet! Go to Define to define your first rule.");
+                $(alertDanger).show();
+                $(".existing-rules-spinner").hide();
             }
         }).then(response => {
         $(".maintain-spinner").hide();
