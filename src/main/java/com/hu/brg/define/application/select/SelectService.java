@@ -20,5 +20,6 @@ public interface SelectService {
     Table getTableByName(String name, Claims claims);
 
     List<Rule> getAllRules(int projectId);
+    List<Rule> getAllRules(int projectId, boolean signatureOnly);
     Rule getRuleById(int id);
 }
