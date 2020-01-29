@@ -2,7 +2,7 @@
 Business Rule Generator for TOSAD 2019-2020
 
 #### Important Notice
-This project will be archived after `29/01/2020`, and will not receive any updates after that date.
+This project will be archived after `30/01/2020`, and will not receive any updates after that date.
 
 ## Deploy
 Clone the project and/or create a Maven Project<br>
@@ -19,6 +19,11 @@ Run `src\main\java\com\hu\brg\Main.java`. The endpoints will open for use. Note 
 - /define/tables
 - /define/tables/:typeName/attributes
 - /define/rules 
+- /maintain/rules
+- /maintain/rules/:id
+- /generate/rules
+- /generate/rules/insert
+- /generate/rules/:id
 
 Use a bearer token to get access to the Database. The way to get a valid token is to request one at `/auth/connection`.
 This will take the following as data:
@@ -40,7 +45,7 @@ that a customer would use.
 #### Storage
 When creating a business rule, some data might be saved:
 - The data input from the FE/request.
-- The engine, scheme, host, port and service of the given project (should be given as a bearer token).
+- The project ID and db authentication (should be given as a bearer token).
 
 #### Cookies
 This project does not store any cookies in the browser.
