@@ -4,6 +4,7 @@ public class RuleType {
     private int id;
     private String type;
     private String typeCode;
+    private String description;
 
     public RuleType(int id, String type, String typeCode) {
         this.id = id;
@@ -27,11 +28,11 @@ public class RuleType {
         return type.contains("Attribute");
     }
 
-    public boolean isTupleType(){
+    public boolean isTupleType() {
         return type.contains("Tuple");
     }
 
-    public boolean isInterEntityType(){
+    public boolean isInterEntityType() {
         return type.contains("InterEntity");
     }
 
@@ -45,6 +46,14 @@ public class RuleType {
 
     public String getTypeCode() {
         return typeCode;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

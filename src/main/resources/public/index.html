@@ -44,7 +44,7 @@
     </div>
 
     <div class="row">
-<!--        Make connection form-->
+        <!--        Make connection form-->
         <div class="col-md-12">
             <form action="javascript:void(0);">
                 <div id="db-info-wrapper" class="db-info-wrapper">
@@ -92,7 +92,7 @@
 
     <div class="row">
         <div class="col-md-12">
-<!--            New businessrule-->
+            <!--            New businessrule-->
             <div class="rule-details-wrapper new-rule-wrapper">
                 <div class="py-5 text-center new-rule-header">
                     <h2>Define your new Business Rule</h2>
@@ -108,7 +108,8 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label>Description:</label>
-                        <textarea class="form-input rule-description rule-field" placeholder="New rule description"></textarea>
+                        <textarea class="form-input rule-description rule-field"
+                                  placeholder="New rule description"></textarea>
                         <div class="field-error description-error">Enter a description.</div>
                     </div>
                     <div class="col-md-6 mb-3">
@@ -126,7 +127,9 @@
                         <div class="field-error target-table-error">Select a table.</div>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label>Select rule type:</label>
+                        <label>Select rule type:</label> <span class="badge badge-primary" id="tableHelp"
+                                                               data-toggle="tooltip" data-html="true"
+                                                               title="<em>Select a table first</em>">?</span>
                         <select class="type-selection form-input rule-field" disabled="disabled">
                             <option disabled selected>Select a type</option>
                         </select>
@@ -167,7 +170,7 @@
                 </div>
             </div>
 
-<!--            Search businessrule-->
+            <!--            Search businessrule-->
             <div class="rule-details-wrapper search-rule-wrapper">
                 <div class="py-5 text-center">
                     <h2>Search Business rule</h2>

@@ -58,7 +58,7 @@ public class RuleController {
         Map<String, Map<String, String>> types = new HashMap<>();
         Map<String, String> tempTypes = new HashMap<>();
         for (RuleType type : getSelectService().getAllRuleTypes()) {
-            tempTypes.put(type.getType(), type.getTypeCode());
+            tempTypes.put(type.getType(), type.getDescription());
         }
         types.put("Types", tempTypes);
         context.json(types).status(200);

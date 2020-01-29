@@ -100,13 +100,14 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
         List<RuleType> ruleTypes = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
-            String query = "SELECT ID, TYPE, TYPECODE " +
+            String query = "SELECT ID, TYPE, TYPECODE, DESCRIPTION " +
                     "FROM TYPES";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 RuleType ruleType = getRuleTypeStatement(resultSet);
+                ruleType.setDescription(resultSet.getString(4));
                 ruleTypes.add(ruleType);
             }
 

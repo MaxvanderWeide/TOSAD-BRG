@@ -4,6 +4,10 @@ $(document).ready(function () {
     startupEventListeners();
 });
 
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+});
+
 function startupEventListeners() {
     $(".btn-connect").click(() => {
         createConnection();
@@ -49,6 +53,8 @@ function startupEventListeners() {
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
+        console.log(item.target.value);
+        $('#tableHelp').prop('title', 'hey');
         fillOperators(item.target.value);
         displayBlock(item.target.value);
         if ($._data($('.table-selection').get(0), "events").change.length < 3) {
@@ -226,7 +232,7 @@ function fillTypes() {
         .then(response => {
             if (response !== undefined) {
                 for (const index in response.Types) {
-                    $(".type-selection").append("<option value='" + index + "'>" + index + "</option>");
+                    $(".type-selection").append("<option title='" + response.Types[index] + "' value='" + index + "'>" + index + "</option>");
                 }
             }
         });
