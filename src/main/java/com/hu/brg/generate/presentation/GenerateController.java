@@ -8,7 +8,6 @@ import com.hu.brg.generate.domain.Attribute;
 import com.hu.brg.generate.domain.AttributeValue;
 import com.hu.brg.generate.domain.Project;
 import com.hu.brg.generate.domain.Rule;
-import com.hu.brg.generate.persistence.tooldatabase.DAOServiceProvider;
 import com.hu.brg.service.model.web.ErrorResponse;
 import io.javalin.plugin.openapi.annotations.HttpMethod;
 import io.javalin.plugin.openapi.annotations.OpenApi;
@@ -99,7 +98,7 @@ public class GenerateController {
             return;
         }
 
-        Project project = DAOServiceProvider.getProjectDAO().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
+        Project project = getSelectService().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
         Generator generator = GeneratorFactory.getGenerator(project.getDbEngine());
         if (generator == null) {
             context.status(501);
@@ -111,7 +110,7 @@ public class GenerateController {
                 .map(o -> Integer.parseInt(o.toString()))
                 .collect(Collectors.toList());
 
-        List<Rule> ruleList = DAOServiceProvider.getRuleDAO().getRulesByProject(project);
+        List<Rule> ruleList = getSelectService().getRulesByProject(project);
         ruleList = ruleList
                 .stream()
                 .filter(rule -> ruleIdList.contains(rule.getId()))
@@ -146,7 +145,7 @@ public class GenerateController {
             return;
         }
 
-        Project project = DAOServiceProvider.getProjectDAO().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
+        Project project = getSelectService().getProjectById(Integer.parseInt(claims.get("projectId").toString()));
         Generator generator = GeneratorFactory.getGenerator(project.getDbEngine());
         if (generator == null) {
             context.status(501);
