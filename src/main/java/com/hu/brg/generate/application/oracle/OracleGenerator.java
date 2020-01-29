@@ -82,7 +82,7 @@ public class OracleGenerator implements Generator {
 
                 typeGenerator.fillStringTemplate(stringTemplate, rule.getAttributesList(), groupPath);
 
-                rules.append(stringTemplate.render()).append("\n");
+                rules.append(stringTemplate.render()).append("\n").append("/");
             }
 
             baseStringTemplate.add("trigger_triggers", rules.toString());
