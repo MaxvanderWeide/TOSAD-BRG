@@ -53,7 +53,6 @@ function startupEventListeners() {
     });
 
     $(".new-rule-wrapper .type-selection").change((item) => {
-        console.log(item.target.value);
         fillOperators(item.target.value);
         displayBlock(item.target.value);
         if ($._data($('.table-selection').get(0), "events").change.length < 3) {
@@ -519,7 +518,7 @@ function displayBlock(type) {
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     $(".new-rule-wrapper .table-selection").unbind("change");
     bindTableSelection();
-    console.log(type);
+    window[type]();
     $(".btn-save, .btn-update").unbind("click");
     $(".btn-save").click((item) => {
         if (!checkFieldsError()) {
