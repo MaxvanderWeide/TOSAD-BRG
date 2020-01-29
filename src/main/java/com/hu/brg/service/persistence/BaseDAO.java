@@ -1,4 +1,4 @@
-package com.hu.brg.service.persitence;
+package com.hu.brg.service.persistence;
 
 import com.hu.brg.service.ConfigSelector;
 import com.hu.brg.service.model.required.DBEngine;
