@@ -197,7 +197,7 @@ public class GenerateController {
         List<Map<String, Object>> attributesList = new ArrayList<>();
         map.put("name", rule.getName());
         map.put("id", rule.getId());
-        map.put("type", rule.getRuleType());
+        map.put("type", rule.getRuleType().getType());
         map.put("table", rule.getTargetTable().getName());
 
         if (!keepShort) {

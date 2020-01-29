@@ -12,7 +12,9 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
     @Override
     public void rawQuery(Project project, String username, String password, String query) {
         try (Connection conn = getConnection(project, username, password); Statement statement = conn.createStatement()) {
-            statement.execute(query);
+            for (String string : query.split("/\n")) {
+                statement.execute(string);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

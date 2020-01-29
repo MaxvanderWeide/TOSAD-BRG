@@ -48,6 +48,53 @@
     </div>
 
     <div class="row">
+        <!--        Make connection form-->
+        <div class="col-md-12">
+            <form action="javascript:void(0);">
+                <div id="db-info-wrapper" class="db-info-wrapper">
+                    <div class="mb-3">
+                        <label for="dbEngine">Database Engine:</label>
+                        <select class="custom-select d-block w-100 form-input" id="dbEngine">
+                            <option value="ORACLE">ORACLE</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dbName">Database Name:</label>
+                            <input type="text" class="form-input" id="dbName" placeholder="TOSAD_TARGET">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputHost">Host:</label>
+                            <input type="text" class="form-input" id="dbInputHost" placeholder="Ondora04.hu.nl">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputPort">Port:</label>
+                            <input type="number" class="form-input" id="dbInputPort" placeholder="8521">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputService">Service Name:</label>
+                            <input type="text" class="form-input" id="dbInputService" placeholder="EDUC17">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputUser">Username:</label>
+                            <input type="text" class="form-input" id="dbInputUser">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="dbInputPassword">Password:</label>
+                            <input type="password" class="form-input" id="dbInputPassword">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block btn-connect">Connect</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-12">
             <div class="search-rule-wrapper">
                 <div class="pi-5 text-center">

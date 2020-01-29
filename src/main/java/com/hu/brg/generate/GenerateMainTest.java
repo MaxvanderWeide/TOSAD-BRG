@@ -26,7 +26,7 @@ public class GenerateMainTest {
                 "Test",
                 "Test description",
                 new Table("KLANTEN"),
-                new RuleType(1, "Attribute_Compare", "ACMP"),
+                new RuleType(1, "Attribute_Compare", "ACMP", "hoi"),
                 "Error message",
                 Collections.emptyList()
         );
@@ -58,7 +58,7 @@ public class GenerateMainTest {
                 "Test2",
                 "Test description",
                 new Table("KLANTEN"),
-                new RuleType(4, "Tuple_Compare", "TCMP"),
+                new RuleType(4, "Tuple_Compare", "TCMP", "tuple doei"),
                 "Error message",
                 Collections.emptyList()
         );
@@ -107,7 +107,7 @@ public class GenerateMainTest {
                 "Rule list",
                 "Test description",
                 new Table("KLANTEN"),
-                new RuleType(3, "Attribute_List", "ALIS"),
+                new RuleType(3, "Attribute_List", "ALIS", "die zien we nooit meer te-rug"),
                 "Error message",
                 Collections.emptyList()
         );

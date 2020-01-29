@@ -1,9 +1,17 @@
 $(document).ready(function () {
     getAllRules();
     searchTable();
+    startupEventListeners();
+    loadFromStorage();
+});
 
+function startupEventListeners() {
     $(".generate").click(() => {
         generate();
+    });
+
+    $(".btn-connect").click(() => {
+        createConnection();
     });
 
     $(".insert").click(() => {
@@ -20,7 +28,7 @@ $(document).ready(function () {
 
     $(".sample-code-block").hide();
     $(".insert").hide();
-});
+}
 
 function searchTable() {
     $("#search-rule").on("keyup", function () {
@@ -29,6 +37,65 @@ function searchTable() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
+}
+
+function createConnection() {
+    let values = {};
+    values["engine"] = $("#dbEngine").val();
+    values["dbName"] = $("#dbName").val();
+    values["host"] = $("#dbInputHost").val();
+    values["port"] = $("#dbInputPort").val();
+    values["service"] = $("#dbInputService").val();
+    values["username"] = $("#dbInputUser").val();
+    values["password"] = $("#dbInputPassword").val();
+    values = JSON.stringify(values);
+
+    fetch("/auth/connection", {
+        method: "POST",
+        body: values
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.text();
+            } else if (response.status === 400) {
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("Can't create connection due to unfulfilled data requirements.");
+                $(alertDanger).show();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Contact your technical administrator.");
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                $(".db-info-wrapper").hide();
+                sessionStorage.setItem("access_token", response);
+                sessionStorage.setItem("values", values);
+                $('.alert-danger').hide();
+                getAllRules();
+
+            } else {
+                $(".db-info-wrapper").show();
+            }
+            $(".spinner-holder.initial-spinner").hide();
+        });
+}
+
+function loadFromStorage() {
+    if (sessionStorage.getItem("values") != null) {
+        const values = JSON.parse(sessionStorage.getItem("values"));
+        $("#dbEngine").empty().append("<option value=" + values['engine'] + ">" + values['engine'] + "</option>");
+        $("#dbInputHost").val(values['host']);
+        $("#dbName").val(values['dbName']);
+        $("#dbInputPort").val(values['port']);
+        $("#dbInputService").val(values['service']);
+        $("#dbInputUser").val(values['username']);
+        $("#dbInputPassword").val(values['password']);
+
+        createConnection();
+    } else {
+        $(".db-info-wrapper").show();
+        $(".spinner-holder.initial-spinner").hide();
+    }
 }
 
 function getAllRules() {
@@ -52,7 +119,7 @@ function getAllRules() {
                         "<td>" + id + "</td>" +
                         "<td>" + index + "</td>" +
                         "<td>" + response[index]['table'] + "</td>" +
-                        "<td>" + response[index]['type']['type'] + "</td>" +
+                        "<td>" + response[index]['type'] + "</td>" +
                         "<td data-id='"+ id +"'><input class='form-check-input' value='"+ id +"' type='checkbox' id='checkbox'></td>" +
                         "</tr>"
                     );
@@ -102,8 +169,10 @@ function generate() {
     });
 
     if(typeof ids !== 'undefined' && ids.length > 0) {
-        $('.alert-danger').hide();
+        $(".sample-code-block").html("").hide();
+        $('.alert-danger, .alert-success').hide();
         $(".generate-spinner").show();
+
         const rules = {};
         rules["rules"] = ids;
 
@@ -159,9 +228,7 @@ function showGeneratedRule(response) {
 function insertCode(triggers) {
     const rules = {};
     rules["triggers"] = triggers;
-
-    console.log(triggers);
-
+    
     fetch("/generate/rules/insert", {
         method: "POST",
         headers: {"Authorization": sessionStorage.getItem("access_token")},

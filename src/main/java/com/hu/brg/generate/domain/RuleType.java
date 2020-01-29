@@ -4,11 +4,13 @@ public class RuleType {
     private int id;
     private String type;
     private String typeCode;
+    private String description;
 
-    public RuleType(int id, String type, String typeCode) {
+    public RuleType(int id, String type, String typeCode, String description) {
         this.id = id;
         this.type = type;
         this.typeCode = typeCode;
+        this.description = description;
     }
 
     public boolean isRange() {
@@ -27,11 +29,11 @@ public class RuleType {
         return type.contains("Attribute");
     }
 
-    public boolean isTupleType(){
+    public boolean isTupleType() {
         return type.contains("Tuple");
     }
 
-    public boolean isInterEntityType(){
+    public boolean isInterEntityType() {
         return type.contains("InterEntity");
     }
 
@@ -49,6 +51,10 @@ public class RuleType {
 
     public String getTypeCode() {
         return typeCode;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override

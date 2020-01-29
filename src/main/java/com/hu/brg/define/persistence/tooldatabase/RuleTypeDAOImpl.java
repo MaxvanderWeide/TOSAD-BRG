@@ -17,7 +17,7 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
         RuleType ruleType = null;
 
         try (Connection conn = getConnection()) {
-            String query = "SELECT ID, TYPE, TYPECODE " +
+            String query = "SELECT ID, TYPE, TYPECODE, DESCRIPTION " +
                     "FROM TYPES " +
                     "WHERE ID = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
@@ -43,7 +43,7 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
         RuleType ruleType = null;
 
         try (Connection conn = getConnection()) {
-            String query = "SELECT ID, TYPE, TYPECODE " +
+            String query = "SELECT ID, TYPE, TYPECODE, DESCRIPTION " +
                     "FROM TYPES " +
                     "WHERE TYPE = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
@@ -72,7 +72,7 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
         RuleType ruleType = null;
 
         try (Connection conn = getConnection()) {
-            String query = "SELECT ID, TYPE, TYPECODE " +
+            String query = "SELECT ID, TYPE, TYPECODE, DESCRIPTION " +
                     "FROM TYPES " +
                     "WHERE TYPECODE = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
@@ -107,7 +107,6 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 RuleType ruleType = getRuleTypeStatement(resultSet);
-                ruleType.setDescription(resultSet.getString(4));
                 ruleTypes.add(ruleType);
             }
 
@@ -124,11 +123,13 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
         int id = resultSet.getInt(1);
         String name = resultSet.getString(2);
         String code = resultSet.getString(3);
+        String description = resultSet.getString(4);
 
         return new RuleType(
                 id,
                 name,
-                code
+                code,
+                description
         );
     }
 }
