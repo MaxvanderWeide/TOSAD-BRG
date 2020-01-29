@@ -356,14 +356,14 @@ function saveRule(element, method = "insert") {
         });
     } else if (checkTypeSelected(["Entity_Other"], selectedType)) {
         const attributeItem = {};
-
-        if (method === "insert") {
-            attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "RAW"));
-        } else if (method === "update") {
-            attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "RAW", 0, false, "update", $("#custInput1").data("value-id")));
-            attributeItem["id"] = $(".attribute-id").val();
-        }
-
+        $("[name='inputlog']").each((index, item) => {
+            if (method === "insert") {
+                attributeValuesArray.push(setAttributeValues($(item).val(), "RAW", index, true));
+            } else if (method === "update") {
+                attributeValuesArray.push(setAttributeValues($(item).val(), "RAW", index, true, "update", $(item).data("value-id")));
+                attributeItem["id"] = $(".attribute-id").val();
+            }
+        });
         attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
         attributeItem["operatorName"] = $(target).find(".operator-selection").val();
         attributeItem["attributeValues"] = attributeValuesArray;

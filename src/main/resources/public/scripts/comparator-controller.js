@@ -1,11 +1,23 @@
 function Attribute_Range() {
-    const custInput1 = $("<input>", {type: "text", id: "custInput1", class: "form-input col-md-5 mb-3 rule-field value-input"});
-    const custInput2 = $("<input>", {type: "text", id: "custInput2", class: "form-input col-md-5 mb-3 rule-field value-input"});
+    const custInput1 = $("<input>", {
+        type: "text",
+        id: "custInput1",
+        class: "form-input col-md-5 mb-3 rule-field value-input"
+    });
+    const custInput2 = $("<input>", {
+        type: "text",
+        id: "custInput2",
+        class: "form-input col-md-5 mb-3 rule-field value-input"
+    });
     $(".new-rule-wrapper").find(".comparator-step").append(custInput1, custInput2);
 }
 
 function Attribute_Compare() {
-    const custInput1 = $("<input>", {type: "text", id: "custInput1", class: "form-input col-md-5 mb-3 rule-field value-input"});
+    const custInput1 = $("<input>", {
+        type: "text",
+        id: "custInput1",
+        class: "form-input col-md-5 mb-3 rule-field value-input"
+    });
     $(".new-rule-wrapper").find(".comparator-step").append(custInput1);
 }
 
@@ -84,10 +96,19 @@ function InterEntity_Compare() {
                     }
                     for (const index in response.Attributes) {
                         if (target === "entity") {
-                            $(fkSelect).append($("<option>", {value: index + ' - ' + response.Attributes[index], text: index}));
+                            $(fkSelect).append($("<option>", {
+                                value: index + ' - ' + response.Attributes[index],
+                                text: index
+                            }));
                         } else {
-                            $(otherAttributeSelection).append($("<option>", {value: index + ' - ' + response.Attributes[index], text: index}));
-                            $(otherTablePkSelection).append($("<option>", {value: index + ' - ' + response.Attributes[index], text: index}));
+                            $(otherAttributeSelection).append($("<option>", {
+                                value: index + ' - ' + response.Attributes[index],
+                                text: index
+                            }));
+                            $(otherTablePkSelection).append($("<option>", {
+                                value: index + ' - ' + response.Attributes[index],
+                                text: index
+                            }));
                         }
                     }
                     return "ok";
@@ -142,8 +163,24 @@ function InterEntity_Compare() {
 }
 
 function Entity_Other() {
-    const custInput1 = $("<textarea>", {type: "text", id: "custInput1", class: "form-input col-md-5 mb-3 rule-field value-input"});
+    const custInput1 = $("<textarea placeholder='declarations' name='inputlog'>", {
+        type: "text",
+        id: "custInput1",
+        class: "form-input col-md-5 mb-3 rule-field value-input"
+    });
     $(".new-rule-wrapper").find(".comparator-step").append(custInput1);
+    const custInput2 = $("<textarea placeholder='insertions' name='inputlog'>", {
+        type: "text",
+        id: "custInput2",
+        class: "form-input col-md-5 mb-3 rule-field value-input"
+    });
+    $(".new-rule-wrapper").find(".comparator-step").append(custInput2);
+    const custInput3 = $("<input placeholder='statement' name='inputlog'>", {
+        type: "text",
+        id: "custInput3",
+        class: "form-input col-md-5 mb-3 rule-field value-input"
+    });
+    $(".new-rule-wrapper").find(".comparator-step").append(custInput3);
 }
 
 function Tuple_Other() {

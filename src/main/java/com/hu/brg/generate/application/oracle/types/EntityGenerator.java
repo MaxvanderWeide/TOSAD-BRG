@@ -16,9 +16,9 @@ public class EntityGenerator implements TypeGenerator {
         Attribute attribute = attributeList.get(0);
         stringTemplate.add("attribute", attribute.getColumn().getName());
 
-        if (attribute.getRule().getRuleType().isEntityType()) {
-            stringTemplate.add("statement", attribute.getAttributeValues().get(0).sanitizedValue());
-        }
+        stringTemplate.add("declarations", attribute.getAttributeValues().get(0).sanitizedValue());
+        stringTemplate.add("insertions", attribute.getAttributeValues().get(1).sanitizedValue());
+        stringTemplate.add("statement", attribute.getAttributeValues().get(2).sanitizedValue());
 
     }
 }
