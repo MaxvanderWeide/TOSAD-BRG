@@ -347,7 +347,6 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
             String query = "{call INSERT INTO RULE_VALUES (ATTRIBUTEID, VALUE, VALUETYPE, VALUE_ORDER, ISLITERAL) " +
                     "VALUES (?, ?, ?, ?, ?)" +
                     "RETURNING ID INTO ? }";
-            ;
             CallableStatement attributeValueStatement = conn.prepareCall(query);
             setAttributeValueStatement(attributeValueStatement, attributeValue);
             attributeValueStatement.registerOutParameter(6, OracleTypes.NUMBER);
