@@ -52,7 +52,7 @@ function getAllRules() {
                         "<td>" + id + "</td>" +
                         "<td>" + index + "</td>" +
                         "<td>" + response[index]['table'] + "</td>" +
-                        "<td>" + response[index]['type']['type'] + "</td>" +
+                        "<td>" + response[index]['type'] + "</td>" +
                         "<td data-id='"+ id +"'><input class='form-check-input' value='"+ id +"' type='checkbox' id='checkbox'></td>" +
                         "</tr>"
                     );
