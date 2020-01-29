@@ -300,35 +300,34 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
     @Override
     public boolean deleteRule(int id) {
         try (Connection conn = getConnection()) {
-            //select id from attributes met ruleid
-            String query = "SELECT ID FROM attributes WHERE RULESID = ?";
-            PreparedStatement ruleStatement = conn.prepareStatement(query);
-            ruleStatement.setInt(1, id);
-            ResultSet result1 = ruleStatement.executeQuery();
+            Rule rule = getRule(id);
 
-
-            while (result1.next()) {
-                //delete * from rule values met attribute id
-                String query1 = "DELETE FROM RULE_VALUES WHERE ATTRIBUTEID = ?";
-                PreparedStatement preparedStatement1 = conn.prepareStatement(query1);
-                preparedStatement1.setInt(1, result1.getInt("ID"));
-                preparedStatement1.executeQuery();
-                preparedStatement1.close();
-
-                //delete * from attributes met rulesid
-                String query2 = "DELETE FROM ATTRIBUTES WHERE RULESID = ?";
-                PreparedStatement preparedStatement2 = conn.prepareStatement(query2);
-                preparedStatement2.setInt(1, id);
-                preparedStatement2.executeQuery();
-                preparedStatement2.close();
-
-                //delete * from rules met rulesid
-                String query3 = "DELETE FROM RULES WHERE ID = ?";
-                PreparedStatement preparedStatement3 = conn.prepareStatement(query3);
-                preparedStatement3.setInt(1, id);
-                preparedStatement3.executeUpdate();
-                preparedStatement3.close();
+            if (rule == null) {
+                return true;
             }
+
+            String query;
+            for (Attribute attribute : rule.getAttributesList()) {
+                for (AttributeValue attributeValue : attribute.getAttributeValues()) {
+                    query = "DELETE FROM RULE_VALUES WHERE ID = ?";
+                    PreparedStatement deleteAttributeValueStatement = conn.prepareStatement(query);
+                    deleteAttributeValueStatement.setInt(1, attributeValue.getId());
+                    deleteAttributeValueStatement.executeUpdate();
+                    deleteAttributeValueStatement.close();
+                }
+
+                query = "DELETE FROM ATTRIBUTES WHERE ID = ?";
+                PreparedStatement deleteAttributeStatement = conn.prepareStatement(query);
+                deleteAttributeStatement.setInt(1, attribute.getId());
+                deleteAttributeStatement.executeUpdate();
+                deleteAttributeStatement.close();
+            }
+
+            query = "DELETE FROM RULES WHERE ID = ?";
+            PreparedStatement deleteRuleStatement = conn.prepareStatement(query);
+            deleteRuleStatement.setInt(1, rule.getId());
+            deleteRuleStatement.executeUpdate();
+            deleteRuleStatement.close();
 
             return true;
         } catch (SQLException e) {
