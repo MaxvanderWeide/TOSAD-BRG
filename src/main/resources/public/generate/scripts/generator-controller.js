@@ -189,9 +189,10 @@ function generate() {
             .then(response => {
                 if (response.status === 200) {
                     return response.json();
-                } else if (response.status === 404) {
+                } else if (response.status === 404 || response.status === 500) {
+                    $(".generate-spinner").hide();
                     let alertDanger = $('.alert-danger');
-                    $(alertDanger).html("Contact your technical administrator.");
+                    $(alertDanger).html("Some went wrong, contact your technical administrator.");
                     $(alertDanger).show();
                 }
             })
@@ -231,7 +232,7 @@ function showGeneratedRule(response) {
 function insertCode(triggers) {
     const rules = {};
     rules["triggers"] = triggers;
-    
+
     fetch("/generate/rules/insert", {
         method: "POST",
         headers: {"Authorization": sessionStorage.getItem("access_token")},
@@ -239,18 +240,14 @@ function insertCode(triggers) {
     })
         .then(response => {
             if (response.status === 200) {
-                return response.json();
-            } else if (response.status === 404) {
-                let alertDanger = $('.alert-danger');
-                $(alertDanger).html("Contact your technical administrator.");
-                $(alertDanger).show();
-            }
-        })
-        .then(response => {
-            if (response !== undefined) {
                 let alertSuccess = $('.alert-success');
                 $(alertSuccess).html("The generated triggers are inserted in the selected target database! :)");
                 $(alertSuccess).show();
+                return response.json();
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("Something went wrong, contact your technical administrator.");
+                $(alertDanger).show();
             }
-        });
+        })
 }

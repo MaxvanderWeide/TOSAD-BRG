@@ -119,3 +119,7 @@ tbody tr:hover {
     position: relative;
     border: .2rem solid white;
 }
+
+.insert {
+    margin: 1rem auto auto;
+}
