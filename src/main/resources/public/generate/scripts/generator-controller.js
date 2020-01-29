@@ -6,7 +6,20 @@ $(document).ready(function () {
         generate();
     });
 
+    $(".insert").click(() => {
+        let triggers = sessionStorage.getItem("triggers");
+
+        if(triggers !== undefined) {
+            insertCode(triggers.replace(/(?:<br>)/g, "\n"));
+        } else {
+            let alertDanger = $('.alert-danger');
+            $(alertDanger).html("There is no known trigger code available, try again after regenerating...");
+            $(alertDanger).show();
+        }
+    });
+
     $(".sample-code-block").hide();
+    $(".insert").hide();
 });
 
 function searchTable() {
@@ -50,6 +63,9 @@ function getAllRules() {
                 return "ok";
             } else {
                 $("#table-body").html("No rules found")
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("There are no rules defined yet! Go to Define & Maintain to define your first rule.");
+                $(alertDanger).show();
             }
         }).then(response => {
         $(".spinner-holder.initial-spinner").hide();
@@ -75,7 +91,6 @@ function getRuleById(target) {
 }
 
 function generate() {
-    // $(".generate-spinner").show();
     let ids = [];
     let boxes = $('input[type=checkbox]');
 
@@ -113,7 +128,11 @@ function generate() {
                     let alertSuccess = $('.alert-success');
                     $(alertSuccess).html("The selected rules are generated! See the output below.");
                     $(alertSuccess).show();
-                    showGeneratedRule(response);
+
+                    sessionStorage.setItem("triggers", response.triggers);
+                    showGeneratedRule(sessionStorage.getItem("triggers"));
+
+                    $(".insert").show();
                 }
             });
     } else {
@@ -131,8 +150,37 @@ function showGeneratedRule(response) {
     $(".generate-spinner").hide();
 
     sample.html(
-        ("<samp>"+response.triggers+"</samp>").replace(/(?:\n)/g, "<br>")
+        ("<samp>"+response+"</samp>").replace(/(?:\n)/g, "<br>")
     );
 
     sample.show();
+}
+
+function insertCode(triggers) {
+    const rules = {};
+    rules["triggers"] = triggers;
+
+    console.log(triggers);
+
+    fetch("/generate/rules/insert", {
+        method: "POST",
+        headers: {"Authorization": sessionStorage.getItem("access_token")},
+        body: JSON.stringify(rules)
+    })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("Contact your technical administrator.");
+                $(alertDanger).show();
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                let alertSuccess = $('.alert-success');
+                $(alertSuccess).html("The generated triggers are inserted in the selected target database! :)");
+                $(alertSuccess).show();
+            }
+        });
 }
