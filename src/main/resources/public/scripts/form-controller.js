@@ -651,8 +651,8 @@ function clearFormFields() {
     $(".rule-description").val('');
     $(".table-selection").val('');
     $(".type-selection").val('');
-    $(".attribute-selection").val('');
-    $(".operator-selection").val('');
+    $(".attribute-selection").empty().val('');
+    $(".operator-selection").empty().val('');
     $(".error-message").val('');
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     $(".rule-values-wrapper").hide();
