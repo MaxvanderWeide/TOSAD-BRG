@@ -91,37 +91,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             ruleCallable.close();
 
-            for (Attribute attribute : rule.getAttributesList()) {
-                query = "{call INSERT INTO ATTRIBUTES (RULESID, ATTR_COLUMN, OPERATORID, ATTR_ORDER, TARGETTABLEFK, " +
-                        "TABLEOTHERPK, TABLEOTHER, COLUMNOTHER) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" +
-                        "RETURNING ID INTO ? }";
-
-                CallableStatement attributeCallable = conn.prepareCall(query);
-                setAttributeStatement(attributeCallable, attribute);
-                attributeCallable.registerOutParameter(9, OracleTypes.NUMBER);
-                attributeCallable.executeUpdate();
-
-                int attributeId = attributeCallable.getInt(9);
-                attribute.setId(attributeId);
-
-                attributeCallable.close();
-
-                for (AttributeValue attributeValue : attribute.getAttributeValues()) {
-                    query = "{call INSERT INTO RULE_VALUES (ATTRIBUTEID, VALUE, VALUETYPE, VALUE_ORDER, ISLITERAL) " +
-                            "VALUES (?, ?, ?, ?, ?)" +
-                            "RETURNING ID INTO ? }";
-                    ;
-                    CallableStatement attributeValueStatement = conn.prepareCall(query);
-                    setAttributeValueStatement(attributeValueStatement, attributeValue);
-                    attributeValueStatement.registerOutParameter(6, OracleTypes.NUMBER);
-                    attributeValueStatement.executeUpdate();
-
-                    int attributeValueId = attributeValueStatement.getInt(6);
-                    attributeValue.setId(attributeValueId);
-
-                    attributeValueStatement.close();
-                }
-            }
+            insertAttributes(rule, conn);
 
             return rule;
         } catch (SQLException e) {
@@ -152,7 +122,10 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             ruleStatement.close();
 
-            for (Attribute attribute : rule.getAttributesList()) {
+            for (Attribute attribute : rule.getAttributesList()
+                    .stream()
+                    .filter(attribute -> attribute.getId() != 0)
+                    .collect(Collectors.toList())) {
                 query = "UPDATE ATTRIBUTES SET RULESID = ?, ATTR_COLUMN = ?, OPERATORID = ?, ATTR_ORDER = ?, TARGETTABLEFK = ?, " +
                         "TABLEOTHERPK = ?, TABLEOTHER = ?, COLUMNOTHER = ? " +
                         "WHERE ID = ?";
@@ -163,7 +136,10 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
                 attributeStatement.close();
 
-                for (AttributeValue attributeValue : attribute.getAttributeValues()) {
+                for (AttributeValue attributeValue : attribute.getAttributeValues()
+                        .stream()
+                        .filter(attributeValue -> attributeValue.getId() != 0)
+                        .collect(Collectors.toList())) {
                     query = "UPDATE RULE_VALUES SET ATTRIBUTEID = ?, VALUE = ?, VALUETYPE = ?, VALUE_ORDER = ?, ISLITERAL = ? " +
                             "WHERE ID = ?";
                     PreparedStatement attributeValueStatement = conn.prepareStatement(query);
@@ -173,6 +149,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
                     attributeValueStatement.close();
                 }
+
+                insertAttributeValues(attribute, conn);
 
                 // Delete danglingg AttributeValues
                 List<Integer> keepAttributeValueIds = attribute.getAttributeValues()
@@ -190,6 +168,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 deleteAttributeValueStatement.executeUpdate();
                 deleteAttributeValueStatement.close();
             }
+
+            insertAttributes(rule, conn);
 
             // Delete dangling Attributes
             List<Integer> keepAttributeIds = rule.getAttributesList()
@@ -334,6 +314,50 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void insertAttributes(Rule rule, Connection conn) throws SQLException {
+        for (Attribute attribute : rule.getAttributesList()
+                .stream()
+                .filter(attribute -> attribute.getId() == 0)
+                .collect(Collectors.toList())) {
+            String query = "{call INSERT INTO ATTRIBUTES (RULESID, ATTR_COLUMN, OPERATORID, ATTR_ORDER, TARGETTABLEFK, " +
+                    "TABLEOTHERPK, TABLEOTHER, COLUMNOTHER) VALUES (?, ?, ?, ?, ?, ?, ?, ?)" +
+                    "RETURNING ID INTO ? }";
+
+            CallableStatement attributeCallable = conn.prepareCall(query);
+            setAttributeStatement(attributeCallable, attribute);
+            attributeCallable.registerOutParameter(9, OracleTypes.NUMBER);
+            attributeCallable.executeUpdate();
+
+            int attributeId = attributeCallable.getInt(9);
+            attribute.setId(attributeId);
+
+            attributeCallable.close();
+
+            insertAttributeValues(attribute, conn);
+        }
+    }
+
+    private void insertAttributeValues(Attribute attribute, Connection conn) throws SQLException {
+        for (AttributeValue attributeValue : attribute.getAttributeValues()
+                .stream()
+                .filter(attributeValue -> attributeValue.getId() == 0)
+                .collect(Collectors.toList())) {
+            String query = "{call INSERT INTO RULE_VALUES (ATTRIBUTEID, VALUE, VALUETYPE, VALUE_ORDER, ISLITERAL) " +
+                    "VALUES (?, ?, ?, ?, ?)" +
+                    "RETURNING ID INTO ? }";
+            ;
+            CallableStatement attributeValueStatement = conn.prepareCall(query);
+            setAttributeValueStatement(attributeValueStatement, attributeValue);
+            attributeValueStatement.registerOutParameter(6, OracleTypes.NUMBER);
+            attributeValueStatement.executeUpdate();
+
+            int attributeValueId = attributeValueStatement.getInt(6);
+            attributeValue.setId(attributeValueId);
+
+            attributeValueStatement.close();
+        }
     }
 
     private Rule processRuleResult(ResultSet resultSet, Project project) throws SQLException {
