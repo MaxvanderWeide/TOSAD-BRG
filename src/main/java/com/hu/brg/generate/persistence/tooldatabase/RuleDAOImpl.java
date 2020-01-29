@@ -322,6 +322,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
         rule.setAttributesList(attributeList);
 
+        conn.close();
+
         return rule;
     }
 
