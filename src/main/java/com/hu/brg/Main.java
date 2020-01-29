@@ -1,10 +1,9 @@
 package com.hu.brg;
 
-import com.hu.brg.define.controller.RuleController;
-import com.hu.brg.generate.controller.GenerateController;
-import com.hu.brg.shared.controller.AuthController;
-import com.hu.brg.shared.model.web.ErrorResponse;
-import com.hu.brg.shared.persistence.tooldatabase.DAOServiceProvider;
+import com.hu.brg.define.presentation.RuleController;
+import com.hu.brg.generate.presentation.GenerateController;
+import com.hu.brg.service.controller.AuthController;
+import com.hu.brg.service.model.web.ErrorResponse;
 import io.javalin.Javalin;
 import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
@@ -12,9 +11,7 @@ import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
 import io.swagger.v3.oas.models.info.Info;
 
-import static io.javalin.apibuilder.ApiBuilder.get;
-import static io.javalin.apibuilder.ApiBuilder.path;
-import static io.javalin.apibuilder.ApiBuilder.post;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,6 +24,8 @@ public class Main {
             path("generate", () -> path("rules", () -> {
                 get(GenerateController::getRuleDefinitions);
                 post(GenerateController::generateCode);
+                path(":id", () -> get(GenerateController::getRule));
+                path("insert", () -> post(GenerateController::insertCode));
             }));
             path("auth", () -> path("connection", () -> post(AuthController::createConnection)));
             path("define", () -> {
@@ -41,11 +40,16 @@ public class Main {
                     path(":typeName", () -> path("operators", () -> get(RuleController::getOperatorsWithType)));
                 });
 
-                path("rules", () -> {
-                    get(RuleController::getRuleDefinitions);
-                    post(RuleController::saveRuleDefinition);
-                });
+                path("rules", () -> post(RuleController::saveRuleDefinition));
             });
+            path("maintain", () -> path("rules", () -> {
+                get(RuleController::getMaintainRulesData);
+                path(":id", () -> {
+                    get(RuleController::getRuleById);
+                    delete(RuleController::deleteRule);
+                    put(RuleController::updateRule);
+                });
+            }));
         }).start(4201);
     }
 

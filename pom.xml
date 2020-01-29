@@ -29,6 +29,14 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ojdbc8.jar</systemPath>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.antlr/stringtemplate -->
+        <dependency>
+            <groupId>org.antlr</groupId>
+            <artifactId>stringtemplate</artifactId>
+            <version>4.0.2</version>
+        </dependency>
+
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>

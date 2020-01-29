@@ -16,7 +16,9 @@
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
 
-    <title>BRG</title>
+    <title>Define & Maintain</title>
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles/style.css">
     <script src="scripts/form-controller.js"></script>
     <script src="scripts/comparator-controller.js"></script>
@@ -24,15 +26,41 @@
 <body class="bg">
 <div class="container">
     <div class="py-5 text-center">
-        <h1>Business Rule Generator</h1>
-        <p class="lead">Connect to a target database by filling in the desired fields below to start defining a
-            Businessrule.</p>
+        <h1><i>Business Rule Generator</i></h1>
+        <p class="lead"><i>Best rule generator in the business!</i></p>
+    </div>
+
+    <div class="maintain-rule-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div class="new-rule-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <div class="alert alert-success text-center" role="alert"></div>
+    <div class="alert alert-danger text-center" role="alert"></div>
+    <div class="spinner-holder initial-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div class="col-md-12 text-center">
+        <div class="row action-button-box">
+            <button class="btn btn-primary btn-lg col-md-5 new-rule">Define new Rule</button>
+            <button class="btn btn-primary btn-lg col-md-5 maintain-rule">Maintain an existing rule</button>
+        </div>
     </div>
 
     <div class="row">
+        <!--        Make connection form-->
         <div class="col-md-12">
             <form action="javascript:void(0);">
-                <div id="db-info-wrapper">
+                <div id="db-info-wrapper" class="db-info-wrapper">
                     <div class="mb-3">
                         <label for="dbEngine">Database Engine:</label>
                         <select class="custom-select d-block w-100 form-input" id="dbEngine">
@@ -46,7 +74,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="dbInputHost">Host:</label>
-                            <input type="text" class="form-input" id="dbInputHost" placeholder="Ondora04.hu.nl">
+                            <input type="text" class="form-input" id="dbInputHost" placeholder="ondora04.hu.nl">
                         </div>
                     </div>
                     <div class="row">
@@ -75,71 +103,119 @@
         </div>
     </div>
 
-    <div class="rule-details-wrapper new-rule-wrapper">
-        <div class="py-5 text-center">
-            <h2>Define your Business Rule</h2>
-            <p class="lead">Define your new Businessrule by selecting the correct values below.</p>
-        </div>
-        <div class="mb-3">
-            <label>Rule name:</label>
-            <input type="text" class="form-input rule-name" placeholder="My new Rule">
-        </div>
-        <div class="mb-3">
-            <label>Description:</label>
-            <textarea class="form-input rule-description" placeholder="New rule description"></textarea>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label>Select table:</label>
-                <select class="table-selection form-input">
-                    <option disabled selected>Select a table</option>
-                </select>
+    <div class="row">
+        <div class="col-md-12">
+            <!--            New businessrule-->
+            <div class="rule-details-wrapper new-rule-wrapper">
+                <div class="py-5 text-center new-rule-header">
+                    <h2>Define your new Business Rule</h2>
+                    <p class="lead">Define your new Businessrule by selecting the correct values below.</p>
+                </div>
+                <input hidden class="rule-id" id="rule-id">
+                <input hidden class="attribute-id">
+                <div class="mb-3">
+                    <label>Rule name:</label>
+                    <input type="text" class="form-input rule-name rule-field" placeholder="My new Rule">
+                    <div class="field-error rule-name-error">Enter a name.</div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Description:</label>
+                        <textarea class="form-input rule-description rule-field"
+                                  placeholder="New rule description"></textarea>
+                        <div class="field-error description-error">Enter a description.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Define the error message:</label>
+                        <textarea class="error-message form-input rule-field"></textarea>
+                        <div class="field-error rule-name-error">Enter an error message.</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Select table:</label>
+                        <select class="table-selection form-input rule-field">
+                            <option disabled selected>Select a table</option>
+                        </select>
+                        <div class="field-error target-table-error">Select a table.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Select rule type:</label> <span class="badge badge-primary" id="tableHelp"
+                                                               data-toggle="tooltip" data-html="true"
+                                                               title="<em>Select a table first</em>">?</span>
+                        <select class="type-selection form-input rule-field" disabled="disabled">
+                            <option disabled selected>Select a type</option>
+                        </select>
+                        <div class="field-error rule-type-error">Select a rule type.</div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label>Select the target attribute:</label>
+                        <select class="attribute-selection form-input rule-field">
+                            <option disabled selected>Select an attribute</option>
+                        </select>
+                        <div class="field-error target-attribute-error">Select an attribute.</div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label>Select an operator:</label>
+                        <select class="operator-selection form-input rule-field">
+                            <option disabled selected>Select an operator</option>
+                        </select>
+                        <div class="field-error operator-error">Select an operator.</div>
+                    </div>
+                </div>
+                <div class="mb-3 rule-values-wrapper">
+                    <h3>Rule values:</h3>
+                    <div class="form-step-comparator">
+                        <div class="row comparator-step"></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 mb-3 field-error rule-values-error">
+                        Select / enter all values.
+                    </div>
+                </div>
+                <div class="text-center row">
+                    <button class="save-rule btn btn-primary btn-lg btn-save">Save Rule</button>
+                    <button class="save-rule btn btn-primary btn-lg btn-update">Save Rule</button>
+                    <button class="save-rule btn btn-danger btn-lg btn-delete">Delete Rule</button>
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label>Select rule type:</label>
-                <select class="type-selection form-input">
-                    <option disabled selected>Select a type</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label>Select the target attribute:</label>
-                <select class="attribute-selection form-input">
-                    <option disabled selected>Select an attribute</option>
-                </select>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Select an operator:</label>
-                <select class="operator-selection form-input">
-                    <option disabled selected>Select an operator</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label>Define the error message:</label>
-                <textarea class="error-message form-input"></textarea>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label>Error code:</label>
-                <input type="number" class="form-input error-code" placeholder="-20000">
-            </div>
-        </div>
-        <div class="mb-3 rule-values-wrapper">
-            <h3>Rule values:</h3>
-            <div class="form-step-comparator">
-                <div class="row comparator-step"></div>
-            </div>
-        </div>
 
-        <div class="text-center">
-            <button class="save-rule btn btn-primary btn-lg btn-block btn-save">Save Rule</button>
-        </div>
-    </div>
-    <div class="rule-details-wrapper rules-list-wrapper">
-        <div class="py-5 text-center">
-            <h2>List of all business rules</h2>
+            <!--            Search businessrule-->
+            <div class="rule-details-wrapper search-rule-wrapper">
+                <div class="py-5 text-center">
+                    <h2>Search Business rule</h2>
+                    <p class="lead">Search for the desired Rule below.</p>
+                    <input id="search-rule" class="form-input">
+                    <br>
+                    <h3>Existing Rules</h3>
+                    <div class="maintain-spinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </div>
+                    <p class="lead"></p>
+
+                    <table class="table table-striped existing-rules-wrapper">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">RuleName</th>
+                            <th scope="col">Applied Table</th>
+                            <th scope="col">Rule Type</th>
+                        </tr>
+                        </thead>
+                        <tbody id="table-body" class="maintain-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="back-button-box">
+                <button class="btn btn-primary back-maintain">Back</button>
+                <button class="btn btn-primary back-define">Back</button>
+            </div>
         </div>
     </div>
 </div>

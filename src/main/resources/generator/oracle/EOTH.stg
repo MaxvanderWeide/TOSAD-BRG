@@ -1,0 +1,18 @@
+template(name, description, error_message, declarations, insertions, attribute, statement) ::= <<
+-- evaluate business rule '<name>'
+declare
+   <declarations>
+   v_passed boolean := true;
+begin
+   if v_oper in ('INS','UPD')
+   then
+       -- <description>
+       <insertions>
+       v_passed := :new.<attribute> <statement>
+       if not v_passed
+           then
+           v_error_stack := v_error_stack || '<error_message>';
+       end if;
+  end if;
+end;
+>>

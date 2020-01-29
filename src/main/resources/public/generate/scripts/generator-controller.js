@@ -1,86 +1,252 @@
-loadRules();
+$(document).ready(function () {
+    searchTable();
+    startupEventListeners();
+    loadFromStorage();
+});
 
-function loadRules() {
-    fetch("/generate/rules", {
-        method: "GET",
-        headers: {"Authorization": sessionStorage.getItem("access_token")},
+function startupEventListeners() {
+    $(".generate").click(() => {
+        generate();
+    });
+
+    $(".btn-connect").click(() => {
+        createConnection();
+    });
+
+    $(".insert").click(() => {
+        let triggers = sessionStorage.getItem("triggers");
+
+        if(triggers !== undefined) {
+            insertCode(triggers.replace(/(?:<br>)/g, "\n"));
+        } else {
+            let alertDanger = $('.alert-danger');
+            $(alertDanger).html("There is no known trigger code available, try again after regenerating...");
+            $(alertDanger).show();
+        }
+    });
+
+    $(".sample-code-block").hide();
+    $(".insert").hide();
+}
+
+function searchTable() {
+    $("#search-rule").on("keyup", function () {
+        const value = $(this).val().toLowerCase();
+        $("#table-body tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+}
+
+function createConnection() {
+    let values = {};
+    values["engine"] = $("#dbEngine").val();
+    values["dbName"] = $("#dbName").val();
+    values["host"] = $("#dbInputHost").val();
+    values["port"] = $("#dbInputPort").val();
+    values["service"] = $("#dbInputService").val();
+    values["username"] = $("#dbInputUser").val();
+    values["password"] = $("#dbInputPassword").val();
+    values = JSON.stringify(values);
+
+    fetch("/auth/connection", {
+        method: "POST",
+        body: values
     })
         .then(response => {
             if (response.status === 200) {
-                $(".rule-items-wrapper").show();
-                $(".spinner-holder").hide();
+                return response.text();
+            } else if (response.status === 400) {
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("Can't create connection due to unfulfilled data requirements.");
+                $(alertDanger).show();
+            } else if (response.status === 403) {
+                alert("You can't be authenticated. Contact your technical administrator.");
+            }
+        })
+        .then(response => {
+            if (response !== undefined) {
+                $(".db-info-wrapper").hide();
+                sessionStorage.setItem("access_token", response);
+                sessionStorage.setItem("values", values);
+                $('.alert-danger').hide();
+                getAllRules();
+                $(".search-rule-wrapper, .existing-rules-title").show();
+            } else {
+                $(".db-info-wrapper").show();
+            }
+            $(".spinner-holder.initial-spinner").hide();
+        });
+}
+
+function loadFromStorage() {
+    if (sessionStorage.getItem("values") != null) {
+        const values = JSON.parse(sessionStorage.getItem("values"));
+        $("#dbEngine").empty().append("<option value=" + values['engine'] + ">" + values['engine'] + "</option>");
+        $("#dbInputHost").val(values['host']);
+        $("#dbName").val(values['dbName']);
+        $("#dbInputPort").val(values['port']);
+        $("#dbInputService").val(values['service']);
+        $("#dbInputUser").val(values['username']);
+        $("#dbInputPassword").val(values['password']);
+
+        createConnection();
+    } else {
+        $(".spinner-holder.initial-spinner").hide();
+        $(".db-info-wrapper").show();
+    }
+}
+
+function getAllRules() {
+    $(".alert-danger").html("").hide();
+    $(".alert-success").html("").hide();
+    $(".existing-lead, #ruleTable, button.generate").hide();
+    $(".existing-rules-spinner").show();
+    fetch("rules", {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
+    })
+        .then(response => {
+            if (response.status === 200) {
                 return response.json();
             }
         })
         .then(response => {
             if (response !== undefined) {
-                for (const k in response) {
-                    const item = response[k];
-                    const values = JSON.parse(item["Values"]);
-                    const itemWrapper = document.createElement("div");
-                    itemWrapper.setAttribute("class", "rule-item");
-                    const ruleWrapper = document.createElement("div");
-                    ruleWrapper.setAttribute("class", "rule-wrapper");
-                    const ruleInfoWrapper = document.createElement("div");
-                    ruleInfoWrapper.setAttribute("class", "rule-info-wrapper");
-                    const ruleLeftBlock = document.createElement("div");
-                    ruleLeftBlock.setAttribute("class", "rule-info-left-block");
-                    const ruleRightBlock = document.createElement("div");
-                    ruleRightBlock.setAttribute("class", "rule-info-right-block");
-                    const ruleBottomBlock = document.createElement("div");
-                    ruleBottomBlock.setAttribute("class", "rule-info-bottom-block");
-                    const generatedRuleWrapper = document.createElement("div");
-                    generatedRuleWrapper.setAttribute("class", "generated-rule-wrapper");
-                    const ul = document.createElement("ul");
+                const tableBody = $("#table-body").html("");
 
-
-                    for (const value of values) {
-                        $(ul).append("<li>" + value + "</li>")
-                    }
-
-                    $(ruleLeftBlock).append("<label>Type code</label><input type='text' value='" + item["Operator"] + "'>");
-                    $(ruleLeftBlock).append("<label>Type</label><input type='text' value='" + item["Type"] + "'>");
-                    $(ruleLeftBlock).append("<label>Error code</label><input type='text' value='" + item["ErrorCode"] + "'>");
-                    $(ruleLeftBlock).append("<label>Error message</label><input type='text' value='" + item["ErrorMessage"] + "'>");
-                    $(ruleRightBlock).append("<label>Table</label><input type='text' value='" + item["Table"] + "'>");
-                    $(ruleRightBlock).append("<label>Attribute</label><input type='text' value='" + item["Attribute"] + "'>");
-                    $(ruleRightBlock).append("<label>Operator</label><input type='text' value='" + item["Operator"] + "'>");
-                    $(ruleBottomBlock).append("<br/><label>Description</label>");
-                    $(ruleBottomBlock).append("<textarea>" + item["Description"] + "</textarea>");
-                    $(ruleBottomBlock).append("<br/><label>Values</label>");
-                    $(ruleBottomBlock).append(ul);
-                    $(ruleInfoWrapper).append(ruleLeftBlock, ruleRightBlock, ruleBottomBlock);
-                    $(generatedRuleWrapper).append("<span class='generated-rule-title'>Generated rule</span>");
-                    $(generatedRuleWrapper).append("<div class='generated-rule'>Click the \"Generate Code\" button to generate and insert the rule into your database</div>");
-                    $(itemWrapper).append("<div class='rule-name'>" + k + "</div>");
-                    $(ruleWrapper).append(ruleInfoWrapper, generatedRuleWrapper);
-                    $(itemWrapper).append(ruleWrapper);
-                    $(itemWrapper).append("<div class='rule-generator-wrapper'><button class='btn-generate-rule' data-id='" + item["ID"] + "'>Generate code</button></div>");
-
-                    $("div.rule-items-wrapper").append(itemWrapper);
+                for (const index in response) {
+                    let id = response[index]['id'];
+                    $(tableBody).append("" +
+                        "<tr>" +
+                        "<td>" + id + "</td>" +
+                        "<td>" + index + "</td>" +
+                        "<td>" + response[index]['table'] + "</td>" +
+                        "<td>" + response[index]['type'] + "</td>" +
+                        "<td data-id='"+ id +"'><input class='form-check-input' value='"+ id +"' type='checkbox' id='checkbox'></td>" +
+                        "</tr>"
+                    );
                 }
 
-                $("button.btn-generate-rule").click((item) => {
-                    generateCode(item.target);
-                });
+                $("table.existing-rules-wrapper").append(tableBody);
+                $("#ruleTable, .generate, .existing-lead").show();
+                return "ok";
+            } else {
+                $("#table-body").html("No rules found")
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("There are no rules defined yet! Go to Define & Maintain to define your first rule.");
+                $(alertDanger).show();
+                $(".existing-rules-spinner").hide();
             }
-        });
+        }).then(response => {
+        $(".spinner-holder.initial-spinner, .existing-rules-spinner").hide();
+        $("table.existing-rules-wrapper, button.generate").show();
+    });
 }
 
-function generateCode(element) {
-    fetch("/generate/rules", {
-        method: "POST",
-        headers: {"Authorization": sessionStorage.getItem("access_token")},
-        body: $(element).data("id")
+function getRuleById(target) {
+    fetch("maintain/rules/" + target, {
+        method: "GET",
+        headers: {"Authorization": sessionStorage.getItem("access_token")}
     })
         .then(response => {
-            if (response.status === 201) {
-                return response.text();
+            if (response.status === 200) {
+                return response.json();
             }
         })
         .then(response => {
             if (response !== undefined) {
-                $(element).parent().parent().find("div.generated-rule").text(response);
+                fillFormFields(response)
             }
         });
+}
+
+function generate() {
+    let ids = [];
+    let boxes = $('input[type=checkbox]');
+
+    // get checked boxes
+    boxes.each(function () {
+        if (this.checked) {
+            ids.push($(this).val());
+        }
+    });
+
+    if(typeof ids !== 'undefined' && ids.length > 0) {
+        $(".sample-code-block").html("").hide();
+        $('.alert-danger, .alert-success, button.insert').hide();
+        $(".generate-spinner").show();
+
+        const rules = {};
+        rules["rules"] = ids;
+
+        //generate the rules
+        fetch("/generate/rules", {
+            method: "POST",
+            headers: {"Authorization": sessionStorage.getItem("access_token")},
+            body: JSON.stringify(rules)
+        })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else if (response.status === 404 || response.status === 500) {
+                    $(".generate-spinner").hide();
+                    let alertDanger = $('.alert-danger');
+                    $(alertDanger).html("Some went wrong, contact your technical administrator.");
+                    $(alertDanger).show();
+                }
+            })
+            .then(response => {
+                if (response !== undefined) {
+                    // show generated items...
+                    let alertSuccess = $('.alert-success');
+                    $(alertSuccess).html("The selected rules are generated! See the output below.");
+                    $(alertSuccess).show();
+
+                    sessionStorage.setItem("triggers", response.triggers);
+                    showGeneratedRule(sessionStorage.getItem("triggers"));
+                }
+            });
+    } else {
+        $(".alert-success").html("").hide();
+        $(".sample-code-block").html("").hide();
+        $("button.insert").hide();
+        $(".alert-danger").html("You haven't yet selected any rules to be created!").show();
+        return;
+    }
+}
+
+function showGeneratedRule(response) {
+    let sample = $(".sample-code-block");
+    $(".generate-spinner").hide();
+
+    $(sample).html(
+        ("<samp>"+response+"</samp>").replace(/(?:\n)/g, "<br>")
+    );
+
+    $(sample).show();
+    $("button.insert").show();
+}
+
+function insertCode(triggers) {
+    const rules = {};
+    rules["triggers"] = triggers;
+
+    fetch("/generate/rules/insert", {
+        method: "POST",
+        headers: {"Authorization": sessionStorage.getItem("access_token")},
+        body: JSON.stringify(rules)
+    })
+        .then(response => {
+            if (response.status === 200) {
+                let alertSuccess = $('.alert-success');
+                $(alertSuccess).html("The generated triggers are inserted in the selected target database! :)");
+                $(alertSuccess).show();
+                return response.json();
+            } else if (response.status === 404) {
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("Something went wrong, contact your technical administrator.");
+                $(alertDanger).show();
+            }
+        })
 }
