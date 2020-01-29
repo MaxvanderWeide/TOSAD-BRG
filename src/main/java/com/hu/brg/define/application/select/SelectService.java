@@ -11,15 +11,20 @@ import java.util.List;
 public interface SelectService {
 
     List<RuleType> getAllRuleTypes();
+
     RuleType getRuleTypeByName(String name);
 
     List<Operator> getOperatorsByTypeId(int typeId);
+
     Operator getOperatorByName(String name);
 
     List<Table> getAllTables(Claims claims);
+
     Table getTableByName(String name, Claims claims);
 
     List<Rule> getAllRules(int projectId);
+
     List<Rule> getAllRules(int projectId, boolean signatureOnly);
+
     Rule getRuleById(int id);
 }

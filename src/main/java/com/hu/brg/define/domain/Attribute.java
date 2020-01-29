@@ -17,6 +17,7 @@ public class Attribute {
 
     private List<AttributeValue> attributeValues;
 
+
     public Attribute(Rule rule, Column column, Operator operator, int order, Column targetTableFK, Column otherTablePK, Table otherTable, Column otherColumn, List<AttributeValue> attributeValues) {
         this.rule = rule;
         this.column = column;

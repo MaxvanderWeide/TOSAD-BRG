@@ -4,6 +4,9 @@ import com.hu.brg.generate.domain.Operator;
 
 public class OracleOperatorFactory {
 
+    private OracleOperatorFactory() {
+    }
+
     public static String getLiteralOperator(Operator operator) {
         switch (operator.getName().toUpperCase()) {
             case "EQUALS":

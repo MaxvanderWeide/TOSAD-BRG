@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface TargetDatabaseDAO {
     List<Table> getTablesByProject(String username, String password, Project project);
+
     List<Table> getTablesByProjectId(String username, String password, int id);
 
     boolean testConnection(String username, String password, Project project);

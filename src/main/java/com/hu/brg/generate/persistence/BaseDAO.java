@@ -20,6 +20,7 @@ public abstract class BaseDAO {
                 ConfigSelector.USERNAME,
                 ConfigSelector.PASSWORD
         );
+        // TODO - Remove after testing
 //        return getConnection(DBEngine.ORACLE, "ondora04.hu.nl", 8521, "EDUC17",  "TOSAD2", "tosad1234");
     }
 
@@ -59,7 +60,7 @@ public abstract class BaseDAO {
     }
 
     public void closeConnection() {
-        //TODO: Maybe remove, datapools don't support this
+        //TODO - Remove after testing
 //        if (oraclePoolDataSource != null) {
 //            try {
 //                oraclePoolDataSource.close();

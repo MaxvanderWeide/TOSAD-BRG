@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface RuleTypeDAO {
     RuleType getRuleTypeById(int id);
+
     RuleType getRuleTypeByName(String name);
+
     RuleType getRuleTypeByCode(String code);
 
     List<RuleType> getAllRuleTypes();
