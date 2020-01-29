@@ -662,6 +662,7 @@ function clearFormFields() {
     $(".rule-values-wrapper").hide();
     $(".field-error").hide();
     $(".type-selection").attr("disabled", "disabled");
+    $("#tableHelp").attr("data-original-title", "<em>Select a table first</em>");
 }
 
 function timoutAction() {
