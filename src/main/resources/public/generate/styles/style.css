@@ -53,11 +53,6 @@ table {
     margin-top: 2vw;
 }
 
-tbody tr:hover {
-    opacity: .8;
-    cursor: pointer;
-}
-
 .alert-success, .alert-danger {
     display: none;
 }
@@ -77,6 +72,10 @@ tbody tr:hover {
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     background: var(--input-color);
     margin: auto;
+}
+
+.form-check-input {
+    cursor: pointer;
 }
 
 .pi-5 {
