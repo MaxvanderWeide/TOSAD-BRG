@@ -93,6 +93,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             insertAttributes(rule, conn);
 
+            conn.close();
+
             return rule;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -186,6 +188,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             deleteAttributeStatement.executeUpdate();
             deleteAttributeStatement.close();
+
+            conn.close();
 
             return rule;
         } catch (SQLException e) {
