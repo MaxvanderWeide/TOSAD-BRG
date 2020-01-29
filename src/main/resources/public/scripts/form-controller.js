@@ -55,7 +55,6 @@ function startupEventListeners() {
     $(".new-rule-wrapper .type-selection").change((item) => {
         fillOperators(item.target.value);
         displayBlock(item.target.value);
-        fillTargetAttributes(item.target);
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
         $(".rule-values-error").hide();
         setTypeInfo(item.target);
@@ -595,6 +594,7 @@ function getAllRules() {
 
 function clickTable(id) {
     $(".new-rule-wrapper").hide();
+    $(".alert-danger, .alert-success").html("").hide();
     $(".maintain-rule-spinner").show();
     clearFormFields();
 
@@ -615,6 +615,7 @@ function getRuleById(target) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("The specified rule was not found. Maybe it was deleted?");
                 $(alertDanger).show();
+                $(".maintain-rule-spinner").hide();
             }
         })
         .then(response => {

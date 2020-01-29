@@ -174,7 +174,7 @@ function generate() {
 
     if(typeof ids !== 'undefined' && ids.length > 0) {
         $(".sample-code-block").html("").hide();
-        $('.alert-danger, .alert-success').hide();
+        $('.alert-danger, .alert-success, button.insert').hide();
         $(".generate-spinner").show();
 
         const rules = {};
@@ -205,8 +205,6 @@ function generate() {
 
                     sessionStorage.setItem("triggers", response.triggers);
                     showGeneratedRule(sessionStorage.getItem("triggers"));
-
-                    $(".insert").show();
                 }
             });
     } else {
@@ -222,11 +220,12 @@ function showGeneratedRule(response) {
     let sample = $(".sample-code-block");
     $(".generate-spinner").hide();
 
-    sample.html(
+    $(sample).html(
         ("<samp>"+response+"</samp>").replace(/(?:\n)/g, "<br>")
     );
 
-    sample.show();
+    $(sample).show();
+    $("button.insert").show();
 }
 
 function insertCode(triggers) {
