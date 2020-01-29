@@ -681,10 +681,13 @@ function fillFormValues(ruleData) {
                 }
                 break;
             case "Attribute_Range":
-                $("#custInput1").val(attribute.attributeValues[0].value);
-                $("#custInput1").attr("data-value-id", attribute.attributeValues[0].id);
-                $("#custInput2").val(attribute.attributeValues[1].value);
-                $("#custInput2").attr("data-value-id", attribute.attributeValues[1].id);
+                const number = attribute.attributeValues[0].order === 0 ? 0 : 1;
+                const number2 = attribute.attributeValues[1].order === 0 ? 0 : 1;
+                $("#custInput1").val(attribute.attributeValues[number].value);
+                $("#custInput1").attr("data-value-id", attribute.attributeValues[number].id);
+
+                $("#custInput2").val(attribute.attributeValues[number2].value);
+                $("#custInput2").attr("data-value-id", attribute.attributeValues[number2].id);
                 break;
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
