@@ -487,6 +487,7 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 parameterBuilder.append(",");
             }
         }
+        parameterBuilder.append(") ");
 
         return parameterBuilder.toString();
     }
