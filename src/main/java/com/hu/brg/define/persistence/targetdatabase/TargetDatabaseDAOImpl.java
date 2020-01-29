@@ -34,6 +34,10 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
 
             resultSet.close();
             preparedStatement.close();
+
+            conn.close();
+
+            return tableList;
         } catch (SQLException e) {
             e.printStackTrace();
         }
