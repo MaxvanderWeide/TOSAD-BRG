@@ -6,10 +6,11 @@ public class RuleType {
     private String typeCode;
     private String description;
 
-    public RuleType(int id, String type, String typeCode) {
+    public RuleType(int id, String type, String typeCode, String description) {
         this.id = id;
         this.type = type;
         this.typeCode = typeCode;
+        this.description = description;
     }
 
     public boolean isRange() {
@@ -50,10 +51,6 @@ public class RuleType {
 
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     @Override
