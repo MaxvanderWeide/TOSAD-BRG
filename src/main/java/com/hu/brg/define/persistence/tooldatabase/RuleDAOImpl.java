@@ -179,16 +179,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                         .stream()
                         .map(AttributeValue::getId)
                         .collect(Collectors.toList());
-                StringBuilder parameterBuilder = new StringBuilder();
-                parameterBuilder.append(" (");
-                for (int i = 0; i < keepAttributeValueIds.size(); i++) {
-                    parameterBuilder.append("?");
-                    if (keepAttributeValueIds.size() > i + 1) {
-                        parameterBuilder.append(",");
-                    }
-                }
-                parameterBuilder.append(")");
-                query = "DELETE FROM RULE_VALUES WHERE ID NOT IN " + parameterBuilder.toString() + " AND ATTRIBUTEID = ?";
+
+                query = "DELETE FROM RULE_VALUES WHERE ID NOT IN " + preparedStatementParameterBuilder(keepAttributeValueIds) + " AND ATTRIBUTEID = ?";
                 PreparedStatement deleteAttributeValueStatement = conn.prepareStatement(query);
                 for (int i = 1; i < keepAttributeValueIds.size() + 1; i++) {
                     deleteAttributeValueStatement.setInt(i, keepAttributeValueIds.get(i - 1));
@@ -204,16 +196,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                     .stream()
                     .map(Attribute::getId)
                     .collect(Collectors.toList());
-            StringBuilder parameterBuilder = new StringBuilder();
-            parameterBuilder.append(" (");
-            for (int i = 0; i < keepAttributeIds.size(); i++) {
-                parameterBuilder.append("?");
-                if (keepAttributeIds.size() > i + 1) {
-                    parameterBuilder.append(",");
-                }
-            }
-            parameterBuilder.append(")");
-            query = "DELETE FROM ATTRIBUTES WHERE ID NOT IN " + parameterBuilder.toString() + " AND RULESID = ?";
+
+            query = "DELETE FROM ATTRIBUTES WHERE ID NOT IN " + preparedStatementParameterBuilder(keepAttributeIds) + " AND RULESID = ?";
             PreparedStatement deleteAttributeStatement = conn.prepareStatement(query);
             for (int i = 1; i < keepAttributeIds.size() + 1; i++) {
                 deleteAttributeStatement.setInt(i, keepAttributeIds.get(i - 1));
@@ -489,5 +473,18 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 order,
                 isLiteral
         );
+    }
+
+    private String preparedStatementParameterBuilder(List<?> list) {
+        StringBuilder parameterBuilder = new StringBuilder();
+        parameterBuilder.append(" (");
+        for (int i = 0; i < list.size(); i++) {
+            parameterBuilder.append("?");
+            if (list.size() > i + 1) {
+                parameterBuilder.append(",");
+            }
+        }
+
+        return parameterBuilder.toString();
     }
 }
