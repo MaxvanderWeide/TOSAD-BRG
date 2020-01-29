@@ -313,18 +313,21 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 PreparedStatement preparedStatement1 = conn.prepareStatement(query1);
                 preparedStatement1.setInt(1, result1.getInt("ID"));
                 preparedStatement1.executeQuery();
+                preparedStatement1.close();
 
                 //delete * from attributes met rulesid
                 String query2 = "DELETE FROM ATTRIBUTES WHERE RULESID = ?";
                 PreparedStatement preparedStatement2 = conn.prepareStatement(query2);
                 preparedStatement2.setInt(1, id);
                 preparedStatement2.executeQuery();
+                preparedStatement2.close();
 
                 //delete * from rules met rulesid
                 String query3 = "DELETE FROM RULES WHERE ID = ?";
                 PreparedStatement preparedStatement3 = conn.prepareStatement(query3);
                 preparedStatement3.setInt(1, id);
                 preparedStatement3.executeUpdate();
+                preparedStatement3.close();
             }
 
             return true;
