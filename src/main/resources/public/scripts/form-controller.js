@@ -733,11 +733,17 @@ function fillFormValues(ruleData) {
                             return false;
                         }
                     });
-                }, 1500);
+                }, 1000);
                 setTimeout(() => {
                     $(".maintain-rule-spinner").hide();
                     $(".new-rule-wrapper").show();
-                }, 1800);
+                }, 1200);
+                break;
+            case "Entity_Other":
+                $(".declaration-field").val(attribute.attributeValues[0].value);
+                $(".insertion-field").val(attribute.attributeValues[1].value);
+                $(".statement-field").val(attribute.attributeValues[2].value);
+                break;
             default:
                 break;
         }
