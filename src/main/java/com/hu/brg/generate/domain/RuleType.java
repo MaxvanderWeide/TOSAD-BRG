@@ -37,7 +37,7 @@ public class RuleType {
         return type.contains("InterEntity");
     }
 
-    public boolean isEntityType(){
+    public boolean isEntityType() {
         return type.contains("Entity");
     }
 

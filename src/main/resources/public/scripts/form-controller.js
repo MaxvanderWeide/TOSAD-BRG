@@ -198,7 +198,7 @@ function createConnection() {
                 $(alertDanger).html("Can't create connection due to unfulfilled data requirements.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Contact your technical administrator.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -206,6 +206,7 @@ function createConnection() {
                 showMenu();
                 $(".db-info-wrapper").hide();
                 sessionStorage.setItem("access_token", response);
+                // sessionStorage.setItem("expiration_time", response);
                 sessionStorage.setItem("values", values);
                 fillTargetTables();
             } else {
@@ -251,7 +252,7 @@ function fillTargetTables() {
                 $(alertDanger).html("No tables were found. Contact your technical administrator.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -278,7 +279,7 @@ function fillTargetAttributes(table, target = null, operation, column) {
                 $(alertDanger).html("No attributes were found. Contact your technical administrator.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -468,7 +469,7 @@ function saveRule(element, method = "insert") {
                     $(alertDanger).html("Your Business Rule was not created. You may want to check the input again.");
                     $(alertDanger).show();
                 } else if (response.status === 403) {
-                    alert("You can't be authenticated. Please authenticate again.");
+                    timoutAction();
                 }
             });
     } else if (method === "update") {
@@ -490,7 +491,7 @@ function saveRule(element, method = "insert") {
                     $(alertDanger).html("Your Business Rule was not updated. You may want to check the input again.");
                     $(alertDanger).show();
                 } else if (response.status === 403) {
-                    alert("You can't be authenticated. Please authenticate again.");
+                    timoutAction();
                 }
             });
     }
@@ -515,7 +516,7 @@ function deleteRule(element) {
                 $(alertDanger).html("The rule was not deleted.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("The rule was not found. Maybe it was already deleted?");
@@ -555,7 +556,7 @@ function getAllRules() {
             if (response.status === 200) {
                 return response.json();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("No Rules Were Found.");
@@ -582,7 +583,11 @@ function getAllRules() {
                 $("table.existing-rules-wrapper").append(tableBody);
                 return "ok";
             } else {
-                $("#table-body").html("No rules found")
+                $("#table-body").html("No rules found");
+                let alertDanger = $('.alert-danger');
+                $(alertDanger).html("There are no rules defined yet! Go to Define to define your first rule.");
+                $(alertDanger).show();
+                $(".existing-rules-spinner").hide();
             }
         }).then(response => {
         $(".maintain-spinner").hide();
@@ -610,7 +615,7 @@ function getRuleById(target) {
             if (response.status === 200) {
                 return response.json();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Please authenticate again.");
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("The specified rule was not found. Maybe it was deleted?");
@@ -642,6 +647,7 @@ function fillFormFields(rule) {
     fillFormValues(rule);
     $(".rule-values-wrapper").show();
     $(".error-message").val(rule.errorMessages);
+    $(".type-selection").attr("disabled", "disabled");
 }
 
 function clearFormFields() {
@@ -649,13 +655,20 @@ function clearFormFields() {
     $(".rule-description").val('');
     $(".table-selection").val('');
     $(".type-selection").val('');
-    $(".attribute-selection").val('');
-    $(".operator-selection").val('');
+    $(".attribute-selection").empty().val('');
+    $(".operator-selection").empty().val('');
     $(".error-message").val('');
     $(".form-step-comparator").html("").append($("<div>", {class: "row comparator-step"}));
     $(".rule-values-wrapper").hide();
     $(".field-error").hide();
     $(".type-selection").attr("disabled", "disabled");
+    $("#tableHelp").attr("data-original-title", "<em>Select a table first</em>");
+}
+
+function timoutAction() {
+    alert("You can't be authenticated. The page will reload.");
+
+    location.reload();
 }
 
 function fillFormValues(ruleData) {
@@ -673,10 +686,13 @@ function fillFormValues(ruleData) {
                 }
                 break;
             case "Attribute_Range":
-                $("#custInput1").val(attribute.attributeValues[0].value);
-                $("#custInput1").attr("data-value-id", attribute.attributeValues[0].id);
-                $("#custInput2").val(attribute.attributeValues[1].value);
-                $("#custInput2").attr("data-value-id", attribute.attributeValues[1].id);
+                const number = attribute.attributeValues[0].order === 0 ? 0 : 1;
+                const number2 = attribute.attributeValues[1].order === 0 ? 0 : 1;
+                $("#custInput1").val(attribute.attributeValues[number].value);
+                $("#custInput1").attr("data-value-id", attribute.attributeValues[number].id);
+
+                $("#custInput2").val(attribute.attributeValues[number2].value);
+                $("#custInput2").attr("data-value-id", attribute.attributeValues[number2].id);
                 break;
             case "Attribute_Compare":
                 $("#custInput1").val(attribute.attributeValues[0].value);
@@ -725,11 +741,17 @@ function fillFormValues(ruleData) {
                             return false;
                         }
                     });
-                }, 1500);
+                }, 1000);
                 setTimeout(() => {
                     $(".maintain-rule-spinner").hide();
                     $(".new-rule-wrapper").show();
-                }, 1800);
+                }, 1200);
+                break;
+            case "Entity_Other":
+                $(".declaration-field").val(attribute.attributeValues[0].value);
+                $(".insertion-field").val(attribute.attributeValues[1].value);
+                $(".statement-field").val(attribute.attributeValues[2].value);
+                break;
             default:
                 break;
         }
@@ -739,4 +761,5 @@ function fillFormValues(ruleData) {
         $(".maintain-rule-spinner").hide();
         $(".new-rule-wrapper").show();
     }
+
 }

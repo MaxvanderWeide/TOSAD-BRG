@@ -54,8 +54,9 @@ public class AttributeValue {
     /**
      * This getter is dangerous to use it in the generator,
      * use it only for the storage
-     *
+     * <p>
      * Use sanatizedValue();
+     *
      * @return raw value
      */
     public String getValue() {

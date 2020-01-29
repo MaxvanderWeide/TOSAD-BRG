@@ -93,6 +93,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             insertAttributes(rule, conn);
 
+            conn.close();
+
             return rule;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -187,6 +189,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
             deleteAttributeStatement.executeUpdate();
             deleteAttributeStatement.close();
 
+            conn.close();
+
             return rule;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -211,6 +215,9 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
                 rule = processRuleResult(ruleResult, null);
                 ruleResult.close();
                 ruleStatement.close();
+
+                conn.close();
+
                 return rule;
             }
 
@@ -243,6 +250,10 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             ruleResult.close();
             ruleStatement.close();
+
+            conn.close();
+
+            return rules;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -252,6 +263,11 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
     @Override
     public List<Rule> getRulesByProjectId(int projectId) {
+        return getRulesByProjectId(projectId, false);
+    }
+
+    @Override
+    public List<Rule> getRulesByProjectId(int projectId, boolean signatureOnly) {
         List<Rule> rules = new ArrayList<>();
 
         try (Connection conn = getConnection()) {
@@ -264,12 +280,21 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
             ResultSet ruleResult = ruleStatement.executeQuery();
             while (ruleResult.next()) {
-                Rule rule = processRuleResult(ruleResult, null);
+                Rule rule;
+                if (signatureOnly) {
+                    rule = getRuleStatement(ruleResult, null);
+                } else {
+                    rule = processRuleResult(ruleResult, null);
+                }
                 rules.add(rule);
             }
 
             ruleResult.close();
             ruleStatement.close();
+
+            conn.close();
+
+            return rules;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -279,13 +304,13 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
 
     @Override
     public boolean deleteRule(int id) {
+        Rule rule = getRule(id);
+
+        if (rule == null) {
+            return true;
+        }
+
         try (Connection conn = getConnection()) {
-            Rule rule = getRule(id);
-
-            if (rule == null) {
-                return true;
-            }
-
             String query;
             for (Attribute attribute : rule.getAttributesList()) {
                 for (AttributeValue attributeValue : attribute.getAttributeValues()) {
@@ -398,6 +423,8 @@ public class RuleDAOImpl extends BaseDAO implements RuleDAO {
         attributeStatement.close();
 
         rule.setAttributesList(attributeList);
+
+        conn.close();
 
         return rule;
     }

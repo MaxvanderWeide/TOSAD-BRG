@@ -2,13 +2,14 @@ package com.hu.brg.define.persistence;
 
 import com.hu.brg.define.domain.DBEngine;
 import com.hu.brg.service.ConfigSelector;
-import oracle.jdbc.pool.OracleDataSource;
+import oracle.ucp.jdbc.PoolDataSource;
+import oracle.ucp.jdbc.PoolDataSourceFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public abstract class BaseDAO {
-    private Connection connection;
+    private PoolDataSource oraclePoolDataSource;
 
     protected Connection getConnection() {
         return getConnection(
@@ -19,40 +20,56 @@ public abstract class BaseDAO {
                 ConfigSelector.USERNAME,
                 ConfigSelector.PASSWORD
         );
+        // TODO - Remove after testing
 //        return getConnection(DBEngine.ORACLE, "ondora04.hu.nl", 8521, "EDUC17",  "TOSAD2", "tosad1234");
     }
 
     protected Connection getConnection(DBEngine dbEngine, String host, int port, String serviceName, String user, String password) {
         try {
-            if (connection == null || connection.isClosed() || !connection.isValid(10)) {
-                switch (dbEngine) {
-                    case ORACLE: {
-                        OracleDataSource ods = new OracleDataSource();
-                        ods.setURL(String.format("jdbc:oracle:thin:@//%s:%d/%s", host, port, serviceName)); // jdbc:oracle:thin@//[hostname]:[port]/[DB service name]
-                        ods.setUser(user); // [username]
-                        ods.setPassword(password); // [password]
-                        connection = ods.getConnection();
-                        connection.setAutoCommit(true);
-                        break;
+            switch (dbEngine) {
+                case ORACLE:
+                    if (oraclePoolDataSource == null) {
+                        createOraclePool(host, port, serviceName, user, password);
                     }
-                    default:
-                        return null;
-                }
+
+                    return oraclePoolDataSource.getConnection();
+                default:
+                    return null;
             }
         } catch (SQLException e) {
             return null;
         }
+    }
 
-        return connection;
+    private void createOraclePool(String host, int port, String serviceName, String user, String password) throws SQLException {
+        oraclePoolDataSource = PoolDataSourceFactory.getPoolDataSource();
+        oraclePoolDataSource.setConnectionFactoryClassName("oracle.jdbc.pool.OracleDataSource");
+        oraclePoolDataSource.setURL(String.format("jdbc:oracle:thin:@//%s:%d/%s", host, port, serviceName)); // jdbc:oracle:thin@//[hostname]:[port]/[DB service name]
+        oraclePoolDataSource.setUser(user); // [username]
+        oraclePoolDataSource.setPassword(password); // [password]
+        oraclePoolDataSource.setFastConnectionFailoverEnabled(true);
+        oraclePoolDataSource.setMaxPoolSize(30);
+        oraclePoolDataSource.setConnectionHarvestTriggerCount(5);
+        oraclePoolDataSource.setConnectionHarvestMaxCount(2);
+
+        // Validate the connection while borrowing
+        oraclePoolDataSource.setValidateConnectionOnBorrow(true);
+
+        // this is timeout period any connection to remove pool after creation of 30 secs
+        oraclePoolDataSource.setMaxConnectionReuseTime(30);
+
+        // this is timeout period for idle "available connections" to close and remove pool
+        oraclePoolDataSource.setInactiveConnectionTimeout(10);
     }
 
     public void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
+        //TODO - Remove after testing
+//        if (oraclePoolDataSource != null) {
+//            try {
+//                oraclePoolDataSource.close();
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

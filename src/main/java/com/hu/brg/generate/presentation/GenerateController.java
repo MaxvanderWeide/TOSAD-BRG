@@ -59,8 +59,8 @@ public class GenerateController {
 
         Map<String, Map<String, Object>> rules = new HashMap<>();
         try {
-            for (Rule rule : getSelectService().getRulesWithProjectId(Integer.parseInt(claims.get("projectId").toString()))) {
-                Map<String, Object> map = serializeRuleToJson(rule, false);
+            for (Rule rule : getSelectService().getRulesWithProjectId(Integer.parseInt(claims.get("projectId").toString()), true)) {
+                Map<String, Object> map = serializeRuleToJson(rule);
                 rules.put(rule.getName(), map);
             }
             context.json(rules).status(200);
@@ -183,7 +183,7 @@ public class GenerateController {
             if (rule == null) {
                 context.status(400).result("No rule found");
             } else {
-                context.json(serializeRuleToJson(rule, false)).status(200);
+                context.json(serializeRuleToJson(rule)).status(200);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -191,7 +191,7 @@ public class GenerateController {
         }
     }
 
-    private static Map<String, Object> serializeRuleToJson(Rule rule, boolean keepShort) {
+    private static Map<String, Object> serializeRuleToJson(Rule rule) {
         Map<String, Object> map = new HashMap<>();
         List<Map<String, Object>> attributesList = new ArrayList<>();
         map.put("name", rule.getName());
@@ -199,52 +199,49 @@ public class GenerateController {
         map.put("type", rule.getRuleType().getType());
         map.put("table", rule.getTargetTable().getName());
 
-        if (!keepShort) {
-            // TODO - ^ plz no touch. (Max) will remove
 
-            map.put("description", rule.getDescription());
-            map.put("errorMessages", rule.getErrorMessage());
-            for (Attribute attribute : rule.getAttributesList()) {
-                Map<String, Object> attributesMap = new HashMap<>();
-                List<Map<String, Object>> attributeValuesList = new ArrayList<>();
+        map.put("description", rule.getDescription());
+        map.put("errorMessages", rule.getErrorMessage());
+        for (Attribute attribute : rule.getAttributesList()) {
+            Map<String, Object> attributesMap = new HashMap<>();
+            List<Map<String, Object>> attributeValuesList = new ArrayList<>();
 
-                attributesMap.put("id", attribute.getId());
-                attributesMap.put("column", attribute.getColumn().getName());
-                attributesMap.put("operatorName", attribute.getOperator().getName());
-                attributesMap.put("order", attribute.getOrder());
+            attributesMap.put("id", attribute.getId());
+            attributesMap.put("column", attribute.getColumn().getName());
+            attributesMap.put("operatorName", attribute.getOperator().getName());
+            attributesMap.put("order", attribute.getOrder());
 
-                if (attribute.getTargetTableFK() != null) {
-                    attributesMap.put("targetTableFK", attribute.getTargetTableFK().getName());
-                }
-
-                if (attribute.getOtherTablePK() != null) {
-                    attributesMap.put("otherTablePK", attribute.getOtherTablePK().getName());
-                }
-
-                if (attribute.getOtherTable() != null) {
-                    attributesMap.put("otherTable", attribute.getOtherTable().getName());
-                }
-
-                if (attribute.getOtherColumn() != null) {
-                    attributesMap.put("otherColumn", attribute.getOtherColumn().getName());
-                }
-
-                for (AttributeValue attributeValue : attribute.getAttributeValues()) {
-                    Map<String, Object> attributeValuesMap = new HashMap<>();
-                    attributeValuesMap.put("id", attributeValue.getId());
-                    attributeValuesMap.put("value", attributeValue.getValue());
-                    attributeValuesMap.put("valueType", attributeValue.getValueType());
-                    attributeValuesMap.put("order", attributeValue.getOrder());
-                    attributeValuesMap.put("isLiteral", attributeValue.isLiteral());
-
-                    attributeValuesList.add(attributeValuesMap);
-                }
-
-                attributesMap.put("attributeValues", attributeValuesList);
-                attributesList.add(attributesMap);
+            if (attribute.getTargetTableFK() != null) {
+                attributesMap.put("targetTableFK", attribute.getTargetTableFK().getName());
             }
-            map.put("attributes", attributesList);
+
+            if (attribute.getOtherTablePK() != null) {
+                attributesMap.put("otherTablePK", attribute.getOtherTablePK().getName());
+            }
+
+            if (attribute.getOtherTable() != null) {
+                attributesMap.put("otherTable", attribute.getOtherTable().getName());
+            }
+
+            if (attribute.getOtherColumn() != null) {
+                attributesMap.put("otherColumn", attribute.getOtherColumn().getName());
+            }
+
+            for (AttributeValue attributeValue : attribute.getAttributeValues()) {
+                Map<String, Object> attributeValuesMap = new HashMap<>();
+                attributeValuesMap.put("id", attributeValue.getId());
+                attributeValuesMap.put("value", attributeValue.getValue());
+                attributeValuesMap.put("valueType", attributeValue.getValueType());
+                attributeValuesMap.put("order", attributeValue.getOrder());
+                attributeValuesMap.put("isLiteral", attributeValue.isLiteral());
+
+                attributeValuesList.add(attributeValuesMap);
+            }
+
+            attributesMap.put("attributeValues", attributeValuesList);
+            attributesList.add(attributesMap);
         }
+        map.put("attributes", attributesList);
         return map;
     }
 }

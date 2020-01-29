@@ -4,6 +4,8 @@ import com.hu.brg.generate.domain.RuleType;
 
 public class TypeGeneratorFactory {
 
+    private TypeGeneratorFactory() {}
+
     public static TypeGenerator getTypeGenerator(RuleType ruleType) {
         if (ruleType.isAttributeType()) {
             return new AttributeGenerator();

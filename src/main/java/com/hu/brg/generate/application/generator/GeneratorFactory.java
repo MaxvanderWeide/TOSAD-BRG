@@ -5,6 +5,9 @@ import com.hu.brg.generate.domain.DBEngine;
 
 public class GeneratorFactory {
 
+    private GeneratorFactory() {
+    }
+
     public static Generator getGenerator(DBEngine dbEngine) {
         switch (dbEngine) {
             case ORACLE:

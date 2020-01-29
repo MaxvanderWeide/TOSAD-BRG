@@ -25,9 +25,30 @@
         <dependency>
             <groupId>com.oracle.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
-            <version>1.0</version>
+            <version>12.2.0.1</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/ojdbc8.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.jdbc</groupId>
+            <artifactId>ucp</artifactId>
+            <version>12.2.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ucp.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.jdbc</groupId>
+            <artifactId>ons</artifactId>
+            <version>12.2.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ons.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.jdbc</groupId>
+            <artifactId>simplefan</artifactId>
+            <version>12.2.0.1</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/simplefan.jar</systemPath>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.antlr/stringtemplate -->

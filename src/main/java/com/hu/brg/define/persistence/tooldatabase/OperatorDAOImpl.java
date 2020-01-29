@@ -16,11 +16,11 @@ public class OperatorDAOImpl extends BaseDAO implements OperatorDAO {
     public Operator getOperatorById(int id) {
         Operator operator = null;
 
-        try (Connection conn = getConnection()) {
-            String query = "SELECT ID, NAME " +
-                    "FROM OPERATORS " +
-                    "WHERE ID = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
+        String query = "SELECT ID, NAME " +
+                "FROM OPERATORS " +
+                "WHERE ID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -28,6 +28,8 @@ public class OperatorDAOImpl extends BaseDAO implements OperatorDAO {
                 operator = getOperatorStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return operator;
             }
         } catch (SQLException e) {
@@ -53,6 +55,8 @@ public class OperatorDAOImpl extends BaseDAO implements OperatorDAO {
                 operator = getOperatorStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return operator;
             }
 

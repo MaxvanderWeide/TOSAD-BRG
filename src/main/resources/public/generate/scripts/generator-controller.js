@@ -2,6 +2,11 @@ $(document).ready(function () {
     searchTable();
     startupEventListeners();
     loadFromStorage();
+
+    setTimeout(function () {
+        // alert("Your token has ");
+        createConnection();
+    }, 3600000);
 });
 
 function startupEventListeners() {
@@ -16,7 +21,7 @@ function startupEventListeners() {
     $(".insert").click(() => {
         let triggers = sessionStorage.getItem("triggers");
 
-        if(triggers !== undefined) {
+        if (triggers !== undefined) {
             insertCode(triggers.replace(/(?:<br>)/g, "\n"));
         } else {
             let alertDanger = $('.alert-danger');
@@ -61,7 +66,7 @@ function createConnection() {
                 $(alertDanger).html("Can't create connection due to unfulfilled data requirements.");
                 $(alertDanger).show();
             } else if (response.status === 403) {
-                alert("You can't be authenticated. Contact your technical administrator.");
+                timoutAction();
             }
         })
         .then(response => {
@@ -109,6 +114,8 @@ function getAllRules() {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 403) {
+                timoutAction();
             }
         })
         .then(response => {
@@ -123,7 +130,7 @@ function getAllRules() {
                         "<td>" + index + "</td>" +
                         "<td>" + response[index]['table'] + "</td>" +
                         "<td>" + response[index]['type'] + "</td>" +
-                        "<td data-id='"+ id +"'><input class='form-check-input' value='"+ id +"' type='checkbox' id='checkbox'></td>" +
+                        "<td data-id='" + id + "'><input class='form-check-input' value='" + id + "' type='checkbox' id='checkbox'></td>" +
                         "</tr>"
                     );
                 }
@@ -152,6 +159,8 @@ function getRuleById(target) {
         .then(response => {
             if (response.status === 200) {
                 return response.json();
+            } else if (response.status === 403) {
+                timoutAction();
             }
         })
         .then(response => {
@@ -172,7 +181,7 @@ function generate() {
         }
     });
 
-    if(typeof ids !== 'undefined' && ids.length > 0) {
+    if (typeof ids !== 'undefined' && ids.length > 0) {
         $(".sample-code-block").html("").hide();
         $('.alert-danger, .alert-success, button.insert').hide();
         $(".generate-spinner").show();
@@ -189,6 +198,8 @@ function generate() {
             .then(response => {
                 if (response.status === 200) {
                     return response.json();
+                } else if (response.status === 403) {
+                    timoutAction();
                 } else if (response.status === 404 || response.status === 500) {
                     $(".generate-spinner").hide();
                     let alertDanger = $('.alert-danger');
@@ -221,7 +232,7 @@ function showGeneratedRule(response) {
     $(".generate-spinner").hide();
 
     $(sample).html(
-        ("<samp>"+response+"</samp>").replace(/(?:\n)/g, "<br>")
+        ("<samp>" + response + "</samp>").replace(/(?:\n)/g, "<br>")
     );
 
     $(sample).show();
@@ -243,10 +254,18 @@ function insertCode(triggers) {
                 $(alertSuccess).html("The generated triggers are inserted in the selected target database! :)");
                 $(alertSuccess).show();
                 return response.json();
+            } else if (response.status === 403) {
+                timoutAction();
             } else if (response.status === 404) {
                 let alertDanger = $('.alert-danger');
                 $(alertDanger).html("Something went wrong, contact your technical administrator.");
                 $(alertDanger).show();
             }
         })
+}
+
+function timoutAction() {
+    alert("You can't be authenticated. The page will reload.");
+
+    location.reload();
 }

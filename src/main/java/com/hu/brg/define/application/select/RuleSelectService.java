@@ -99,7 +99,12 @@ public class RuleSelectService implements SelectService {
 
     @Override
     public List<Rule> getAllRules(int projectId) {
-        return this.rulesDAO.getRulesByProjectId(projectId);
+        return getAllRules(projectId, false);
+    }
+
+    @Override
+    public List<Rule> getAllRules(int projectId, boolean signatureOnly) {
+        return this.rulesDAO.getRulesByProjectId(projectId, signatureOnly);
     }
 
     @Override

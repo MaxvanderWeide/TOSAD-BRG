@@ -16,11 +16,11 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
     public RuleType getRuleTypeById(int id) {
         RuleType ruleType = null;
 
-        try (Connection conn = getConnection()) {
-            String query = "SELECT ID, TYPE, TYPECODE, DESCRIPTION " +
-                    "FROM TYPES " +
-                    "WHERE ID = ?";
-            PreparedStatement preparedStatement = conn.prepareStatement(query);
+        String query = "SELECT ID, TYPE, TYPECODE, DESCRIPTION " +
+                "FROM TYPES " +
+                "WHERE ID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -28,6 +28,8 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
                 ruleType = getRuleTypeStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return ruleType;
             }
         } catch (SQLException e) {
@@ -54,6 +56,8 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
                 ruleType = getRuleTypeStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return ruleType;
             }
 
@@ -83,6 +87,8 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
                 ruleType = getRuleTypeStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return ruleType;
             }
 

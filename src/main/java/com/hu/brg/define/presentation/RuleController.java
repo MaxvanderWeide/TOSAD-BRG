@@ -211,7 +211,7 @@ public class RuleController {
         List<Map<String, Map<String, String>>> rules = new ArrayList<>();
         Map<String, Map<String, String>> tempRules = new HashMap<>();
 
-        for (Rule rule : getSelectService().getAllRules((int) claims.get("projectId"))) {
+        for (Rule rule : getSelectService().getAllRules((int) claims.get("projectId"), true)) {
             Map<String, String> tempRule = new HashMap<>();
             tempRule.put("table", rule.getTargetTable().getName());
             tempRule.put("type", rule.getRuleType().getType());
@@ -223,7 +223,7 @@ public class RuleController {
 
         context.json(rules).status(200);
 
-        if (rules.isEmpty()) {
+        if (tempRules.isEmpty()) {
             context.status(404).json(new ErrorResponse().status(404).sType("Not Found").title("No Rules Found"));
         }
     }

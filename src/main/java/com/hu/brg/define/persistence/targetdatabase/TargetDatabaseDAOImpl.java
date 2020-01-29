@@ -28,12 +28,16 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Table table = processTableResult(conn, resultSet);
+                Table table = processTableResult(resultSet, username, password, project);
                 tableList.add(table);
             }
 
             resultSet.close();
             preparedStatement.close();
+
+            conn.close();
+
+            return tableList;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -47,7 +51,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
         return getTablesByProject(username, password, project);
     }
 
-    private Table processTableResult(Connection conn, ResultSet resultSet) throws SQLException {
+    private Table processTableResult(ResultSet resultSet, String username, String password, Project project) throws SQLException {
+        Connection conn = getConnection(project, username, password);
         Table table = getTablesStatement(resultSet);
 
         PreparedStatement attributeStatement = conn.prepareStatement("SELECT COLUMN_NAME, DATA_TYPE FROM USER_TAB_COLUMNS " +
@@ -65,6 +70,8 @@ public class TargetDatabaseDAOImpl extends BaseDAO implements TargetDatabaseDAO 
         attributeStatement.close();
 
         table.setColumnList(columnList);
+
+        conn.close();
 
         return table;
     }

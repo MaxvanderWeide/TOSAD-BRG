@@ -7,7 +7,7 @@
     /*--button-color: var(--input-color);*/
 
     /*Theme: normal (white)*/
-    --background-color: #f8f9fa!important;
+    --background-color: #f8f9fa !important;
     --text-color: black;
     --input-color: #fff;
     --input-border-color: #ced4da;
@@ -53,11 +53,6 @@ table {
     margin-top: 2vw;
 }
 
-tbody tr:hover {
-    opacity: .8;
-    cursor: pointer;
-}
-
 .alert-success, .alert-danger {
     display: none;
 }
@@ -74,18 +69,22 @@ tbody tr:hover {
     background-clip: padding-box;
     border: 1px solid var(--input-border-color);
     border-radius: .25rem;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
     background: var(--input-color);
     margin: auto;
 }
 
+.form-check-input {
+    cursor: pointer;
+}
+
 .pi-5 {
-    padding-bottom: 1rem!important;
-    padding-top: 1.5rem!important;
+    padding-bottom: 1rem !important;
+    padding-top: 1.5rem !important;
 }
 
 .text-center {
-    text-align: center!important;
+    text-align: center !important;
 }
 
 .lead {
@@ -100,7 +99,7 @@ tbody tr:hover {
 .inner {
     border: 1px solid black;
     min-width: 100%;
-    padding: 10px!important;
+    padding: 10px !important;
 }
 
 #ruleTable, .existing-lead, button.generate, .search-rule-wrapper, .existing-rules-title, .db-info-wrapper {
