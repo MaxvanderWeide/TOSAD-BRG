@@ -350,10 +350,24 @@ function saveRule(element, method = "insert") {
     let attributeItems = [];
     const attributeValuesArray = [];
 
-    if (checkTypeSelected(["Tuple_Other", "Entity_Other"], selectedType)) {
+    if (checkTypeSelected(["Tuple_Other"], selectedType)) {
         $(target).find("ul.attributes-list li").each((index, item) => {
             attributeValuesArray.push(setAttributeValues($(item).html().split("|")[3].trim(), $(item).html().split("|")[1].split("-")[1].trim()));
         });
+    } else if (checkTypeSelected(["Entity_Other"], selectedType)) {
+        const attributeItem = {};
+
+        if (method === "insert") {
+            attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "RAW"));
+        } else if (method === "update") {
+            attributeValuesArray.push(setAttributeValues($("#custInput1").val(), "RAW", 0, false, "update", $("#custInput1").data("value-id")));
+            attributeItem["id"] = $(".attribute-id").val();
+        }
+
+        attributeItem["column"] = $(".attribute-selection").val().split("-")[0].trim();
+        attributeItem["operatorName"] = $(target).find(".operator-selection").val();
+        attributeItem["attributeValues"] = attributeValuesArray;
+        attributeItems.push(attributeItem);
     } else if (checkTypeSelected(["Attribute_Range"], selectedType)) {
         const attributeItem = {};
         $("[id^=custInput]").each((index, item) => {

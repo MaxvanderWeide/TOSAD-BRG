@@ -142,18 +142,8 @@ function InterEntity_Compare() {
 }
 
 function Entity_Other() {
-    const attributeInput = $("<input>", {class: "form-input attr-lst-input"});
-    const addAttribute = $("<button>", {class: "btn-success col-md-3 mb-3 attr-lst-btn", text: "add"});
-    const br = $("<br>");
-    const custInput1 = $("<ul>", {id: "custInput1", class: "attributes-list col-md-12 mb-3"});
-    let count = 1;
-    $(addAttribute).click(() => {
-        const li = $("<li>", {text: $(".table-selection").val() + "|" + $(".attribute-selection").val() + "|" + $(".operator-selection").val() + "|" + $(attributeInput).val()});
-        $(li).attr("data-number", count);
-        $(".new-rule-wrapper").find(".attributes-list").append(li);
-        count++;
-    });
-    $(".new-rule-wrapper").find(".comparator-step").append(attributeInput, addAttribute, br, custInput1);
+    const custInput1 = $("<textarea>", {type: "text", id: "custInput1", class: "form-input col-md-5 mb-3 rule-field value-input"});
+    $(".new-rule-wrapper").find(".comparator-step").append(custInput1);
 }
 
 function Tuple_Other() {
