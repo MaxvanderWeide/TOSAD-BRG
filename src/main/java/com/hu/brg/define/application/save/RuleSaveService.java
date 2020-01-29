@@ -121,7 +121,6 @@ public class RuleSaveService implements SaveService {
         return rulesDAO.saveRule(ruleDefinition);
     }
 
-    //TODO: maybe nieuwe service hiervoor maken??
     @Override
     public boolean deleteRule(int id) {
         return this.rulesDAO.deleteRule(id);

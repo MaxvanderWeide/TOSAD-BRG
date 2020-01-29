@@ -29,6 +29,12 @@ public class Table {
     }
 
     @Override
+    public int hashCode() {
+        assert false : "hashCode not designed";
+        return 42;
+    }
+
+    @Override
     public String toString() {
         return "Table{" +
                 "id=" + id +
