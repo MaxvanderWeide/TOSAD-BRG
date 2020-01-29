@@ -55,12 +55,10 @@ function startupEventListeners() {
     $(".new-rule-wrapper .type-selection").change((item) => {
         fillOperators(item.target.value);
         displayBlock(item.target.value);
-        if ($._data($('.table-selection').get(0), "events").change.length < 3) {
-            fillValuesTargetAttributes(item.target);
-        }
+        fillTargetAttributes(item.target);
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
         $(".rule-values-error").hide();
-        $("#tableHelp").attr("data-original-title", $(item.target).find("option:selected").attr("title"));
+        setTypeInfo(item.target);
     });
 
     $(".btn-save").click((item) => {
@@ -82,9 +80,13 @@ function startupEventListeners() {
     bindTableSelection();
 }
 
+function setTypeInfo(target) {
+    $("#tableHelp").attr("data-original-title", $(target).find("option:selected").attr("title"));
+}
+
 function bindTableSelection() {
     $(".new-rule-wrapper .table-selection").change((item) => {
-        fillTargetAttributes(item.target.value, false);
+        fillTargetAttributes(item.target.value);
         $(".type-selection").removeAttr("disabled");
     });
 }
@@ -264,7 +266,7 @@ function fillTargetTables() {
         });
 }
 
-function fillTargetAttributes(table, interEntityRuleType = false, operation, column) {
+function fillTargetAttributes(table, target = null, operation, column) {
     fetch("define/tables/" + table + "/attributes ", {
         method: "GET",
         headers: {"Authorization": sessionStorage.getItem("access_token")}
@@ -282,8 +284,7 @@ function fillTargetAttributes(table, interEntityRuleType = false, operation, col
         })
         .then(response => {
             if (response !== undefined) {
-                const selectionTarget = interEntityRuleType ? $(".new-rule-wrapper #custInput2") : $(".new-rule-wrapper .attribute-selection");
-
+                const selectionTarget = target === null ? $(".new-rule-wrapper .attribute-selection") : target;
                 $(selectionTarget).empty();
                 for (const index in response.Attributes) {
                     const selected = operation === "maintain" && column === index ? "selected" : "";
@@ -546,16 +547,6 @@ function displayBlock(type) {
     });
 }
 
-function fillValuesTargetAttributes(element) {
-    const typeName = $(element).val();
-    const typeNameSplit = typeName.split("_");
-    if (typeNameSplit[0].trim() === "InterEntity") {
-        $(".new-rule-wrapper .table-selection").change((item) => {
-            fillTargetAttributes(item.target.value, true);
-        });
-    }
-}
-
 function getAllRules() {
     fetch("maintain/rules", {
         method: "GET",
@@ -642,8 +633,9 @@ function fillFormFields(rule) {
     $(".rule-description").val(rule.description);
     $(".table-selection").val(table);
     $(".type-selection").val(type);
+    setTypeInfo($(".type-selection"));
 
-    fillTargetAttributes(table, false, "maintain", rule.attributes[0].column);
+    fillTargetAttributes(table, null, "maintain", rule.attributes[0].column);
     fillOperators(type, "maintain", rule.attributes[0].operatorName);
     displayBlock(type);
     fillFormValues(rule);
@@ -674,7 +666,7 @@ function fillFormValues(ruleData) {
                     const li = $("<li>", {text: value.value});
                     $(li).attr("data-value-id", value.id);
                     $(li).click((item) => {
-                       $(item.target).remove();
+                        $(item.target).remove();
                     });
                     $(".attributes-list").append(li);
                 }
@@ -691,7 +683,7 @@ function fillFormValues(ruleData) {
                 break;
             case "Tuple_Compare":
                 for (const value of attribute.attributeValues) {
-                    const li = $("<li>", {text: ruleData.table + " | " + attribute.column + " - " + value.valueType + " | " + attribute.operatorName + " | "  +value.value});
+                    const li = $("<li>", {text: ruleData.table + " | " + attribute.column + " - " + value.valueType + " | " + attribute.operatorName + " | " + value.value});
                     $(li).attr("data-value-id", value.id);
                     $(li).click((item) => {
                         $(item.target).remove();
@@ -700,12 +692,50 @@ function fillFormValues(ruleData) {
                 }
                 break;
             case "InterEntity_Compare":
-            //TODO - select correct values
+                // Pls don't hurt me, I did not know another solution
+                setTimeout(() => {
+                    $(".target-foreign-key option").each((index, item) => {
+                        if ($(item).val().split("-")[0].trim() === attribute.targetTableFK) {
+                            $(item).attr("selected", "selected");
+                            return false;
+                        }
+                    });
+
+                    $(".other-table-selection option").each((index, item) => {
+                        if ($(item).val().split("-")[0].trim() === attribute.otherTable) {
+                            $(item).attr("selected", "selected");
+                            return false;
+                        }
+                    });
+
+                    fillTargetAttributes(attribute.otherTable, $(".other-attribute-selection"), "maintain", attribute.otherColumn);
+                    fillTargetAttributes(attribute.otherTable, $(".other-table-pk-selection"), "maintain", attribute.otherTablePK);
+
+                    $(".other-table-pk-selection option").each((index, item) => {
+                        if ($(item).val().split("-")[0].trim() === attribute.otherTablePK) {
+                            $(item).attr("selected", "selected");
+                            return false;
+                        }
+                    });
+
+                    $(".other-attribute-selection option").each((index, item) => {
+                        if ($(item).val().split("-")[0].trim() === attribute.otherColumn) {
+                            $(item).attr("selected", "selected");
+                            return false;
+                        }
+                    });
+                }, 1500);
+                setTimeout(() => {
+                    $(".maintain-rule-spinner").hide();
+                    $(".new-rule-wrapper").show();
+                }, 1800);
             default:
                 break;
         }
     }
-    $(".maintain-rule-spinner").hide();
-    $(".new-rule-wrapper").show();
 
+    if (ruleData.type.type !== "InterEntity_Compare") {
+        $(".maintain-rule-spinner").hide();
+        $(".new-rule-wrapper").show();
+    }
 }
