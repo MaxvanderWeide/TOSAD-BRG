@@ -1,8 +1,8 @@
-package com.hu.brg.service.persistance.tooldatabase;
+package com.hu.brg.service.persitence.tooldatabase;
 
 import com.hu.brg.service.model.required.DBEngine;
 import com.hu.brg.service.model.required.Project;
-import com.hu.brg.service.persistance.BaseDAO;
+import com.hu.brg.service.persitence.BaseDAO;
 
 import java.sql.*;
 

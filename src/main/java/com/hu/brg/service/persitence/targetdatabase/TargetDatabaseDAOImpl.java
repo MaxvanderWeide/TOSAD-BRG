@@ -1,7 +1,7 @@
-package com.hu.brg.service.persistance.targetdatabase;
+package com.hu.brg.service.persitence.targetdatabase;
 
 import com.hu.brg.service.model.required.Project;
-import com.hu.brg.service.persistance.BaseDAO;
+import com.hu.brg.service.persitence.BaseDAO;
 
 import java.sql.Connection;
 

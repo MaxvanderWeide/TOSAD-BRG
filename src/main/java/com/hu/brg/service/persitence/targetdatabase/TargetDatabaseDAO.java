@@ -1,4 +1,4 @@
-package com.hu.brg.service.persistance.targetdatabase;
+package com.hu.brg.service.persitence.targetdatabase;
 
 import com.hu.brg.service.model.required.Project;
 
