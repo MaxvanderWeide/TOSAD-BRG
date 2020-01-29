@@ -28,6 +28,8 @@ public class OperatorDAOImpl extends BaseDAO implements OperatorDAO {
                 operator = getOperatorStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return operator;
             }
         } catch (SQLException e) {
@@ -53,6 +55,8 @@ public class OperatorDAOImpl extends BaseDAO implements OperatorDAO {
                 operator = getOperatorStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return operator;
             }
 

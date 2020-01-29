@@ -28,6 +28,8 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
                 ruleType = getRuleTypeStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return ruleType;
             }
         } catch (SQLException e) {
@@ -54,6 +56,8 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
                 ruleType = getRuleTypeStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return ruleType;
             }
 
@@ -83,6 +87,8 @@ public class RuleTypeDAOImpl extends BaseDAO implements RuleTypeDAO {
                 ruleType = getRuleTypeStatement(resultSet);
                 resultSet.close();
                 preparedStatement.close();
+
+                conn.close();
                 return ruleType;
             }
 
