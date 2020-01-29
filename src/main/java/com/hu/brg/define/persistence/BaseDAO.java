@@ -48,6 +48,7 @@ public abstract class BaseDAO {
         oraclePoolDataSource.setUser(user); // [username]
         oraclePoolDataSource.setPassword(password); // [password]
         oraclePoolDataSource.setFastConnectionFailoverEnabled(true);
+        oraclePoolDataSource.setMaxPoolSize(30);
 
         // Validate the connection while borrowing
         oraclePoolDataSource.setValidateConnectionOnBorrow(true);
