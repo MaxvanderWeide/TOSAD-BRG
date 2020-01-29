@@ -204,3 +204,8 @@ li {
     color: red;
     display: none;
 }
+
+.maintain-rule-spinner, .new-rule-spinner {
+    display: none;
+    text-align: center;
+}

@@ -54,7 +54,6 @@ function startupEventListeners() {
 
     $(".new-rule-wrapper .type-selection").change((item) => {
         console.log(item.target.value);
-        $('#tableHelp').prop('title', 'hey');
         fillOperators(item.target.value);
         displayBlock(item.target.value);
         if ($._data($('.table-selection').get(0), "events").change.length < 3) {
@@ -62,6 +61,7 @@ function startupEventListeners() {
         }
         $(item.target).parent().parent().parent().find(".rule-values-wrapper").show();
         $(".rule-values-error").hide();
+        $("#tableHelp").attr("data-original-title", $(item.target).find("option:selected").attr("title"));
     });
 
     $(".btn-save").click((item) => {
@@ -112,7 +112,7 @@ function checkFieldsError() {
             if (isNaN($("#custInput1").val()) || isNaN($("#custInput2").val())) {
                 $(".rule-values-error").text("The values have to be a number");
                 valuesError = true;
-            } else if ($("#custInput1").val() > $("#custInput2").val()) {
+            } else if (parseInt($("#custInput1").val()) > parseInt($("#custInput2").val())) {
                 $(".rule-values-error").text("Minimum value is higher than maximum value");
                 valuesError = true;
             }
@@ -340,6 +340,7 @@ function setAttributeValues(value, type, index, doIndex = false, operation = "in
 }
 
 function saveRule(element, method = "insert") {
+    $(".new-rule-spinner").show();
     const target = $(element.target).parent().parent();
     const selectedTable = $(target).find(".table-selection").val();
     const selectedType = $(target).find(".type-selection").val();
@@ -445,6 +446,7 @@ function saveRule(element, method = "insert") {
                     let alertSuccess = $('.alert-success');
                     $(alertSuccess).html("Your new BusinessRule was created!");
                     $(alertSuccess).show();
+                    $(".new-rule-spinner").hide();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
                     $(alertDanger).html("Your Business Rule was not created. You may want to check the input again.");
@@ -465,6 +467,7 @@ function saveRule(element, method = "insert") {
                     let alertSuccess = $('.alert-success');
                     $(alertSuccess).html("The rule was updated!");
                     $(alertSuccess).show();
+                    $(".new-rule-spinner").hide();
                 } else if (response.status === 400) {
                     let alertDanger = $('.alert-danger');
                     $(alertDanger).html("Your Business Rule was not updated. You may want to check the input again.");
@@ -572,7 +575,7 @@ function getAllRules() {
                 $("#table-body").html("No rules found")
             }
         }).then(response => {
-        $(".spinner-holder.maintain-spinner").hide();
+        $(".maintain-spinner").hide();
 
         $("table.existing-rules-wrapper").show();
 
@@ -580,8 +583,9 @@ function getAllRules() {
 }
 
 function clickTable(id) {
+    $(".new-rule-wrapper").hide();
+    $(".maintain-rule-spinner").show();
     clearFormFields();
-    $(".new-rule-wrapper").show();
 
     getRuleById(id);
 }
@@ -681,4 +685,7 @@ function fillFormValues(ruleData) {
                 break;
         }
     }
+    $(".maintain-rule-spinner").hide();
+    $(".new-rule-wrapper").show();
+
 }

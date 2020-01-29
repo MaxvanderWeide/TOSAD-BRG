@@ -102,8 +102,10 @@ function generate() {
     });
 
     if(typeof ids !== 'undefined' && ids.length > 0) {
-        $('.alert-danger').hide();
+        $(".sample-code-block").html("").hide();
+        $('.alert-danger, .alert-success').hide();
         $(".generate-spinner").show();
+
         const rules = {};
         rules["rules"] = ids;
 

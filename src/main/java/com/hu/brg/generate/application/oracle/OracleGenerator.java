@@ -96,7 +96,7 @@ public class OracleGenerator implements Generator {
     @Override
     public void pushTriggers(Project project, String triggers, String username, String password) {
         TargetDatabaseDAO targetDatabaseDAO = new TargetDatabaseDAOImpl();
-        targetDatabaseDAO.rawQuery(project, triggers, username, password);
+        targetDatabaseDAO.rawQuery(project, username, password, triggers);
     }
 
 }
