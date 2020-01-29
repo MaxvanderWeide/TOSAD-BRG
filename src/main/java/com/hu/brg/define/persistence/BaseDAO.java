@@ -48,16 +48,16 @@ public abstract class BaseDAO {
         oraclePoolDataSource.setUser(user); // [username]
         oraclePoolDataSource.setPassword(password); // [password]
         oraclePoolDataSource.setFastConnectionFailoverEnabled(true);
-//        oraclePoolDataSource.setMaxPoolSize(30);
+        oraclePoolDataSource.setMaxPoolSize(30);
 
         // Validate the connection while borrowing
         oraclePoolDataSource.setValidateConnectionOnBorrow(true);
 
         // this is timeout period any connection to remove pool after creation of 30 secs
-//        oraclePoolDataSource.setMaxConnectionReuseTime(30);
+        oraclePoolDataSource.setMaxConnectionReuseTime(30);
 
         // this is timeout period for idle "available connections" to close and remove pool
-//        oraclePoolDataSource.setInactiveConnectionTimeout(60);
+        oraclePoolDataSource.setInactiveConnectionTimeout(60);
     }
 
     public void closeConnection() {
